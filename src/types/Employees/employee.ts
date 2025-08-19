@@ -31,6 +31,7 @@ export interface EmployeeTheme {
   };
   row: {
     borderColor: string;
+    hoverBackground?: string;
   };
   employee: {
     nameColor: string;

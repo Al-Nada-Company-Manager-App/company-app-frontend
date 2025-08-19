@@ -127,6 +127,7 @@ const lightEmployeeTheme: EmployeeTheme = {
   },
   row: {
     borderColor: "#E2E8F0",
+    hoverBackground: "rgba(108, 121, 239, 0.08)",
   },
   employee: {
     nameColor: "#2D3748",
@@ -167,6 +168,7 @@ const darkEmployeeTheme: EmployeeTheme = {
   },
   row: {
     borderColor: "#56577A",
+    hoverBackground: "rgba(255, 255, 255, 0.05)",
   },
   employee: {
     nameColor: "#FFFFFF",
@@ -198,8 +200,20 @@ export const useEmployees = (isDark: boolean) => {
     [isDark]
   );
 
+  const activeEmployees = useMemo(
+    () => DUMMY_EMPLOYEES.filter((employee) => employee.e_active),
+    []
+  );
+
+  const deactivatedEmployees = useMemo(
+    () => DUMMY_EMPLOYEES.filter((employee) => !employee.e_active),
+    []
+  );
+
   return {
     employees: DUMMY_EMPLOYEES,
+    activeEmployees,
+    deactivatedEmployees,
     theme,
   };
 };

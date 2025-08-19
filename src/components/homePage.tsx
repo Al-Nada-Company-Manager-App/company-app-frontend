@@ -9,7 +9,6 @@ const HomePage = () => {
   const [currentRoute, setCurrentRoute] = useState("/");
 
   const handleSidebarItemClick = (itemId: string) => {
-
     // Route mapping
     const routeMap: Record<string, string> = {
       dashboard: "/",
@@ -132,7 +131,7 @@ const HomePage = () => {
 
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden"
+      className="relative w-screen h-screen"
       style={{ backgroundColor: theme.containerBg }}
     >
       {/* Sidebar */}
@@ -169,17 +168,14 @@ const HomePage = () => {
         />
       </div>
 
-      {/* Dynamic Content */}
-      {renderContent()}
+      {/* Scrollable Content Area */}
+      <div className="scrollable-content fixed left-[298px] top-0 right-0 bottom-0 overflow-y-auto pt-[101px]">
+        {renderContent()}
+      </div>
 
       {/* Debug indicator */}
-      <div
-        className="ml-72 relative z-10 flex items-center justify-center h-full"
-        style={{ color: theme.textColor }}
-      >
-        <div className="absolute bottom-4 left-4 px-2 py-1 text-xs bg-black/50 text-white rounded">
-          Mode: {isDark ? "Dark" : "Light"} | Route: {currentRoute}
-        </div>
+      <div className="fixed bottom-4 left-4 px-2 py-1 text-xs bg-black/50 text-white rounded z-50">
+        Mode: {isDark ? "Dark" : "Light"} | Route: {currentRoute}
       </div>
     </div>
   );

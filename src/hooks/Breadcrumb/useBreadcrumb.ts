@@ -20,7 +20,7 @@ export const USER_MENU_ITEMS: UserMenuItem[] = [
 
 const lightBreadcrumbTheme: BreadcrumbTheme = {
   container: {
-    background: "#EFF0FB",
+    background: "transparent",
     textColor: "#090B1B",
   },
   searchInput: {
@@ -50,11 +50,71 @@ const lightBreadcrumbTheme: BreadcrumbTheme = {
 
 const darkBreadcrumbTheme: BreadcrumbTheme = {
   container: {
-    background: "#040510",
+    background: "transparent",
     textColor: "#E4E6F6",
   },
   searchInput: {
     background: "#040510",
+    borderColor: "#828CE8",
+    textColor: "#E4E6F6",
+    placeholderColor: "#828CE8",
+    iconColor: "#828CE8",
+  },
+  userMenu: {
+    textColor: "#828CE8",
+    iconColor: "#828CE8",
+  },
+  userProfile: {
+    nameColor: "#E4E6F6",
+    imageBorder: "#828CE8",
+    containerBackground: "rgba(130, 140, 232, 0.1)",
+    containerBorder: "#828CE8",
+  },
+  title: {
+    color: "#E4E6F6",
+  },
+  breadcrumbText: {
+    color: "#828CE8",
+  },
+};
+
+const lightBreadcrumbScrolledTheme: BreadcrumbTheme = {
+  container: {
+    background: "rgba(239, 240, 251, 0.8)",
+    textColor: "#090B1B",
+  },
+  searchInput: {
+    background: "rgba(239, 240, 251, 0.9)",
+    borderColor: "#6C79EF",
+    textColor: "#090B1B",
+    placeholderColor: "#6C79EF",
+    iconColor: "#17217D",
+  },
+  userMenu: {
+    textColor: "#17217D",
+    iconColor: "#6C79EF",
+  },
+  userProfile: {
+    nameColor: "#090B1B",
+    imageBorder: "#6C79EF",
+    containerBackground: "rgba(108, 121, 239, 0.1)",
+    containerBorder: "#6C79EF",
+  },
+  title: {
+    color: "#090B1B",
+  },
+  breadcrumbText: {
+    color: "#6C79EF",
+  },
+};
+
+const darkBreadcrumbScrolledTheme: BreadcrumbTheme = {
+  container: {
+    background: "rgba(4, 5, 16, 0.8)",
+    textColor: "#E4E6F6",
+  },
+  searchInput: {
+    background: "rgba(4, 5, 16, 0.9)",
     borderColor: "#828CE8",
     textColor: "#E4E6F6",
     placeholderColor: "#828CE8",
@@ -84,8 +144,14 @@ export const useBreadcrumb = (isDark: boolean) => {
     [isDark]
   );
 
+  const scrolledTheme = useMemo(
+    () => (isDark ? darkBreadcrumbScrolledTheme : lightBreadcrumbScrolledTheme),
+    [isDark]
+  );
+
   return {
     theme,
+    scrolledTheme,
     userMenuItems: USER_MENU_ITEMS,
   };
 };
