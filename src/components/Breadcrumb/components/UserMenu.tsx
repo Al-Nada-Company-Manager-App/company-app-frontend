@@ -11,53 +11,75 @@ interface UserMenuProps {
   isDark: boolean;
 }
 
-const UserMenu = ({ theme, onItemClick, isDark }: UserMenuProps) => {
+const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
   const handleItemClick = (itemId: string) => {
     if (onItemClick) {
       onItemClick(itemId);
     }
   };
 
+  const profileItem = items.find((item) => item.isProfile);
+  const menuItems = items.filter((item) => !item.isProfile);
+
   return (
     <div className="flex items-center gap-4">
-      {/* Sign In */}
-      <div
-        className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
-        onClick={() => handleItemClick("profile")}
-      >
-        <Icons.User size={20} color={theme.userMenu.iconColor} />
-        <span className="text-x" style={{ color: theme.userMenu.textColor }}>
-          Sign In
-        </span>
-      </div>
+      {/* User Profile */}
+      {profileItem && (
+        <div
+          className="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
+          onClick={() => handleItemClick(profileItem.id)}
+          style={{
+            backgroundColor: theme.userProfile.containerBackground,
+            border: `1px solid ${theme.userProfile.containerBorder}`,
+          }}
+        >
+          <img
+            src={profileItem.image}
+            alt={profileItem.label}
+            className="w-8 h-8 rounded-full object-cover"
+            style={{ border: `2px solid ${theme.userProfile.imageBorder}` }}
+          />
+          <span
+            className="text-sm font-medium"
+            style={{ color: theme.userProfile.nameColor }}
+          >
+            {profileItem.label}
+          </span>
+        </div>
+      )}
 
-      {/* Settings */}
-      <div
-        className="cursor-pointer hover:opacity-70 transition-opacity"
-        onClick={() => handleItemClick("settings")}
-      >
-        <Icons.Settings size={20} color={theme.userMenu.iconColor} />
-      </div>
+      {menuItems.map((item) => {
+        const IconComponent = Icons[
+          item.icon as keyof typeof Icons
+        ] as React.ComponentType<{ size?: number; color?: string }>;
 
-      {/* Notifications */}
-      <div
-        className="cursor-pointer hover:opacity-70 transition-opacity"
-        onClick={() => handleItemClick("notifications")}
-      >
-        <Icons.Bell size={20} color={theme.userMenu.iconColor} />
-      </div>
+        // Special handling for theme toggle
+        if (item.id === "theme") {
+          return (
+            <div
+              key={item.id}
+              className="cursor-pointer hover:opacity-70 transition-opacity"
+              onClick={() => handleItemClick(item.id)}
+            >
+              {isDark ? (
+                <Icons.Sun size={20} color={theme.userMenu.iconColor} />
+              ) : (
+                <Icons.Moon size={20} color={theme.userMenu.iconColor} />
+              )}
+            </div>
+          );
+        }
 
-      {/* Theme Toggle */}
-      <div
-        className="cursor-pointer hover:opacity-70 transition-opacity"
-        onClick={() => handleItemClick("theme")}
-      >
-        {isDark ? (
-          <Icons.Sun size={20} color={theme.userMenu.iconColor} />
-        ) : (
-          <Icons.Moon size={20} color={theme.userMenu.iconColor} />
-        )}
-      </div>
+        return (
+          <div
+            key={item.id}
+            className="cursor-pointer hover:opacity-70 transition-opacity"
+            onClick={() => handleItemClick(item.id)}
+          >
+            <IconComponent size={20} color={theme.userMenu.iconColor} />
+          </div>
+        );
+      })}
     </div>
   );
 };
