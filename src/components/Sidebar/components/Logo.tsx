@@ -1,21 +1,22 @@
-import { useSidebar } from "../../../hooks/useSidebar";
 
-const Logo = () => {
-  const { theme } = useSidebar(false);
+interface LogoProps {
+  isDark: boolean;
+}
+
+const Logo = ({ isDark }: LogoProps) => {
 
   return (
     <div className="flex justify-center pt-11">
-      <div
-        className="text-sm font-normal tracking-[0.18em] text-center"
+      <img
+        src={isDark ? "/Images/logo/alnadadr.png" : "/Images/logo/alnada.png"}
+        alt="Company Manager"
+        className="object-contain"
         style={{
-          background: theme.logo.gradient,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
+          filter: isDark ? "none" : "none",
+          height: "100px",
+          width: "200px",
         }}
-      >
-        Company Manager
-      </div>
+      />
     </div>
   );
 };

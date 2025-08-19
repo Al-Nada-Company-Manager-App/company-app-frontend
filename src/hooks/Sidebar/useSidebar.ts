@@ -1,14 +1,49 @@
 import { useMemo } from "react";
-import type { SidebarItem, SidebarTheme } from "../types/Sidebar/sidebar";
+import type { SidebarItem, SidebarTheme } from "../../types/Sidebar/sidebar";
 
-export const SIDEBAR_ITEMS: SidebarItem[] = [
-  { id: "dashboard", label: "Dashboard", icon: "Home", isActive: true },
-  { id: "users", label: "Users", icon: "Users" },
-  { id: "customers", label: "Customers", icon: "UserCheck" },
-  { id: "stock", label: "Stock", icon: "Package" },
-  { id: "sales", label: "Sales", icon: "TrendingUp" },
-  { id: "purchases", label: "Purchases", icon: "ShoppingCart" },
-  { id: "suppliers", label: "Suppliers", icon: "Truck" },
+export const getSidebarItems = (currentPath: string): SidebarItem[] => [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: "Home",
+    isActive: currentPath === "/",
+  },
+  {
+    id: "employees",
+    label: "Employees",
+    icon: "Users",
+    isActive: currentPath === "/employees",
+  },
+  {
+    id: "customers",
+    label: "Customers",
+    icon: "UserCheck",
+    isActive: currentPath === "/customers",
+  },
+  {
+    id: "stock",
+    label: "Stock",
+    icon: "Package",
+    isActive: currentPath === "/stock",
+  },
+  {
+    id: "sales",
+    label: "Sales",
+    icon: "TrendingUp",
+    isActive: currentPath === "/sales",
+  },
+  {
+    id: "purchases",
+    label: "Purchases",
+    icon: "ShoppingCart",
+    isActive: currentPath === "/purchases",
+  },
+  {
+    id: "suppliers",
+    label: "Suppliers",
+    icon: "Truck",
+    isActive: currentPath === "/suppliers",
+  },
 ];
 
 const lightTheme: SidebarTheme = {
@@ -83,11 +118,12 @@ const darkTheme: SidebarTheme = {
   },
 };
 
-export const useSidebar = (isDark: boolean) => {
+export const useSidebar = (isDark: boolean, currentPath: string = "/") => {
   const theme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
+  const items = useMemo(() => getSidebarItems(currentPath), [currentPath]);
 
   return {
-    items: SIDEBAR_ITEMS,
+    items,
     theme,
   };
 };

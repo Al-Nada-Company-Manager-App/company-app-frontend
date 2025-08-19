@@ -1,12 +1,16 @@
-import { useSidebar } from "../../../hooks/useSidebar";
+import { useSidebar } from "../../../hooks/Sidebar/useSidebar";
 import type { SidebarProps } from "../../../types/Sidebar/sidebar";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import SidebarMenuItem from "./SidebarMenuItem";
 
-const NavigationMenu = ({ isDark, onItemClick }: SidebarProps) => {
-  const { items, theme } = useSidebar(isDark);
+const NavigationMenu = ({
+  isDark,
+  currentPath = "/",
+  onItemClick,
+}: SidebarProps) => {
+  const { items, theme } = useSidebar(isDark, currentPath);
 
   const handleItemClick = (itemId: string) => {
     if (onItemClick) {

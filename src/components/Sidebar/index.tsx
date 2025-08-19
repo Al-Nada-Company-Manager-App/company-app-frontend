@@ -1,12 +1,13 @@
-import { useSidebar } from "../../hooks/useSidebar";
+import { useSidebar } from "../../hooks/Sidebar/useSidebar";
 import type { SidebarProps } from "../../types/Sidebar/sidebar";
 
 import HelpSection from "./components/HelpSection";
 import NavigationMenu from "./components/NavigationMenu";
 import Logo from "./components/Logo";
 
-const Sidebar = ({ isDark, onItemClick }: SidebarProps) => {
-  const { theme } = useSidebar(isDark);
+const Sidebar = ({ isDark, currentPath = "/", onItemClick }: SidebarProps) => {
+  console.log("Sidebar");
+  const {theme } = useSidebar(isDark, currentPath);
 
   const handleItemClick = (itemId: string) => {
     if (onItemClick) {
@@ -25,16 +26,20 @@ const Sidebar = ({ isDark, onItemClick }: SidebarProps) => {
     >
       {/* Logo Section */}
       <div className="flex items-center justify-center mt-4 mb-8">
-        <Logo />
+        <Logo isDark={isDark}  />
       </div>
 
       {/* Navigation Menu */}
-      <NavigationMenu isDark={isDark} onItemClick={handleItemClick} />
+      <NavigationMenu
+        isDark={isDark}
+        currentPath={currentPath}
+        onItemClick={handleItemClick}
+      />
 
       {/* Decorative Circles (optional) */}
 
       {/* Help Section */}
-      <HelpSection isDark={isDark} />
+      <HelpSection isDark={isDark} currentPath={currentPath} />
     </div>
   );
 };

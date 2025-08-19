@@ -21,6 +21,12 @@ export interface BreadcrumbTheme {
     textColor: string;
     iconColor: string;
   };
+  userProfile: {
+    nameColor: string;
+    imageBorder: string;
+    containerBackground: string;
+    containerBorder: string;
+  };
   title: {
     color: string;
   };
@@ -33,4 +39,6 @@ export interface UserMenuItem {
   id: string;
   label: string;
   icon: string;
+  image?: string;
+  isProfile?: boolean;
 }

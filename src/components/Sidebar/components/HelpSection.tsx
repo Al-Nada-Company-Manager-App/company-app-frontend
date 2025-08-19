@@ -1,12 +1,13 @@
-import { useSidebar } from "../../../hooks/useSidebar";
+import { useSidebar } from "../../../hooks/Sidebar/useSidebar";
 import * as Icons from "lucide-react";
 
 interface HelpSectionProps {
   isDark: boolean;
+  currentPath?: string;
 }
 
-const HelpSection = ({ isDark }: HelpSectionProps) => {
-  const { theme } = useSidebar(isDark);
+const HelpSection = ({ isDark, currentPath = "/" }: HelpSectionProps) => {
+  const { theme } = useSidebar(isDark, currentPath);
   return (
     <div className="absolute bottom-8 left-8 right-8">
       <div

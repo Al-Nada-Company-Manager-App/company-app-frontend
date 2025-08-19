@@ -40,6 +40,7 @@ export interface SidebarTheme {
 
 export interface SidebarProps {
   isDark: boolean;
+  currentPath?: string;
   onItemClick?: (itemId: string) => void;
 }
 
