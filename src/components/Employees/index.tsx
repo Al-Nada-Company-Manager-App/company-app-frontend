@@ -3,6 +3,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import DeactivatedEmployeeTable from "./components/DeactivatedEmployeeTable";
 import { useActivateEmployee,useGetAllEmployees } from "../../queries";
 import { Loading, ErrorDisplay } from "../UI";
+import TableStyle from "../UI/TableStyle";
 
 interface EmployeesProps {
   isDark: boolean;
@@ -79,56 +80,57 @@ const Employees = ({ isDark }: EmployeesProps) => {
     await getAllEmployees.refetch();
   };
 
+
   return (
-    <div className="p-6">
-      <div
-        className="w-full rounded-2xl p-6 mb-6"
-        style={{
-          background: theme.container.background,
-          backdropFilter: theme.container.backdropFilter,
-          minHeight: "auto",
-        }}
-      >
-        {/* Title */}
-        <div className="mb-6">
-          <h2
-            className="text-lg font-bold"
-            style={{ color: theme.title.color }}
-          >
-            Activated Employees
-          </h2>
-        </div>
+    <>
+      <TableStyle theme={theme} />
+      <div className="p-6">
+        <div
+          className="w-full rounded-2xl p-6 mb-6"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+            minHeight: "auto",
+          }}
+        >
+          {/* Title */}
+          <div className="mb-6">
+            <h2
+              className="text-lg font-bold"
+              style={{ color: theme.title.color }}
+            >
+              Activated Employees
+            </h2>
+          </div>
 
-        <EmployeeTable
-          employees={activeEmployees}
-          theme={theme}
-        />
-      </div>
-      <div
-        className="w-full rounded-2xl p-6"
-        style={{
-          background: theme.container.background,
-          backdropFilter: theme.container.backdropFilter,
-          minHeight: "auto",
-        }}
-      >
-        {/* Title */}
-        <div className="mb-6">
-          <h2
-            className="text-lg font-bold"
-            style={{ color: theme.title.color }}
-          >
-            DeActivated Employees
-          </h2>
+          <EmployeeTable employees={activeEmployees} theme={theme} />
         </div>
+        <div
+          className="w-full rounded-2xl p-6"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+            minHeight: "auto",
+          }}
+        >
+          {/* Title */}
+          <div className="mb-6">
+            <h2
+              className="text-lg font-bold"
+              style={{ color: theme.title.color }}
+            >
+              DeActivated Employees
+            </h2>
+          </div>
 
-        <DeactivatedEmployeeTable
-          employees={deactivatedEmployees}
-          theme={theme}
-          onActivate={handleActivate}
-        />
+          <DeactivatedEmployeeTable
+            employees={deactivatedEmployees}
+            theme={theme}
+            onActivate={handleActivate}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

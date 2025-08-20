@@ -21,62 +21,10 @@ const DeactivatedEmployeeTable = ({
 }: DeactivatedEmployeeTableProps) => {
   return (
     <>
-      <style>{`
-        .deactivated-table .ant-table {
-          background: transparent !important;
-        }
-        .deactivated-table .ant-table-thead > tr > th {
-          background: transparent !important;
-          border-bottom: 1px solid ${theme.row.borderColor} !important;
-          color: ${theme.headers.color} !important;
-          font-size: 10px !important;
-          font-weight: 400 !important;
-          text-transform: uppercase !important;
-          letter-spacing: 0.05em !important;
-          padding: 12px 16px !important;
-        }
-        .deactivated-table .ant-table-tbody > tr > td {
-          background: transparent !important;
-          border-bottom: 1px solid ${theme.row.borderColor} !important;
-          color: ${theme.employee.nameColor} !important;
-          font-size: 14px !important;
-          padding: 16px !important;
-        }
-        .deactivated-table .ant-table-tbody > tr:hover > td {
-          background: ${
-            theme.row.hoverBackground || "rgba(108, 121, 239, 0.08)"
-          } !important;
-          transition: background-color 0.2s ease !important;
-        }
-        .deactivated-table .ant-table-container {
-          border: none !important;
-        }
-        .deactivated-table .ant-table-content {
-          background: transparent !important;
-        }
-        .deactivated-table .ant-table-placeholder {
-          background: transparent !important; /* Same as others */
-          border-bottom: 1px solid ${theme.row.borderColor} !important;
-        }
-
-        .deactivated-table .ant-empty-description {
-          color: ${
-            theme.employee.nameColor
-          } !important; /* or another theme color */
-          font-size: 14px !important;
-        }
-        .deactivated-table .ant-empty-image svg path {
-           fill: ${
-             theme.employee.nameColor
-           } !important; /* Or any theme color */
-          opacity: 0.8; /* Optional: make it slightly softer */
-        }
-      `}</style>
-
-      <div className="deactivated-table">
+      <div className="custom-table">
         <Table<Employee>
           dataSource={employees}
-          pagination={false}
+          pagination={{ pageSize: 10 }}
           showHeader={true}
           rowKey="e_id"
         >
