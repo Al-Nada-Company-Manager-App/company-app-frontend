@@ -15,12 +15,6 @@ const Employees = ({ isDark }: EmployeesProps) => {
   const activateEmployee = useActivateEmployee();
   const getAllEmployees = useGetAllEmployees();
 
-
-  const handleEdit = (employeeId: number) => {
-    console.log("Edit employee:", employeeId);
-    // Handle edit logic here
-  };
-
   if (isLoading) {
     return (
       <div className="p-6">
@@ -108,7 +102,6 @@ const Employees = ({ isDark }: EmployeesProps) => {
         <EmployeeTable
           employees={activeEmployees}
           theme={theme}
-          onEdit={handleEdit}
         />
       </div>
       <div

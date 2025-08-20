@@ -55,4 +55,8 @@ export interface EmployeeTheme {
       color: string;
     };
   };
+  modal: {
+    background: string;
+    color: string;
+  };
 }

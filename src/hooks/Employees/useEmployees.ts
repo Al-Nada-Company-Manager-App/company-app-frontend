@@ -152,6 +152,10 @@ const lightEmployeeTheme: EmployeeTheme = {
       color: "#A0AEC0",
     },
   },
+  modal: {
+    background: "rgba(255,255,255,0.85)",
+    color: "#2D3748",
+  },
 };
 
 const darkEmployeeTheme: EmployeeTheme = {
@@ -192,6 +196,10 @@ const darkEmployeeTheme: EmployeeTheme = {
       borderColor: "#FFFFFF",
       color: "#FFFFFF",
     },
+  },
+  modal: {
+    background: "rgba(20, 20, 40, 0.85)",
+    color: "#FFFFFF",
   },
 };
 

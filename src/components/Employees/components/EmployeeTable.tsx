@@ -7,17 +7,20 @@ import EmployeeInfo from "./EmployeeInfo";
 import EmployeeRole from "./EmployeeRole";
 import StatusBadge from "./StatusBadge";
 import EmployeeDate from "./EmployeeDate";
-import ActionButton from "./ActionButton";
+import { useState } from "react";
+import EmployeeDetailModal from "./EmployeeDetailModal";
 
 interface EmployeeTableProps {
   employees: Employee[];
   theme: EmployeeTheme;
-  onEdit?: (employeeId: number) => void;
 }
 
 const { Column } = Table;
 
-const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
+const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
+  const [selectedRow, setSelectedRow] = useState<Employee>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <>
       <style>{`
@@ -78,6 +81,12 @@ const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
           pagination={false}
           showHeader={true}
           rowKey="e_id"
+          onRow={(record) => ({
+            onClick: () => {
+              setSelectedRow(record);
+              setIsModalVisible(true);
+            },
+          })}
         >
           <Column
             title="Employee"
@@ -111,18 +120,14 @@ const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
               <EmployeeDate date={date} theme={theme} />
             )}
           />
-          <Column
-            title=""
-            key="action"
-            render={(_, record: Employee) => (
-              <ActionButton
-                theme={theme}
-                onEdit={() => onEdit?.(record.e_id)}
-              />
-            )}
-          />
         </Table>
       </div>
+      <EmployeeDetailModal
+        modalOpen={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        employee={selectedRow}
+        theme={theme}
+      />
     </>
   );
 };
