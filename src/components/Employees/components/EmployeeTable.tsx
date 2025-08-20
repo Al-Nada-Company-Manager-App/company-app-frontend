@@ -53,6 +53,23 @@ const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
         .custom-table .ant-table-content {
           background: transparent !important;
         }
+        .deactivated-table .ant-table-placeholder {
+          background: transparent !important; /* Same as others */
+          border-bottom: 1px solid ${theme.row.borderColor} !important;
+        }
+
+        .deactivated-table .ant-empty-description {
+          color: ${
+            theme.employee.nameColor
+          } !important; /* or another theme color */
+          font-size: 14px !important;
+        }
+        .deactivated-table .ant-empty-image svg path {
+           fill: ${
+             theme.employee.nameColor
+           } !important; /* Or any theme color */
+          opacity: 0.8; /* Optional: make it slightly softer */
+        }
       `}</style>
 
       <div className="custom-table">

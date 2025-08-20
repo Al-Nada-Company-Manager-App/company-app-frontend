@@ -1,11 +1,10 @@
 import { useThemeContext } from "../../contexts/useThemeContext";
-import EmployeesComponent from "./index";
+import EmployeesComponent from "../Employees";
 
-const EmployeesWrapper = () => {
+const EmployeesPage = () => {
   const { isDark } = useThemeContext();
-
 
   return <EmployeesComponent isDark={isDark} />;
 };
 
-export default EmployeesWrapper;
+export default EmployeesPage;
