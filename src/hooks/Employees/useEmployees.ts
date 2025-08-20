@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { Employee, EmployeeTheme } from "../../types/Employees/employee";
+import { useGetAllEmployees } from "../../queries/Employees/employeeQueries";
 
 const DUMMY_EMPLOYEES: Employee[] = [
   {
@@ -200,20 +201,30 @@ export const useEmployees = (isDark: boolean) => {
     [isDark]
   );
 
+  // Use React Query to fetch employees data
+  const {
+    data: employees = DUMMY_EMPLOYEES,
+    isLoading,
+    error,
+  } = useGetAllEmployees();
+
+
   const activeEmployees = useMemo(
-    () => DUMMY_EMPLOYEES.filter((employee) => employee.e_active),
-    []
+    () => employees.filter((employee) => employee.e_active),
+    [employees]
   );
 
   const deactivatedEmployees = useMemo(
-    () => DUMMY_EMPLOYEES.filter((employee) => !employee.e_active),
-    []
+    () => employees.filter((employee) => !employee.e_active),
+    [employees]
   );
 
   return {
-    employees: DUMMY_EMPLOYEES,
+    employees,
     activeEmployees,
     deactivatedEmployees,
     theme,
+    isLoading,
+    error,
   };
 };

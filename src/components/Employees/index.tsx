@@ -1,18 +1,79 @@
 import { useEmployees } from "../../hooks/Employees/useEmployees";
 import EmployeeTable from "./components/EmployeeTable";
 import DeactivatedEmployeeTable from "./components/DeactivatedEmployeeTable";
+import { Loading, ErrorDisplay } from "../UI";
 
 interface EmployeesProps {
   isDark: boolean;
 }
 
 const Employees = ({ isDark }: EmployeesProps) => {
-  const { employees, theme } = useEmployees(isDark);
+  const { activeEmployees, deactivatedEmployees, theme, isLoading, error } =
+    useEmployees(isDark);
 
   const handleEdit = (employeeId: number) => {
     console.log("Edit employee:", employeeId);
     // Handle edit logic here
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div
+          className="w-full rounded-2xl"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+            minHeight: "400px",
+          }}
+        >
+          <Loading
+            size="large"
+            message="Loading employees..."
+            textStyle={{ color: theme.title.color }}
+            containerStyle={{
+              background: "transparent",
+              minHeight: "400px",
+            }}
+            isDark={isDark}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div
+          className="w-full rounded-2xl"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+            minHeight: "400px",
+          }}
+        >
+          <ErrorDisplay
+            status="error"
+            title="Failed to Load Employees"
+            subTitle="There was an error loading the employee data."
+            message={error.message}
+            onRetry={() => window.location.reload()}
+            showRetryButton={true}
+            showHomeButton={false}
+            isDark={isDark}
+            style={{
+              background: "transparent",
+              minHeight: "400px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -30,42 +91,42 @@ const Employees = ({ isDark }: EmployeesProps) => {
             className="text-lg font-bold"
             style={{ color: theme.title.color }}
           >
-            Employees Table
+            Activated Employees
           </h2>
         </div>
 
         <EmployeeTable
-          employees={employees}
+          employees={activeEmployees}
           theme={theme}
           onEdit={handleEdit}
         />
-
       </div>
-       <div
+      <div
         className="w-full rounded-2xl p-6"
         style={{
           background: theme.container.background,
           backdropFilter: theme.container.backdropFilter,
           minHeight: "auto",
-        }}>
-          {/* Title */}
-          <div className="mb-6">
-            <h2
-              className="text-lg font-bold"
-              style={{ color: theme.title.color }}
-            >
-              DeActivated Employees
-            </h2>
-          </div>
-
-          <DeactivatedEmployeeTable
-            employees={employees.filter((e) => !e.e_active)}
-            theme={theme}
-            onActivate={(employeeId) =>
-              console.log("Activate employee:", employeeId)
-            }
-          />
+        }}
+      >
+        {/* Title */}
+        <div className="mb-6">
+          <h2
+            className="text-lg font-bold"
+            style={{ color: theme.title.color }}
+          >
+            DeActivated Employees
+          </h2>
         </div>
+
+        <DeactivatedEmployeeTable
+          employees={deactivatedEmployees}
+          theme={theme}
+          onActivate={(employeeId) =>
+            console.log("Activate employee:", employeeId)
+          }
+        />
+      </div>
     </div>
   );
 };

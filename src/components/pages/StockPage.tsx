@@ -1,16 +1,16 @@
 import React from "react";
 import { useThemeContext } from "../../contexts/useThemeContext";
 
-const ManagerDashboards: React.FC = () => {
+const StockPage: React.FC = () => {
   const { theme } = useThemeContext();
 
   return (
     <div className="absolute left-0 top-0 w-[1600px] h-[488.5px] flex items-center justify-center">
       <div className="text-2xl font-bold" style={{ color: theme.textColor }}>
-        Dashboard - Welcome to Company Manager
+        Stock Page - Coming Soon
       </div>
     </div>
   );
 };
 
-export default ManagerDashboards;
+export default StockPage;
