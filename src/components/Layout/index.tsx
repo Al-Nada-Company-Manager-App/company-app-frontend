@@ -1,16 +1,14 @@
-import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../contexts/useThemeContext";
 import Sidebar from "../Sidebar";
 import Breadcrumb from "../Breadcrumb";
 
-const Layout: React.FC = () => {
+const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleSidebarItemClick = (itemId: string) => {
-    // Route mapping
     const routeMap: Record<string, string> = {
       dashboard: "/",
       employees: "/employees",
@@ -64,17 +62,14 @@ const Layout: React.FC = () => {
 
       {/* Background layers */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Background with state-driven image */}
         <div
           className="absolute inset-0 scale-110 bg-cover bg-center blur-[30px]"
           style={{ backgroundImage: `url(${theme.backgroundImage})` }}
         />
-        {/* Gradient overlay 1 */}
         <div
           className="absolute inset-0"
           style={{ backgroundImage: theme.gradient1 }}
         />
-        {/* Gradient overlay 2 */}
         <div
           className="absolute inset-0"
           style={{ backgroundImage: theme.gradient2 }}

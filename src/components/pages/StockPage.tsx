@@ -1,7 +1,6 @@
-import React from "react";
 import { useThemeContext } from "../../contexts/useThemeContext";
 
-const StockPage: React.FC = () => {
+const StockPage = () => {
   const { theme } = useThemeContext();
 
   return (

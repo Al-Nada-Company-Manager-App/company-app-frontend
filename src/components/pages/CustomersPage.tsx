@@ -1,7 +1,6 @@
-import React from "react";
 import { useThemeContext } from "../../contexts/useThemeContext";
 
-const CustomersPage: React.FC = () => {
+const CustomersPage = () => {
   const { theme } = useThemeContext();
 
   return (

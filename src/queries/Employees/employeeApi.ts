@@ -63,7 +63,7 @@ export const employeeApi = {
 
   // Delete employee
   deleteEmployee: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/employees/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/employees/delete/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -73,7 +73,7 @@ export const employeeApi = {
 
   // Activate employee
   activateEmployee: async (id: number): Promise<Employee> => {
-    const response = await fetch(`${API_BASE_URL}/employees/${id}/activate`, {
+    const response = await fetch(`${API_BASE_URL}/employees/activate/${id}`, {
       method: "PATCH",
     });
     if (!response.ok) {
@@ -84,7 +84,7 @@ export const employeeApi = {
 
   // Deactivate employee
   deactivateEmployee: async (id: number): Promise<Employee> => {
-    const response = await fetch(`${API_BASE_URL}/employees/${id}/deactivate`, {
+    const response = await fetch(`${API_BASE_URL}/employees/deactivate/${id}`, {
       method: "PATCH",
     });
     if (!response.ok) {

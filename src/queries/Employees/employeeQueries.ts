@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { employeeApi } from "./employeeApi";
 
-// Query keys
 export const employeeKeys = {
   all: ["employees"] as const,
   lists: () => [...employeeKeys.all, "list"] as const,

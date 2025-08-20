@@ -1,7 +1,6 @@
-import React from "react";
 import { useThemeContext } from "../../contexts/useThemeContext";
 
-const ManagerDashboards: React.FC = () => {
+const ManagerDashboards = () => {
   const { theme } = useThemeContext();
 
   return (

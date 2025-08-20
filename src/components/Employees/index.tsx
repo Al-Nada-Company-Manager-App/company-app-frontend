@@ -1,15 +1,20 @@
 import { useEmployees } from "../../hooks/Employees/useEmployees";
 import EmployeeTable from "./components/EmployeeTable";
 import DeactivatedEmployeeTable from "./components/DeactivatedEmployeeTable";
+import { useActivateEmployee,useGetAllEmployees } from "../../queries";
 import { Loading, ErrorDisplay } from "../UI";
 
 interface EmployeesProps {
   isDark: boolean;
 }
 
+
 const Employees = ({ isDark }: EmployeesProps) => {
   const { activeEmployees, deactivatedEmployees, theme, isLoading, error } =
     useEmployees(isDark);
+  const activateEmployee = useActivateEmployee();
+  const getAllEmployees = useGetAllEmployees();
+
 
   const handleEdit = (employeeId: number) => {
     console.log("Edit employee:", employeeId);
@@ -75,6 +80,11 @@ const Employees = ({ isDark }: EmployeesProps) => {
     );
   }
 
+  const handleActivate = async (employeeId: number) => {
+    await activateEmployee.mutateAsync(employeeId);
+    await getAllEmployees.refetch();
+  };
+
   return (
     <div className="p-6">
       <div
@@ -122,9 +132,7 @@ const Employees = ({ isDark }: EmployeesProps) => {
         <DeactivatedEmployeeTable
           employees={deactivatedEmployees}
           theme={theme}
-          onActivate={(employeeId) =>
-            console.log("Activate employee:", employeeId)
-          }
+          onActivate={handleActivate}
         />
       </div>
     </div>

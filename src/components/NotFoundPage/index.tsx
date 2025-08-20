@@ -1,9 +1,8 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ErrorDisplay } from "../UI";
 import { useTheme } from "../../hooks/useTheme";
 
-const NotFoundPage: React.FC = () => {
+const NotFoundPage = () => {
   const navigate = useNavigate();
   const { isDark } = useTheme();
 
