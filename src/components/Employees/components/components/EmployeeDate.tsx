@@ -1,8 +1,8 @@
-import type { EmployeeTheme } from "@src/types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 
 interface EmployeeDateProps {
   date: string;
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 
 const EmployeeDate = ({ date, theme }: EmployeeDateProps) => {

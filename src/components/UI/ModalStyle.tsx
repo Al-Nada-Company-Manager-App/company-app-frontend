@@ -1,6 +1,6 @@
-import type { EmployeeTheme } from "@src/types/Employees/employee";
+import { Theme } from "@src/types/theme";
 
-const ModalStyle = ({ theme }: { theme: EmployeeTheme }) => {
+const ModalStyle = ({ theme }: { theme: Theme }) => {
   return (
     <style>{`
       .custom-modal .ant-modal-content {

@@ -14,8 +14,8 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import type {
   Employee,
-  EmployeeTheme,
 } from "../../../types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useUpdateEmployee } from "@src/queries/Employees"; // Assuming this hook exists for updating employee data
@@ -26,7 +26,7 @@ import { useState, useEffect } from "react";
 interface UpdateModalProps {
   modalOpen: boolean;
   onClose: () => void;
-  theme: EmployeeTheme;
+  theme: Theme;
   employee?: Employee;
 }
 

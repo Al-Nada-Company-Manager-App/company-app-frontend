@@ -1,8 +1,8 @@
 import { Table } from "antd";
 import type {
   Employee,
-  EmployeeTheme,
 } from "../../../types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 import EmployeeInfo from "./components/EmployeeInfo";
 import EmployeeRole from "./components/EmployeeRole";
 import StatusBadge from "./components/StatusBadge";
@@ -12,7 +12,7 @@ import EmployeeDetailModal from "./EmployeeDetailModal";
 
 interface EmployeeTableProps {
   employees: Employee[];
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 
 const { Column } = Table;

@@ -1,9 +1,10 @@
-import type { Employee, EmployeeTheme } from "@src/types/Employees/employee";
+import type { Employee } from "@src/types/Employees/employee";
 import EmployeeAvatar from "./EmployeeAvatar";
+import type { Theme } from "@src/types/theme";
 
 interface EmployeeInfoProps {
   employee: Employee;
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 
 const EmployeeInfo = ({ employee, theme }: EmployeeInfoProps) => {

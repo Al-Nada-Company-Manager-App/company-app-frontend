@@ -1,6 +1,6 @@
-import type { EmployeeTheme } from "@src/types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 
-const TableStyle = ({ theme }: { theme: EmployeeTheme }) => {
+const TableStyle = ({ theme }: { theme: Theme }) => {
   return (
     <style>{`
         .custom-table .ant-table {
@@ -59,14 +59,19 @@ const TableStyle = ({ theme }: { theme: EmployeeTheme }) => {
         }
         .custom-table .ant-pagination-item {
           background: transparent !important;
-          color: ${theme.employee.nameColor || "#222"} !important;
+          color: ${theme.employee.nameColor || "#FFF"} !important;
           border-radius: 6px !important;
           border: 1px solid ${theme.row.borderColor || "#d9d9d9"} !important;
+        }
+        .custom-table .ant-pagination-item  a {
+          background: transparent !important;
+          color: ${theme.employee.nameColor || "#FFF"} !important;
         }
         .custom-table .ant-pagination-item-active {
           color: ${theme.button.color || "#fff"} !important;
           border-color: ${theme.button.background || "#6C79F7"} !important;
         }
+        
         .custom-table .ant-pagination-prev,
         .custom-table .ant-pagination-next {
           background: transparent !important;

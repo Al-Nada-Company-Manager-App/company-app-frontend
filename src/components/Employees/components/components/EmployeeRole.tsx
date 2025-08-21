@@ -1,8 +1,9 @@
-import type { Employee, EmployeeTheme } from "@src/types/Employees/employee";
+import type { Employee } from "@src/types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 
 interface EmployeeRoleProps {
   employee: Employee;
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 
 const EmployeeRole = ({ employee, theme }: EmployeeRoleProps) => {

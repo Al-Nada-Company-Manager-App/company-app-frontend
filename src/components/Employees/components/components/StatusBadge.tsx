@@ -1,7 +1,7 @@
-import type { EmployeeTheme } from "@src/types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 
 interface StatusBadgeProps {
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 
 const StatusBadge = ({theme }: StatusBadgeProps) => {
