@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import ModalStyle from "./ModalStyle";
-import type {EmployeeTheme} from "../../types/Employees/employee"; 
+import type { Theme } from "@src/types/theme";
 
 interface ConfirmProps {
   type?: "default" | "primary" | "dashed" | "link" | "text";
@@ -10,7 +10,7 @@ interface ConfirmProps {
   onOk?: () => void;
   onCancel?: () => void;
   className?: string;
-  theme: EmployeeTheme;
+  theme: Theme;
 }
 const Confirm = ({ type, isdanger, btnTitle ,onOk,onCancel, className , theme}: ConfirmProps) => {
   const [modal, contextHolder] = Modal.useModal();

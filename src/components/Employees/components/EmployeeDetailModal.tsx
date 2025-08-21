@@ -1,9 +1,9 @@
 import { Modal, Descriptions, Tag, Row, Col, Image, Button } from "antd";
 import { useState } from "react";
 import type {
-  Employee,
-  EmployeeTheme,
+  Employee
 } from "../../../types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 import { calculateAge } from "@src/utils/calculateAge";
 
 import ConfirmBtn from "@src/components/UI/confirm";
@@ -18,7 +18,7 @@ import UpdatePermissionsModal from "./UpdatePermissions";
 interface DetailModal {
   modalOpen: boolean;
   onClose: () => void;
-  theme: EmployeeTheme;
+  theme: Theme;
   employee?: Employee;
 }
 
