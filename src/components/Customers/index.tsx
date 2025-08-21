@@ -123,7 +123,7 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               Add New Customer
             </Button>
           </div>
-          <CustomerTable Customers={customers ?? []} theme={theme} />
+          <CustomerTable customers={customers ?? []} theme={theme} />
         </div>
       </div>
     </>

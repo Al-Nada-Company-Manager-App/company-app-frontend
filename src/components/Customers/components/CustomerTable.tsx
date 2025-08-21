@@ -6,13 +6,13 @@ import CustomerDetailModal from "./CustomerDetailModal";
 import CustomerInfo from "./components/CustomerInfo";
 
 interface CustomerTableProps {
-  Customers: Customer[];
+  customers: Customer[];
   theme: Theme;
 }
 
 const { Column } = Table;
 
-const CustomerTable = ({ Customers, theme }: CustomerTableProps) => {
+const CustomerTable = ({ customers, theme }: CustomerTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Customer>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -20,7 +20,7 @@ const CustomerTable = ({ Customers, theme }: CustomerTableProps) => {
     <>
       <div className="custom-table">
         <Table<Customer>
-          dataSource={Customers}
+          dataSource={customers}
           showHeader={true}
           pagination={{ pageSize: 10 }}
           rowKey="c_id"
@@ -35,9 +35,9 @@ const CustomerTable = ({ Customers, theme }: CustomerTableProps) => {
             title="Employee"
             dataIndex="c_name"
             key="customer"
-            render={(_, record: Customer) =>
-             <CustomerInfo customer={record} theme={theme} />
-            }
+            render={(_, record: Customer) => (
+              <CustomerInfo customer={record} theme={theme} />
+            )}
           />
           <Column title="Address" dataIndex="c_address" key="address" />
           <Column title="City" dataIndex="c_city" key="city" />
@@ -47,12 +47,12 @@ const CustomerTable = ({ Customers, theme }: CustomerTableProps) => {
           <Column title="Phone" dataIndex="c_phone" key="phone" />
         </Table>
       </div>
-      {/* <CustomerDetailModal
+      <CustomerDetailModal
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        Customer={selectedRow}
+        customer={selectedRow}
         theme={theme}
-      /> */}
+      />
     </>
   );
 };
