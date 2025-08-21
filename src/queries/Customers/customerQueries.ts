@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { customerApi } from "./customerApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Customer } from "@src/types/Customers/customer";
+import type { Customer,CustomerSales } from "@src/types/Customers/customer";
 
 export const customerKeys = {
     all: ["customers"] as const,

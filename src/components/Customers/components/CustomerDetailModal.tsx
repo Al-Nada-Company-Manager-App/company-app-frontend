@@ -3,10 +3,9 @@ import type { Theme } from "@src/types/theme";
 import type { Customer } from "@src/types/Customers/customer";
 import ConfirmBtn from "@src/components/UI/confirm";
 import ModalStyle from "@src/components/UI/ModalStyle";
+import CustomerSalesTable from "./components/CustomerSalesTable";
 
-import {
-  useDeleteCustomer
-} from "@src/queries/Customers";
+import { useDeleteCustomer } from "@src/queries/Customers";
 
 import { useThemeContext } from "@src/contexts/useThemeContext";
 
@@ -35,7 +34,7 @@ const CustomerDetailModal = ({
       <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
-        title="Cusomer Details"
+        title="Customer Details"
         open={modalOpen}
         onCancel={onClose}
         footer={
@@ -90,7 +89,7 @@ const CustomerDetailModal = ({
           </div>
         }
         centered
-        width={700}
+        style={{ minWidth: 1400, width: "auto", maxWidth: "95vw" }}
       >
         <Row gutter={[16, 16]}>
           <Col span={8}>
@@ -133,6 +132,7 @@ const CustomerDetailModal = ({
               </Descriptions.Item>
             </Descriptions>
           </Col>
+          <CustomerSalesTable customerId={customer?.c_id || -1} theme={theme} />
         </Row>
       </Modal>
       {/* <UpdatePermissionsModal
