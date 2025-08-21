@@ -1,118 +1,20 @@
 import { useMemo } from "react";
-import type { Employee, EmployeeTheme } from "../../types/Employees/employee";
-
-const DUMMY_EMPLOYEES: Employee[] = [
-  {
-    e_id: 1,
-    f_name: "Esthera",
-    l_name: "Jackson",
-    birth_date: "1990-01-15T00:00:00.000Z",
-    salary: 75000,
-    e_role: "Manager",
-    e_photo: "1.jpg",
-    e_address: "123 Main St",
-    e_email: "esthera@simmmple.com",
-    e_phone: "+1234567890",
-    e_city: "New York",
-    e_country: "USA",
-    e_zipcode: "10001",
-    e_username: "esthera",
-    e_gender: "female",
-    e_active: true,
-  },
-  {
-    e_id: 2,
-    f_name: "Alexa",
-    l_name: "Liras",
-    birth_date: "1985-03-22T00:00:00.000Z",
-    salary: 65000,
-    e_role: "Programmer",
-    e_photo: "2.jpg",
-    e_address: "456 Oak Ave",
-    e_email: "alexa@simmmple.com",
-    e_phone: "+1234567891",
-    e_city: "Los Angeles",
-    e_country: "USA",
-    e_zipcode: "90001",
-    e_username: "alexa",
-    e_gender: "female",
-    e_active: false,
-  },
-  {
-    e_id: 3,
-    f_name: "Laurent",
-    l_name: "Michael",
-    birth_date: "1988-07-10T00:00:00.000Z",
-    salary: 85000,
-    e_role: "Executive",
-    e_photo: "3.jpg",
-    e_address: "789 Pine St",
-    e_email: "laurent@simmmple.com",
-    e_phone: "+1234567892",
-    e_city: "Chicago",
-    e_country: "USA",
-    e_zipcode: "60001",
-    e_username: "laurent",
-    e_gender: "male",
-    e_active: true,
-  },
-  {
-    e_id: 4,
-    f_name: "Freduardo",
-    l_name: "Hill",
-    birth_date: "1992-11-05T00:00:00.000Z",
-    salary: 72000,
-    e_role: "Manager",
-    e_photo: "4.jpg",
-    e_address: "321 Elm St",
-    e_email: "freduardo@simmmple.com",
-    e_phone: "+1234567893",
-    e_city: "Miami",
-    e_country: "USA",
-    e_zipcode: "33001",
-    e_username: "freduardo",
-    e_gender: "male",
-    e_active: true,
-  },
-  {
-    e_id: 5,
-    f_name: "Daniel",
-    l_name: "Thomas",
-    birth_date: "1987-09-18T00:00:00.000Z",
-    salary: 68000,
-    e_role: "Programmer",
-    e_photo: "5.jpg",
-    e_address: "654 Maple Ave",
-    e_email: "daniel@simmmple.com",
-    e_phone: "+1234567894",
-    e_city: "Seattle",
-    e_country: "USA",
-    e_zipcode: "98001",
-    e_username: "daniel",
-    e_gender: "male",
-    e_active: false,
-  },
-  {
-    e_id: 6,
-    f_name: "Mark",
-    l_name: "Wilson",
-    birth_date: "1991-12-25T00:00:00.000Z",
-    salary: 70000,
-    e_role: "Designer",
-    e_photo: "6.jpg",
-    e_address: "987 Cedar St",
-    e_email: "mark@simmmple.com",
-    e_phone: "+1234567895",
-    e_city: "Portland",
-    e_country: "USA",
-    e_zipcode: "97001",
-    e_username: "mark",
-    e_gender: "male",
-    e_active: false,
-  },
-];
-
+import type { Employee, EmployeeTheme } from "@src/types/Employees/employee";
+import { useGetAllEmployees } from "@src/queries/Employees/employeeQueries";
 const lightEmployeeTheme: EmployeeTheme = {
+  button: {
+    background: "#6C79F7",
+    color: "#fff",
+    hoverBackground: "#5A67D8",
+    hoverColor: "#fff",
+    borderRadius: "5px",
+    boxShadow: "0 4px 16px rgba(108,121,239,0.12)",
+    fontWeight: "550",
+    fontSize: "16px",
+    padding: "12px 24px",
+    border: "none",
+    transition: "background 0.2s, color 0.2s",
+  },
   container: {
     background:
       "linear-gradient(126.97deg, rgba(255, 255, 255, 0.9) 28.26%, rgba(240, 240, 240, 0.8) 91.2%)",
@@ -127,6 +29,7 @@ const lightEmployeeTheme: EmployeeTheme = {
   },
   row: {
     borderColor: "#E2E8F0",
+    hoverBackground: "rgba(108, 121, 239, 0.08)",
   },
   employee: {
     nameColor: "#2D3748",
@@ -150,9 +53,40 @@ const lightEmployeeTheme: EmployeeTheme = {
       color: "#A0AEC0",
     },
   },
+  modal: {
+    background: "rgba(255, 255, 255, 0.95)",
+    color: "#2D3748",
+    contentColor: "#4A5568",
+    iconColor: "#ED8936",
+    // Cancel button
+    cancelButtonBg: "transparent",
+    cancelButtonColor: "#4A5568",
+    cancelButtonBorder: "#E2E8F0",
+    cancelButtonHoverBg: "#F7FAFC",
+    cancelButtonHoverColor: "#2D3748",
+    cancelButtonHoverBorder: "#CBD5E0",
+    // Confirm button
+    confirmButtonBg: "#6C79F7",
+    confirmButtonColor: "#FFFFFF",
+    confirmButtonHoverBg: "#5A67D8",
+    confirmButtonHoverColor: "#FFFFFF",
+  },
 };
 
 const darkEmployeeTheme: EmployeeTheme = {
+  button: {
+    background: "#6C79F7",
+    color: "#fff",
+    hoverBackground: "#5A67D8",
+    hoverColor: "#fff",
+    borderRadius: "5px",
+    boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
+    fontWeight: "600",
+    fontSize: "16px",
+    padding: "12px 24px",
+    border: "none",
+    transition: "background 0.2s, color 0.2s",
+  },
   container: {
     background:
       "linear-gradient(126.97deg, rgba(6, 11, 40, 0.74) 28.26%, rgba(10, 14, 35, 0.71) 91.2%)",
@@ -167,6 +101,7 @@ const darkEmployeeTheme: EmployeeTheme = {
   },
   row: {
     borderColor: "#56577A",
+    hoverBackground: "rgba(255, 255, 255, 0.05)",
   },
   employee: {
     nameColor: "#FFFFFF",
@@ -190,6 +125,24 @@ const darkEmployeeTheme: EmployeeTheme = {
       color: "#FFFFFF",
     },
   },
+  modal: {
+    background: "rgba(16, 20, 50, 0.95)",
+    color: "#FFFFFF",
+    contentColor: "#CBD5E0",
+    iconColor: "#F6AD55",
+    // Cancel button
+    cancelButtonBg: "transparent",
+    cancelButtonColor: "#CBD5E0",
+    cancelButtonBorder: "#56577A",
+    cancelButtonHoverBg: "rgba(255, 255, 255, 0.1)",
+    cancelButtonHoverColor: "#FFFFFF",
+    cancelButtonHoverBorder: "#718096",
+    // Confirm button
+    confirmButtonBg: "#6C79F7",
+    confirmButtonColor: "#FFFFFF",
+    confirmButtonHoverBg: "#5A67D8",
+    confirmButtonHoverColor: "#FFFFFF",
+  },
 };
 
 export const useEmployees = (isDark: boolean) => {
@@ -198,8 +151,25 @@ export const useEmployees = (isDark: boolean) => {
     [isDark]
   );
 
+  // Use React Query to fetch employees data
+  const { data: employees, isLoading, error } = useGetAllEmployees();
+
+  const activeEmployees = useMemo(
+    () => (employees ?? []).filter((employee: Employee) => employee.e_active),
+    [employees]
+  );
+
+  const deactivatedEmployees = useMemo(
+    () => (employees ?? []).filter((employee: Employee) => !employee.e_active),
+    [employees]
+  );
+
   return {
-    employees: DUMMY_EMPLOYEES,
+    employees,
+    activeEmployees,
+    deactivatedEmployees,
     theme,
+    isLoading,
+    error,
   };
 };

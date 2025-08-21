@@ -3,61 +3,38 @@ import type {
   Employee,
   EmployeeTheme,
 } from "../../../types/Employees/employee";
-import EmployeeInfo from "./EmployeeInfo";
-import EmployeeRole from "./EmployeeRole";
-import StatusBadge from "./StatusBadge";
-import EmployeeDate from "./EmployeeDate";
-import ActionButton from "./ActionButton";
+import EmployeeInfo from "./components/EmployeeInfo";
+import EmployeeRole from "./components/EmployeeRole";
+import StatusBadge from "./components/StatusBadge";
+import EmployeeDate from "./components/EmployeeDate";
+import { useState } from "react";
+import EmployeeDetailModal from "./EmployeeDetailModal";
 
 interface EmployeeTableProps {
   employees: Employee[];
   theme: EmployeeTheme;
-  onEdit?: (employeeId: number) => void;
 }
 
 const { Column } = Table;
 
-const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
+const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
+  const [selectedRow, setSelectedRow] = useState<Employee>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <>
-      <style>{`
-        .custom-table .ant-table {
-          background: transparent !important;
-        }
-        .custom-table .ant-table-thead > tr > th {
-          background: transparent !important;
-          border-bottom: 1px solid ${theme.row.borderColor} !important;
-          color: ${theme.headers.color} !important;
-          font-size: 10px !important;
-          font-weight: 400 !important;
-          text-transform: uppercase !important;
-          letter-spacing: 0.05em !important;
-          padding: 12px 16px !important;
-        }
-        .custom-table .ant-table-tbody > tr > td {
-          background: transparent !important;
-          border-bottom: 1px solid ${theme.row.borderColor} !important;
-          color: ${theme.employee.nameColor} !important;
-          font-size: 14px !important;
-          padding: 16px !important;
-        }
-        .custom-table .ant-table-tbody > tr:hover > td {
-          background: rgba(255, 255, 255, 0.05) !important;
-        }
-        .custom-table .ant-table-container {
-          border: none !important;
-        }
-        .custom-table .ant-table-content {
-          background: transparent !important;
-        }
-      `}</style>
-
       <div className="custom-table">
         <Table<Employee>
           dataSource={employees}
-          pagination={false}
           showHeader={true}
+          pagination={{ pageSize: 10 }}
           rowKey="e_id"
+          onRow={(record) => ({
+            onClick: () => {
+              setSelectedRow(record);
+              setIsModalVisible(true);
+            },
+          })}
         >
           <Column
             title="Employee"
@@ -79,9 +56,7 @@ const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
             title="STATUS"
             dataIndex="e_active"
             key="status"
-            render={(active: boolean) => (
-              <StatusBadge isActive={active} theme={theme} />
-            )}
+            render={() => <StatusBadge theme={theme} />}
           />
           <Column
             title="EMPLOYED"
@@ -91,18 +66,14 @@ const EmployeeTable = ({ employees, theme, onEdit }: EmployeeTableProps) => {
               <EmployeeDate date={date} theme={theme} />
             )}
           />
-          <Column
-            title=""
-            key="action"
-            render={(_, record: Employee) => (
-              <ActionButton
-                theme={theme}
-                onEdit={() => onEdit?.(record.e_id)}
-              />
-            )}
-          />
         </Table>
       </div>
+      <EmployeeDetailModal
+        modalOpen={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        employee={selectedRow}
+        theme={theme}
+      />
     </>
   );
 };
