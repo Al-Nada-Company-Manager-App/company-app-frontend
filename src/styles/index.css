@@ -51,3 +51,82 @@
 .theme-transition * {
   transition: background-color 0.25s, color 0.25s, border-color 0.25s;
 }
+
+/* Add to your global styles */
+.ant-message .ant-message-notice {
+  animation: messageSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes messageSlideIn {
+  from {
+    transform: translateY(-30px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.ant-message {
+  position: fixed !important;
+  top: 100px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width:auto !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+}
+
+.ant-message .ant-message-notice {
+  pointer-events: auto !important;
+  z-index: 100000 !important;
+  animation: messageSlideInGlass 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  margin-bottom: 16px;
+}
+
+.ant-message .ant-message-notice-content {
+  border-radius: 20px !important;
+  overflow: hidden;
+  position: relative;
+  background: transparent !important;
+
+}
+
+/* Glass morphism entrance animation */
+@keyframes messageSlideInGlass {
+  from {
+    transform: translateY(-40px) scale(0.9);
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    backdrop-filter: blur(60px);
+  }
+}
+
+/* Subtle hover effect */
+.ant-message .ant-message-notice:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+/* Remove default Ant Design styling that might interfere */
+.ant-message .ant-message-notice .ant-message-success,
+.ant-message .ant-message-notice .ant-message-error,
+.ant-message .ant-message-notice .ant-message-warning {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure text is readable */
+.ant-message .ant-message-notice .ant-message-custom-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+}

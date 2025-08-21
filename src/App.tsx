@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Layout from "./components/Layout";
-import ManagerDashboards from "./components/dashboards/managerDashboards";
-import EmployeesPage from "./components/pages/EmployeesPage";
-import CustomersPage from "./components/pages/CustomersPage";
-import StockPage from "./components/pages/StockPage";
-import SalesPage from "./components/pages/SalesPage";
-import PurchasesPage from "./components/pages/PurchasesPage";
-import SuppliersPage from "./components/pages/SuppliersPage";
-import NotFoundPage from "./components/NotFoundPage";
+import { ThemeProvider } from "@src/contexts/ThemeContext";
+import Layout from "@src/components/Layout";
+import ManagerDashboards from "@src/components/dashboards/managerDashboards";
+import EmployeesPage from "@src/components/pages/EmployeesPage";
+import CustomersPage from "@src/components/pages/CustomersPage";
+import StockPage from "@src/components/pages/StockPage";
+import SalesPage from "@src/components/pages/SalesPage";
+import PurchasesPage from "@src/components/pages/PurchasesPage";
+import SuppliersPage from "@src/components/pages/SuppliersPage";
+import NotFoundPage from "@src/components/NotFoundPage";
 
 function App() {
   return (

@@ -18,6 +18,19 @@ export interface Employee {
 }
 
 export interface EmployeeTheme {
+  button: {
+    background: string;
+    color: string;
+    hoverBackground: string;
+    hoverColor: string;
+    borderRadius: string;
+    boxShadow: string;
+    fontWeight: string;
+    fontSize: string;
+    padding: string;
+    border: string;
+    transition: string;
+  };
   container: {
     background: string;
     borderRadius: string;
@@ -55,8 +68,75 @@ export interface EmployeeTheme {
       color: string;
     };
   };
-  modal: {
-    background: string;
-    color: string;
+  modal?: {
+    background?: string;
+    color?: string;
+    contentColor?: string;
+    iconColor?: string;
+
+    // Cancel button styles
+    cancelButtonBg?: string;
+    cancelButtonColor?: string;
+    cancelButtonBorder?: string;
+    cancelButtonHoverBg?: string;
+    cancelButtonHoverColor?: string;
+    cancelButtonHoverBorder?: string;
+
+    // Confirm button styles
+    confirmButtonBg?: string;
+    confirmButtonColor?: string;
+    confirmButtonHoverBg?: string;
+    confirmButtonHoverColor?: string;
   };
 }
+
+
+export interface EmployeePermissions {
+  users_page: boolean;
+  users_add: boolean;
+  users_edit: boolean;
+  users_delete: boolean;
+  users_view: boolean;
+  products_page: boolean;
+  products_add: boolean;
+  products_edit: boolean;
+  products_delete: boolean;
+  products_view: boolean;
+  repaire_page: boolean;
+  repaire_add: boolean;
+  repaire_edit: boolean;
+  repaire_delete: boolean;
+  repaire_view: boolean;
+  repaire_adddum: boolean;
+  sales_page: boolean;
+  sales_add: boolean;
+  sales_edit: boolean;
+  sales_delete: boolean;
+  sales_view: boolean;
+  price_page: boolean;
+  price_add: boolean;
+  price_edit: boolean;
+  price_delete: boolean;
+  price_view: boolean;
+  debts_page: boolean;
+  debts_add: boolean;
+  debts_edit: boolean;
+  debts_delete: boolean;
+  debts_view: boolean;
+  purchase_page: boolean;
+  purchase_add: boolean;
+  purchase_edit: boolean;
+  purchase_delete: boolean;
+  purchase_view: boolean;
+  customer_page: boolean;
+  customer_add: boolean;
+  customer_edit: boolean;
+  customer_delete: boolean;
+  customer_view: boolean;
+  supplier_page: boolean;
+  supplier_add: boolean;
+  supplier_edit: boolean;
+  supplier_delete: boolean;
+  supplier_view: boolean;
+}
+

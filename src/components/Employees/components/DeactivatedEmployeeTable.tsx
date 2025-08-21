@@ -1,10 +1,7 @@
 import { Table } from "antd";
 import * as Icons from "lucide-react";
-import type {
-  Employee,
-  EmployeeTheme,
-} from "../../../types/Employees/employee";
-import EmployeeInfo from "./EmployeeInfo";
+import type { Employee, EmployeeTheme } from "@src/types/Employees/employee";
+import EmployeeInfo from "./components/EmployeeInfo";
 
 interface DeactivatedEmployeeTableProps {
   employees: Employee[];

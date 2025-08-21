@@ -1,4 +1,4 @@
-import { useSidebar } from "../../../hooks/Sidebar/useSidebar";
+import { useSidebar } from "@src/hooks/Sidebar/useSidebar";
 import * as Icons from "lucide-react";
 
 interface HelpSectionProps {

@@ -1,5 +1,5 @@
-import { useSidebar } from "../../hooks/Sidebar/useSidebar";
-import type { SidebarProps } from "../../types/Sidebar/sidebar";
+import { useSidebar } from "@src/hooks/Sidebar/useSidebar";
+import type { SidebarProps } from "@src/types/Sidebar/sidebar";
 
 import HelpSection from "./components/HelpSection";
 import NavigationMenu from "./components/NavigationMenu";

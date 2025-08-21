@@ -3,10 +3,10 @@ import type {
   Employee,
   EmployeeTheme,
 } from "../../../types/Employees/employee";
-import EmployeeInfo from "./EmployeeInfo";
-import EmployeeRole from "./EmployeeRole";
-import StatusBadge from "./StatusBadge";
-import EmployeeDate from "./EmployeeDate";
+import EmployeeInfo from "./components/EmployeeInfo";
+import EmployeeRole from "./components/EmployeeRole";
+import StatusBadge from "./components/StatusBadge";
+import EmployeeDate from "./components/EmployeeDate";
 import { useState } from "react";
 import EmployeeDetailModal from "./EmployeeDetailModal";
 
@@ -56,9 +56,7 @@ const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
             title="STATUS"
             dataIndex="e_active"
             key="status"
-            render={() => (
-              <StatusBadge theme={theme} />
-            )}
+            render={() => <StatusBadge theme={theme} />}
           />
           <Column
             title="EMPLOYED"

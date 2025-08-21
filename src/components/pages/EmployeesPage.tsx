@@ -1,5 +1,5 @@
-import { useThemeContext } from "../../contexts/useThemeContext";
-import EmployeesComponent from "../Employees";
+import { useThemeContext } from "@src/contexts/useThemeContext";
+import EmployeesComponent from "@src/components/Employees";
 
 const EmployeesPage = () => {
   const { isDark } = useThemeContext();

@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useThemeContext } from "../../contexts/useThemeContext";
-import Sidebar from "../Sidebar";
-import Breadcrumb from "../Breadcrumb";
+import { useThemeContext } from "@src/contexts/useThemeContext";
+import Sidebar from "@src/components/Sidebar";
+import Breadcrumb from "@src/components/Breadcrumb";
 
 const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();

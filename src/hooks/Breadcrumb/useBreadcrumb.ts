@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 
-import type { BreadcrumbTheme } from "../../types/Breadcrumb/breadcrumb";
+import type { BreadcrumbTheme } from "@src/types/Breadcrumb/breadcrumb";
 
-import type { UserMenuItem } from "../../types/Breadcrumb/breadcrumb";
+import type { UserMenuItem } from "@src/types/Breadcrumb/breadcrumb";
 
 export const USER_MENU_ITEMS: UserMenuItem[] = [
   {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { SidebarItem, SidebarTheme } from "../../types/Sidebar/sidebar";
+import type { SidebarItem, SidebarTheme } from "@src/types/Sidebar/sidebar";
 
 export const getSidebarItems = (currentPath: string): SidebarItem[] => [
   {

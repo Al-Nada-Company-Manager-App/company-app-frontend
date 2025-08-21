@@ -1,4 +1,4 @@
-import type { EmployeeTheme } from "../../../types/Employees/employee";
+import type { EmployeeTheme } from "@src/types/Employees/employee";
 
 interface StatusBadgeProps {
   theme: EmployeeTheme;

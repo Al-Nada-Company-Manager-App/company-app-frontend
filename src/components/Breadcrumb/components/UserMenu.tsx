@@ -2,7 +2,7 @@ import * as Icons from "lucide-react";
 import type {
   BreadcrumbTheme,
   UserMenuItem,
-} from "../../../types/Breadcrumb/breadcrumb";
+} from "@src/types/Breadcrumb/breadcrumb";
 
 interface UserMenuProps {
   theme: BreadcrumbTheme;

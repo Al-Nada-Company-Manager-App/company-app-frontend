@@ -1,4 +1,4 @@
-import type { Employee, EmployeeTheme } from "../../../types/Employees/employee";
+import type { Employee, EmployeeTheme } from "@src/types/Employees/employee";
 
 interface EmployeeRoleProps {
   employee: Employee;

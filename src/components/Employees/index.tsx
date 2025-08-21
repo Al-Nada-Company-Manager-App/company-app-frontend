@@ -1,20 +1,18 @@
-import { useEmployees } from "../../hooks/Employees/useEmployees";
+import { useEmployees } from "@src/hooks/Employees/useEmployees";
 import EmployeeTable from "./components/EmployeeTable";
 import DeactivatedEmployeeTable from "./components/DeactivatedEmployeeTable";
-import { useActivateEmployee,useGetAllEmployees } from "../../queries";
-import { Loading, ErrorDisplay } from "../UI";
+import { useActivateEmployee } from "@src/queries";
+import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
 
 interface EmployeesProps {
   isDark: boolean;
 }
 
-
 const Employees = ({ isDark }: EmployeesProps) => {
   const { activeEmployees, deactivatedEmployees, theme, isLoading, error } =
     useEmployees(isDark);
-  const activateEmployee = useActivateEmployee();
-  const getAllEmployees = useGetAllEmployees();
+  const activateEmployee = useActivateEmployee(isDark);
 
   if (isLoading) {
     return (
@@ -77,9 +75,7 @@ const Employees = ({ isDark }: EmployeesProps) => {
 
   const handleActivate = async (employeeId: number) => {
     await activateEmployee.mutateAsync(employeeId);
-    await getAllEmployees.refetch();
   };
-
 
   return (
     <>
@@ -93,8 +89,8 @@ const Employees = ({ isDark }: EmployeesProps) => {
             minHeight: "auto",
           }}
         >
-          {/* Title */}
-          <div className="mb-6">
+          {/* Title and Add Button Row */}
+          <div className="mb-6 flex items-center justify-between">
             <h2
               className="text-lg font-bold"
               style={{ color: theme.title.color }}
@@ -102,7 +98,6 @@ const Employees = ({ isDark }: EmployeesProps) => {
               Activated Employees
             </h2>
           </div>
-
           <EmployeeTable employees={activeEmployees} theme={theme} />
         </div>
         <div
@@ -135,3 +130,36 @@ const Employees = ({ isDark }: EmployeesProps) => {
 };
 
 export default Employees;
+
+            // <Button
+            //   type="primary"
+            //   className="ml-4 font-semibold border-none"
+            //   style={{
+            //     background: theme.button?.background || "#6C79F7",
+            //     color: theme.button?.color || "#fff",
+            //     boxShadow: theme.button?.boxShadow,
+            //     borderRadius: theme.button?.borderRadius,
+            //     fontWeight: theme.button?.fontWeight,
+            //     fontSize: theme.button?.fontSize,
+            //     padding: theme.button?.padding,
+            //     transition: theme.button?.transition,
+            //     border: theme.button?.border,
+            //   }}
+            //   onMouseOver={(e) => {
+            //     if (theme.button) {
+            //       e.currentTarget.style.background =
+            //         theme.button.hoverBackground || "#5A67D8";
+            //       e.currentTarget.style.color =
+            //         theme.button.hoverColor || "#fff";
+            //     }
+            //   }}
+            //   onMouseOut={(e) => {
+            //     if (theme.button) {
+            //       e.currentTarget.style.background =
+            //         theme.button.background || "#6C79F7";
+            //       e.currentTarget.style.color = theme.button.color || "#fff";
+            //     }
+            //   }}
+            // >
+            //   Add New Employee
+            // </Button>

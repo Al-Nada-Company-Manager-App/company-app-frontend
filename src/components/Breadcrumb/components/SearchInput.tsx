@@ -1,5 +1,5 @@
 import * as Icons from "lucide-react";
-import type { BreadcrumbTheme } from "../../../types/Breadcrumb/breadcrumb";
+import type { BreadcrumbTheme } from "@src/types/Breadcrumb/breadcrumb";
 
 interface SearchInputProps {
   theme: BreadcrumbTheme;

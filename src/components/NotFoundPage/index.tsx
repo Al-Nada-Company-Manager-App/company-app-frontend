@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { ErrorDisplay } from "../UI";
-import { useTheme } from "../../hooks/useTheme";
+import { ErrorDisplay } from "@src/components/UI";
+import { useTheme } from "@src/hooks/useTheme";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useBreadcrumb } from "../../hooks/Breadcrumb/useBreadcrumb";
+import { useBreadcrumb } from "@src/hooks/Breadcrumb/useBreadcrumb";
 import SearchInput from "./components/SearchInput";
 import UserMenu from "./components/UserMenu";
 import { useState, useEffect } from "react";

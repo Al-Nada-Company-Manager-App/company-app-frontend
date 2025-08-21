@@ -1,13 +1,19 @@
 import { Modal, Descriptions, Tag, Row, Col, Image, Button } from "antd";
+import { useState } from "react";
 import type {
   Employee,
   EmployeeTheme,
 } from "../../../types/Employees/employee";
-import { calculateAge } from "../../../utils/calculateAge";
+import { calculateAge } from "@src/utils/calculateAge";
 
-import ConfirmBtn from "../../UI/confirm";
-import ModalStyle from "../../UI/ModalStyle";
-import  {useDeleteEmployee,useGetAllEmployees} from "../../../queries/Employees";
+import ConfirmBtn from "@src/components/UI/confirm";
+import ModalStyle from "@src/components/UI/ModalStyle";
+import {
+  useDeleteEmployee,
+  useDeactivateEmployee,
+} from "@src/queries/Employees";
+import { useThemeContext } from "@src/contexts/useThemeContext";
+import UpdatePermissionsModal from "./UpdatePermissions";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -22,27 +28,85 @@ const EmployeeDetailModal = ({
   employee,
   theme,
 }: DetailModal) => {
-      const deleteEmployee = useDeleteEmployee();
-      const getAllEmployees = useGetAllEmployees();
+
+  const { isDark } = useThemeContext();
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const deleteEmployee = useDeleteEmployee(isDark);
+
+  const deactivateEmployee = useDeactivateEmployee(isDark);
     
  const handleDelete = async (employeeId: number) => {
     if (employeeId === -1) return;
     await deleteEmployee.mutateAsync(employeeId);
-    await getAllEmployees.refetch();
  }
+ const handleDeactivate = async (employeeId: number) => {
+    if (employeeId === -1) return;
+    await deactivateEmployee.mutateAsync(employeeId);
+  }
    
   return (
     <>
       <ModalStyle theme={theme} />
       <Modal
-        className="custom-employee-modal"
+        className="custom-modal"
         title="Employee Details"
         open={modalOpen}
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <Button type="primary" className="mr-2 px-6 py-2 mb-5 ">
-              Edit
+            <Button
+              type="primary"
+              danger
+              className="mr-2 px-6 py-2 mb-5"
+              style={{
+                color: theme.button?.color || "#fff",
+                boxShadow: theme.button?.boxShadow,
+                borderRadius: theme.button?.borderRadius,
+                fontWeight: theme.button?.fontWeight,
+                fontSize: theme.button?.fontSize,
+                padding: theme.button?.padding,
+                transition: theme.button?.transition,
+                border: theme.button?.border,
+              }}
+              onClick={() => {
+                handleDeactivate(employee?.e_id || -1);
+                onClose();
+              }}
+            >
+              Deactivate
+            </Button>
+            <Button
+              type="primary"
+              className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
+              style={{
+                background: theme.button?.background || "#6C79F7",
+                color: theme.button?.color || "#fff",
+                boxShadow: theme.button?.boxShadow,
+                borderRadius: theme.button?.borderRadius,
+                fontWeight: theme.button?.fontWeight,
+                fontSize: theme.button?.fontSize,
+                padding: theme.button?.padding,
+                transition: theme.button?.transition,
+                border: theme.button?.border,
+              }}
+              onMouseOver={(e) => {
+                if (theme.button) {
+                  e.currentTarget.style.background =
+                    theme.button.hoverBackground || "#5A67D8";
+                  e.currentTarget.style.color =
+                    theme.button.hoverColor || "#fff";
+                }
+              }}
+              onMouseOut={(e) => {
+                if (theme.button) {
+                  e.currentTarget.style.background =
+                    theme.button.background || "#6C79F7";
+                  e.currentTarget.style.color = theme.button.color || "#fff";
+                }
+              }}
+              onClick={() => setUpdateOpen(true)}
+            >
+              Edit Permissions
             </Button>
             <ConfirmBtn
               type="primary"
@@ -51,14 +115,13 @@ const EmployeeDetailModal = ({
               onOk={() => {
                 handleDelete(employee?.e_id || -1);
                 onClose();
-              }
-            }
-            onCancel={() => {
+              }}
+              onCancel={() => {
                 console.log("Delete cancelled");
-            }}
+              }}
               className="px-6 py-2 mb-5 mr-5"
               theme={theme}
-            />  
+            />
           </div>
         }
         centered
@@ -78,7 +141,7 @@ const EmployeeDetailModal = ({
           </Col>
 
           <Col span={16}>
-            <Descriptions bordered column={1} labelStyle={{ fontWeight: 600 }}>
+            <Descriptions bordered column={1}>
               <Descriptions.Item label="Name">
                 {`${employee?.f_name} ${employee?.l_name}`}
               </Descriptions.Item>
@@ -128,6 +191,12 @@ const EmployeeDetailModal = ({
           </Col>
         </Row>
       </Modal>
+      <UpdatePermissionsModal
+        modalOpen={updateOpen}
+        onClose={() => setUpdateOpen(false)}
+        theme={theme}
+        employeeId={employee?.e_id || -1}
+      />
     </>
   );
 };

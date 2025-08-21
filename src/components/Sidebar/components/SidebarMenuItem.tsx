@@ -1,4 +1,4 @@
-import type { SidebarMenuItemProps } from "../../../types/Sidebar/sidebar";
+import type { SidebarMenuItemProps } from "@src/types/Sidebar/sidebar";
 
 const SidebarMenuItem = ({
   item,

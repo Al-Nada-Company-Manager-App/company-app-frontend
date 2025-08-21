@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import ModalStyle from "./ModalStyle";
-import type {EmployeeTheme} from "../../types/Employees/employee";
+import type {EmployeeTheme} from "../../types/Employees/employee"; 
 
 interface ConfirmProps {
   type?: "default" | "primary" | "dashed" | "link" | "text";
@@ -20,6 +20,7 @@ const Confirm = ({ type, isdanger, btnTitle ,onOk,onCancel, className , theme}: 
       title: "Confirm",
       icon: <ExclamationCircleOutlined />,
       content: "Are you sure you want to perform this action?",
+      className: "custom-modal",
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
@@ -43,7 +44,20 @@ const Confirm = ({ type, isdanger, btnTitle ,onOk,onCancel, className , theme}: 
       <Button type = {type || "primary"} 
         danger={isdanger}
         className={className || "px-6 py-2"}
+        style={
+          {
+            color: theme.button?.color || "#fff",
+            boxShadow: theme.button?.boxShadow,
+            borderRadius: theme.button?.borderRadius,
+            fontWeight: theme.button?.fontWeight,
+            fontSize: theme.button?.fontSize,
+            padding: theme.button?.padding,
+            transition: theme.button?.transition,
+            border: theme.button?.border,
+          }
+        }
         onClick={showConfirm}>
+        
         {btnTitle || "Confirm"}
       </Button>
     </>

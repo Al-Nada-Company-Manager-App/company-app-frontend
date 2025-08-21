@@ -1,5 +1,5 @@
-import { useSidebar } from "../../../hooks/Sidebar/useSidebar";
-import type { SidebarProps } from "../../../types/Sidebar/sidebar";
+import { useSidebar } from "@src/hooks/Sidebar/useSidebar";
+import type { SidebarProps } from "@src/types/Sidebar/sidebar";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
