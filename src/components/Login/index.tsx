@@ -4,10 +4,7 @@ import Footer from "./components/Footer";
 
 const Login = () => {
   return (
-    <div
-      className="login-bg h-screen w-screen overflow-hidden relative"
-      style={{ background: "#1E1E1E" }}
-    >
+    <div className="login-bg h-screen w-screen overflow-hidden relative">
       <div className="absolute blue-grow" />
       <div className="absolute baby-blue-grow" />
       <div className="absolute purple-grow" />
