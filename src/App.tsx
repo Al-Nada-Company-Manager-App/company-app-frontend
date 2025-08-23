@@ -1,21 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@src/contexts/ThemeContext";
-import Layout from "@src/components/Layout";
-import ManagerDashboards from "@src/components/dashboards/managerDashboards";
-import EmployeesPage from "@src/components/pages/EmployeesPage";
-import CustomersPage from "@src/components/pages/CustomersPage";
-import StockPage from "@src/components/pages/StockPage";
-import SalesPage from "@src/components/pages/SalesPage";
-import PurchasesPage from "@src/components/pages/PurchasesPage";
-import SuppliersPage from "@src/components/pages/SuppliersPage";
-import NotFoundPage from "@src/components/NotFoundPage";
+// import Layout from "@src/components/Layout";
+// import ManagerDashboards from "@src/components/dashboards/managerDashboards";
+// import EmployeesPage from "@src/components/pages/EmployeesPage";
+// import CustomersPage from "@src/components/pages/CustomersPage";
+// import StockPage from "@src/components/pages/StockPage";
+// import SalesPage from "@src/components/pages/SalesPage";
+// import PurchasesPage from "@src/components/pages/PurchasesPage";
+// import SuppliersPage from "@src/components/pages/SuppliersPage";
+// import NotFoundPage from "@src/components/NotFoundPage";
+import Login from "@src/components/Login";
 
 function App() {
   return (
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          {/* <Route path="/" element={<Layout />}>
             <Route index element={<ManagerDashboards />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="customers" element={<CustomersPage />} />
@@ -24,7 +25,8 @@ function App() {
             <Route path="purchases" element={<PurchasesPage />} />
             <Route path="suppliers" element={<SuppliersPage />} />
             <Route path="*" element={<NotFoundPage />} />
-          </Route>
+          </Route> */}
+          <Route path="/" element={<Login />} />
         </Routes>
       </Router>
     </ThemeProvider>
