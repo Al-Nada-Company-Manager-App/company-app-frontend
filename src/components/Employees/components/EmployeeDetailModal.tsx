@@ -107,7 +107,7 @@ const EmployeeDetailModal = ({
               src={
                 employee?.e_photo
                   ? `Images/employees/${employee.e_photo}`
-                  : "https://via.placeholder.com/200"
+                  : "/Images/employees/placeholder.jpg"
               }
               alt={employee?.f_name}
               style={{ borderRadius: "12px", width: "100%" }}

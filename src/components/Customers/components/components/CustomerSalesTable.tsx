@@ -5,7 +5,8 @@ import { useGetCustomerSales } from "@src/queries/Customers";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import StatusBadge from "@src/components/UI/StatusBadge";
 import CustomerDate from "./CustomerDate";
-import type { CustomerSales } from "@src/types/Customers/customer";  
+import type { CustomerSales } from "@src/types/Customers/customer";
+
 interface CustomerSalesTableProps {
   customerId: number;
   theme: Theme;
@@ -13,9 +14,11 @@ interface CustomerSalesTableProps {
 
 const { Column } = Table;
 type SalesResponse = { salesHistory: CustomerSales[] };
-const CustomerTable = ({ customerId, theme }: CustomerSalesTableProps) => {
+
+const CustomerSalesTable = ({ customerId, theme }: CustomerSalesTableProps) => {
   const { isDark } = useThemeContext();
   const { data: salesData, isLoading, error } = useGetCustomerSales(customerId);
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -29,7 +32,7 @@ const CustomerTable = ({ customerId, theme }: CustomerSalesTableProps) => {
         >
           <Loading
             size="large"
-            message="Loading employees..."
+            message="Loading sales..."
             textStyle={{ color: theme.title.color }}
             containerStyle={{
               background: "transparent",
@@ -55,8 +58,8 @@ const CustomerTable = ({ customerId, theme }: CustomerSalesTableProps) => {
         >
           <ErrorDisplay
             status="error"
-            title="Failed to Load Employees"
-            subTitle="There was an error loading the employee data."
+            title="Failed to Load Sales"
+            subTitle="There was an error loading the sales data."
             message={error.message}
             onRetry={() => window.location.reload()}
             showRetryButton={true}
@@ -80,38 +83,102 @@ const CustomerTable = ({ customerId, theme }: CustomerSalesTableProps) => {
     : salesData && (salesData as SalesResponse).salesHistory
     ? (salesData as SalesResponse).salesHistory
     : [];
+
   return (
-    <div className="custom-table">
-      <Table
-        dataSource={salesHistory}
-        showHeader={true}
-        pagination={{ pageSize: 10 }}
-        rowKey="sl_id"
+    <div className="custom-table p-6 ">
+      <div
+        className="w-full rounded-2xl"
+        style={{
+          background: theme.container.background,
+          backdropFilter: theme.container.backdropFilter,
+          minWidth: "1100px",
+          minHeight: "400px",
+        }}
       >
-        <Column title="ID" dataIndex="sl_id" key="id" />
-        <Column
-          title="Date"
-          dataIndex="sl_date"
-          key="date"
-          render={(_, record) => (
-            <CustomerDate date={record.sl_date} theme={theme} />
-          )}
-        />
-        <Column title="Total" dataIndex="sl_total" key="total" />
-        <Column title="Discount" dataIndex="sl_discount" key="discount" />
-        <Column title="Tax" dataIndex="sl_tax" key="tax" />
-        <Column title="Status" dataIndex="sl_status" key="status" 
+        <Table
+          dataSource={salesHistory}
+          showHeader={true}
+          pagination={{ pageSize: 10 }}
+          rowKey="sl_id"
+          style={{ minHeight: "300px" }}
+          locale={{
+            emptyText: (
+              <div
+                style={{
+                  minHeight: "300px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isDark ? "#ffffff" : "#000000",
+                  fontSize: "16px",
+                  gap: "8px",
+                }}
+              >
+                <span>No sales data available</span>
+                <span style={{ fontSize: "14px", opacity: 0.7 }}>
+                  Try checking another customer or refreshing the data.
+                </span>
+              </div>
+            ),
+          }}
+        >
+          <Column title="ID" dataIndex="sl_id" key="id" />
+          <Column
+            title="Date"
+            dataIndex="sl_date"
+            key="date"
+            render={(_, record) => (
+              <CustomerDate date={record.sl_date} theme={theme} />
+            )}
+          />
+          <Column
+            title="Total"
+            dataIndex="sl_total"
+            key="total"
+            render={(value: number) =>
+              value != null ? value.toFixed(2) : "0.00"
+            }
+          />
+          <Column title="Discount" dataIndex="sl_discount" key="discount" />
+          <Column title="Tax" dataIndex="sl_tax" key="tax" />
+          <Column
+            title="Status"
+            dataIndex="sl_status"
+            key="status"
             render={(status) => <StatusBadge status={status} />}
-        />
-        <Column title="Type" dataIndex="sl_type" key="type" />
-        <Column title="In Amount" dataIndex="sl_inamount" key="inamount" />
-        <Column title="Cost" dataIndex="sl_cost" key="cost" />
-        <Column title="Bill Number" dataIndex="sl_billnum" key="billnum" />
-        <Column title="Payed" dataIndex="sl_payed" key="payed" />
-        <Column title="Currency" dataIndex="sl_currency" key="currency" />
-      </Table>
+          />
+          <Column title="Type" dataIndex="sl_type" key="type" />
+          <Column
+            title="In Amount"
+            dataIndex="sl_inamount"
+            key="inamount"
+            render={(value: number) =>
+              value != null ? value.toFixed(2) : "0.00"
+            }
+          />
+          <Column
+            title="Cost"
+            dataIndex="sl_cost"
+            key="cost"
+            render={(value: number) =>
+              value != null ? value.toFixed(2) : "0.00"
+            }
+          />
+          <Column title="Bill Number" dataIndex="sl_billnum" key="billnum" />
+          <Column
+            title="Payed"
+            dataIndex="sl_payed"
+            key="payed"
+            render={(value: number) =>
+              value != null ? value.toFixed(2) : "0.00"
+            }
+          />
+          <Column title="Currency" dataIndex="sl_currency" key="currency" />
+        </Table>
+      </div>
     </div>
   );
 };
 
-export default CustomerTable;
+export default CustomerSalesTable;

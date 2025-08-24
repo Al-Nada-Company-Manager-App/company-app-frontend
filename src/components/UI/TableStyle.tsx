@@ -85,6 +85,11 @@ const TableStyle = ({ theme }: { theme: Theme }) => {
           color: #A0AEC0 !important;
           background: transparent !important;
         }
+        
+       .custom-table .ant-table-thead > tr > th {
+          background: transparent !important;
+          color: ${theme.title.color || "#000"} !important;
+        }
 
 
 

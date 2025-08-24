@@ -103,6 +103,7 @@ const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
             c_city: customer?.c_city,
             c_country: customer?.c_country,
             c_zipcode: customer?.c_zipcode,
+            c_fax: customer?.c_fax,
           }}
           style={{ maxWidth: "100%" }}
         >
@@ -117,7 +118,7 @@ const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
                 }}
               >
                 <Image
-                  src={previewImage || "https://via.placeholder.com/200"}
+                  src={previewImage || "/Images/customers/placeholder.jpg"}
                   alt={customer?.c_name}
                   style={{
                     width: "100%",
@@ -153,7 +154,7 @@ const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
                       },
                     ]}
                   >
-                    <Input placeholder="Enter first name" />
+                    <Input placeholder="Enter customer name" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -161,30 +162,96 @@ const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
                 name="c_email"
                 label="Email"
                 rules={[
-                  { type: "email", message: "Please enter a valid email" },
+                  {
+                    required: true,
+                    message: "Please enter the customer email",
+                  },
                 ]}
               >
                 <Input placeholder="Enter email" />
               </Form.Item>
-              <Form.Item name="c_phone" label="Phone">
-                <Input placeholder="Enter phone number" />
-              </Form.Item>
-              <Form.Item name="c_address" label="Address">
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Form.Item
+                    name="c_phone"
+                    label="Phone"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the customer phone number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter phone number" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="c_fax"
+                    label="Fax"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the customer fax",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter fax number" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item
+                name="c_address"
+                label="Address"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter the customer address",
+                  },
+                ]}
+              >
                 <Input placeholder="Enter address" />
               </Form.Item>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
-                  <Form.Item name="c_city" label="City">
+                  <Form.Item
+                    name="c_city"
+                    label="City"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the customer city",
+                      },
+                    ]}
+                  >
                     <Input placeholder="Enter city" />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item name="c_country" label="Country">
+                  <Form.Item
+                    name="c_country"
+                    label="Country"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the customer country",
+                      },
+                    ]}
+                  >
                     <Input placeholder="Enter country" />
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item name="c_zipcode" label="Zip Code">
+              <Form.Item
+                name="c_zipcode"
+                label="Zip Code"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter the customer zipcode",
+                  },
+                ]}
+              >
                 <Input placeholder="Enter zip code" />
               </Form.Item>
             </Col>
