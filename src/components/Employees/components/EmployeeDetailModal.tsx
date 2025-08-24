@@ -7,6 +7,7 @@ import type { Theme } from "@src/types/theme";
 import { calculateAge } from "@src/utils/calculateAge";
 
 import ConfirmBtn from "@src/components/UI/confirm";
+import CustomBtn from "@src/components/UI/customBtn";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import {
   useDeleteEmployee,
@@ -75,39 +76,12 @@ const EmployeeDetailModal = ({
             >
               Deactivate
             </Button>
-            <Button
-              type="primary"
-              className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
-              style={{
-                background: theme.button?.background || "#6C79F7",
-                color: theme.button?.color || "#fff",
-                boxShadow: theme.button?.boxShadow,
-                borderRadius: theme.button?.borderRadius,
-                fontWeight: theme.button?.fontWeight,
-                fontSize: theme.button?.fontSize,
-                padding: theme.button?.padding,
-                transition: theme.button?.transition,
-                border: theme.button?.border,
-              }}
-              onMouseOver={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.hoverBackground || "#5A67D8";
-                  e.currentTarget.style.color =
-                    theme.button.hoverColor || "#fff";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.background || "#6C79F7";
-                  e.currentTarget.style.color = theme.button.color || "#fff";
-                }
-              }}
+            <CustomBtn
+              btnTitle="Edit Permissions"
               onClick={() => setUpdateOpen(true)}
-            >
-              Edit Permissions
-            </Button>
+              theme={theme}
+              className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
+            />
             <ConfirmBtn
               type="primary"
               isdanger={true}

@@ -75,7 +75,6 @@ const CustomerTable = ({ customerId, theme }: CustomerSalesTableProps) => {
     );
   }
 
-  console.log("Sales Data:", salesData);
   const salesHistory = Array.isArray(salesData)
     ? salesData
     : salesData && (salesData as SalesResponse).salesHistory

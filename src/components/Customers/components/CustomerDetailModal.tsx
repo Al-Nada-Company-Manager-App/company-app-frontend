@@ -1,13 +1,14 @@
-import { Modal, Descriptions, Row, Col, Image, Button } from "antd";
-import type { Theme } from "@src/types/theme";
-import type { Customer } from "@src/types/Customers/customer";
 import ConfirmBtn from "@src/components/UI/confirm";
 import ModalStyle from "@src/components/UI/ModalStyle";
+import type { Customer } from "@src/types/Customers/customer";
+import type { Theme } from "@src/types/theme";
+import { Col, Descriptions, Image, Modal, Row } from "antd";
+import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
-
+import UpdateCustomerModal from "./UpdateCustomer";
 import { useDeleteCustomer } from "@src/queries/Customers";
-
 import { useThemeContext } from "@src/contexts/useThemeContext";
+import CustomBtn from "@src/components/UI/customBtn";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -22,6 +23,7 @@ const CustomerDetailModal = ({
   customer,
   theme,
 }: DetailModal) => {
+  const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
   const deleteCustomer = useDeleteCustomer(isDark);
 
@@ -29,6 +31,11 @@ const CustomerDetailModal = ({
     if (customerId === -1) return;
     await deleteCustomer.mutateAsync(customerId);
   };
+  const handleUpdateClose = () => {
+    setUpdateOpen(false);
+    onClose();
+  };
+
   return (
     <>
       <ModalStyle theme={theme} />
@@ -39,39 +46,12 @@ const CustomerDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <Button
-              type="primary"
+            <CustomBtn
+              btnTitle="Edit"
+              onClick={() => setUpdateOpen(true)}
+              theme={theme}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
-              style={{
-                background: theme.button?.background || "#6C79F7",
-                color: theme.button?.color || "#fff",
-                boxShadow: theme.button?.boxShadow,
-                borderRadius: theme.button?.borderRadius,
-                fontWeight: theme.button?.fontWeight,
-                fontSize: theme.button?.fontSize,
-                padding: theme.button?.padding,
-                transition: theme.button?.transition,
-                border: theme.button?.border,
-              }}
-              onMouseOver={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.hoverBackground || "#5A67D8";
-                  e.currentTarget.style.color =
-                    theme.button.hoverColor || "#fff";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.background || "#6C79F7";
-                  e.currentTarget.style.color = theme.button.color || "#fff";
-                }
-              }}
-              // onClick={() => setUpdateOpen(true)}
-            >
-              Edit
-            </Button>
+            /> 
             <ConfirmBtn
               type="primary"
               isdanger={true}
@@ -135,12 +115,13 @@ const CustomerDetailModal = ({
           <CustomerSalesTable customerId={customer?.c_id || -1} theme={theme} />
         </Row>
       </Modal>
-      {/* <UpdatePermissionsModal
+      <UpdateCustomerModal
+        key={customer?.c_id}
         modalOpen={updateOpen}
-        onClose={() => setUpdateOpen(false)}
+        onClose={handleUpdateClose}
+        customer={customer}
         theme={theme}
-        employeeId={employee?.e_id || -1}
-      /> */}
+      />
     </>
   );
 };
