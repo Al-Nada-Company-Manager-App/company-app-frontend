@@ -4,6 +4,7 @@ import CustomerTable from "./components/CustomerTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
+import AddCustomerModal from "./components/AddCustomerModal";
 interface CustomersProps {
   isDark: boolean;
 }
@@ -99,6 +100,11 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
           <CustomerTable customers={customers ?? []} theme={theme} />
         </div>
       </div>
+      <AddCustomerModal
+        modalOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        theme={theme}
+      />
     </>
   );
 };

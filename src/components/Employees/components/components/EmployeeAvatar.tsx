@@ -16,7 +16,7 @@ const EmployeeAvatar = ({ employee, theme }: EmployeeAvatarProps) => {
     >
       {employee.e_photo ? (
         <img
-          src={`/Images/employees/${employee.e_photo}`}
+          src={employee.e_photo ? `/Images/employees/${employee.e_photo}` : "/Images/employees/placeholder.jpg"}
           alt={`${employee.f_name} ${employee.l_name}`}
           className="w-full h-full object-cover"
           onError={(e) => {

@@ -5,7 +5,7 @@ import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row } from "antd";
 import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
-import UpdateCustomerModal from "./UpdateCustomer";
+import UpdateCustomerModal from "./UpdateCustomerModal";
 import { useDeleteCustomer } from "@src/queries/Customers";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -51,7 +51,7 @@ const CustomerDetailModal = ({
               onClick={() => setUpdateOpen(true)}
               theme={theme}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
-            /> 
+            />
             <ConfirmBtn
               type="primary"
               isdanger={true}
@@ -77,13 +77,12 @@ const CustomerDetailModal = ({
               src={
                 customer?.c_photo
                   ? `Images/customers/${customer.c_photo}`
-                  : "https://via.placeholder.com/200"
+                  : "/Images/customers/placeholder.jpg"
               }
               alt={customer?.c_name}
               style={{ borderRadius: "12px", width: "100%" }}
             />
           </Col>
-
           <Col span={16}>
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Name">
@@ -112,7 +111,14 @@ const CustomerDetailModal = ({
               </Descriptions.Item>
             </Descriptions>
           </Col>
-          <CustomerSalesTable customerId={customer?.c_id || -1} theme={theme} />
+        </Row>
+        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+          <Col span={24}>
+            <CustomerSalesTable
+              customerId={customer?.c_id || -1}
+              theme={theme}
+            />
+          </Col>
         </Row>
       </Modal>
       <UpdateCustomerModal
