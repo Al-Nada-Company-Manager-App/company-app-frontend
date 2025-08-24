@@ -3,7 +3,7 @@ import { useCustomers } from "@src/hooks/Customers/useCustomers";
 import CustomerTable from "./components/CustomerTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
-import { Button } from "antd";
+import CustomBtn from "../UI/customBtn";
 interface CustomersProps {
   isDark: boolean;
 }
@@ -89,39 +89,12 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
             >
               Customers
             </h2>
-            <Button
-              type="primary"
-              className="ml-4 font-semibold border-none"
-              style={{
-                background: theme.button?.background || "#6C79F7",
-                color: theme.button?.color || "#fff",
-                boxShadow: theme.button?.boxShadow,
-                borderRadius: theme.button?.borderRadius,
-                fontWeight: theme.button?.fontWeight,
-                fontSize: theme.button?.fontSize,
-                padding: theme.button?.padding,
-                transition: theme.button?.transition,
-                border: theme.button?.border,
-              }}
-              onMouseOver={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.hoverBackground || "#5A67D8";
-                  e.currentTarget.style.color =
-                    theme.button.hoverColor || "#fff";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (theme.button) {
-                  e.currentTarget.style.background =
-                    theme.button.background || "#6C79F7";
-                  e.currentTarget.style.color = theme.button.color || "#fff";
-                }
-              }}
-            onClick={() => setShowAddModal(true)}
-            >
-              Add New Customer
-            </Button>
+            <CustomBtn
+              theme={theme}
+              btnTitle="Add New Customer"
+              onClick={() => setShowAddModal(true)}
+              className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
+            />
           </div>
           <CustomerTable customers={customers ?? []} theme={theme} />
         </div>
