@@ -1,7 +1,6 @@
 import type { Employee , EmployeePermissions} from "@src/types/Employees/employee";
 
-// Base API URL - you can move this to an environment variable later
-const API_BASE_URL = "http://localhost:4000"; // Change this to your actual API URL
+const API_BASE_URL = "http://localhost:4000"; 
 
 // Employee API functions
 export const employeeApi = {

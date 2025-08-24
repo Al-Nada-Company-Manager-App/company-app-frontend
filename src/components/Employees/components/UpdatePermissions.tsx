@@ -1,8 +1,5 @@
 import { Modal, Form, Switch, Row, Col, Button, Typography, Spin } from "antd";
-import type {
-  EmployeeTheme,
-  //   EmployeePermissions,
-} from "../../../types/Employees/employee";
+import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 
@@ -17,7 +14,7 @@ const { Title } = Typography;
 interface UpdatePermissionsModalProps {
   modalOpen: boolean;
   onClose: () => void;
-  theme: EmployeeTheme;
+  theme: Theme;
   employeeId: number;
 }
 

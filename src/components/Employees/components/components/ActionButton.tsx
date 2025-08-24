@@ -1,7 +1,6 @@
-import type { EmployeeTheme } from "@src/types/Employees/employee";
-
+import type { Theme } from "@src/types/theme";
 interface ActionButtonProps {
-  theme: EmployeeTheme;
+  theme: Theme;
   onEdit?: () => void;
 }
 
