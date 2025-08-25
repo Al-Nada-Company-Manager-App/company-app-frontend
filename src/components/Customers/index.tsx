@@ -51,8 +51,8 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
         >
           <ErrorDisplay
             status="error"
-            title="Failed to Load Employees"
-            subTitle="There was an error loading the employee data."
+            title="Failed to Load Customers"
+            subTitle="There was an error loading the customer data."
             message={error.message}
             onRetry={() => window.location.reload()}
             showRetryButton={true}
