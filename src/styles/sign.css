@@ -12,6 +12,28 @@
     filter: blur(200px);
 }
 
+.blue2-grow {
+    width: 1145px;
+    height: 1145px;
+    left: 756px;
+    top: -319px;
+    background: #01105D;
+    mix-blend-mode: normal;
+    opacity: 0.4;
+    filter: blur(200px);
+}
+
+.pink-grow {
+    width: 1145px;
+    height: 1145px;
+    left: 756px;
+    top: -319px;
+    background: #60013A;
+    mix-blend-mode: normal;
+    opacity: 0.4;
+    filter: blur(200px);
+}
+
 .baby-blue-grow {
     width: 1145px;
     height: 1145px;
@@ -40,7 +62,6 @@
     left: 430px;
     top: 37px;
     border-radius: 50%;
-    background: linear-gradient(180deg, #530061 0%, #0D0A30 100%);
 }
 
 .ellipse-2 {
@@ -49,7 +70,6 @@
     left: 890px;
     top: 520px;
     border-radius: 50%;
-    background: linear-gradient(180deg, #300061 0%, #0A1030 100%);
     transform: rotate(-28.5deg);
 }
 
@@ -59,9 +79,6 @@
     right: 566px;
     top: 50%;
     transform: translateY(-50%);
-    background:
-        linear-gradient(321.23deg, rgba(191,191,191,0.062) 5.98%, rgba(0,0,0,0) 66.28%), rgba(0,0,0,0.14);
-    border: 1px solid #4F015E;
     box-shadow: -8px 4px 5px rgba(0,0,0,0.24);
     backdrop-filter: blur(26.5px);
     border-radius: 20px;
@@ -123,11 +140,10 @@
     outline: none;
 }
 
-.login-button-style {
+.button-style {
     width: 100%;
     padding: 14px 10px;
     border-radius: 20px;
-    background: linear-gradient(90.57deg, #628EFF 9.91%, #8740CD 53.29%, #580475 91.56%);
     color: #fff;
     font-family: "Poppins";
     font-size: 20px;
@@ -188,4 +204,27 @@
     line-height: 22px;
     color: #fff;
     text-align: center;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  background: transparent;
+  width: 340px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  width: 340px;
 }
