@@ -1,13 +1,13 @@
 import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import type { Customer } from "@src/types/Customers/customer";
+import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import {
-  useCreateCustomer,
-  useUpdateCustomerPhoto,
-} from "@src/queries/Customers";
+  useCreateSupplier,
+  useUpdateSupplierPhoto,
+} from "@src/queries/Suppliers";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -18,11 +18,11 @@ interface AddModalProps {
   theme: Theme;
 }
 
-const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
+const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
   const { isDark } = useThemeContext();
   const [form] = Form.useForm();
-  const createCustomer = useCreateCustomer(isDark);
-  const updateCustomerPhoto = useUpdateCustomerPhoto(isDark);
+  const createSupplier = useCreateSupplier(isDark);
+  const updateSupplierPhoto = useUpdateSupplierPhoto(isDark);
 
   const [imageFile, setImageFile] = useState<RcFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
@@ -50,24 +50,24 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
     file: RcFile,
     id: number
   ): Promise<string> => {
-    const response = await updateCustomerPhoto.mutateAsync({
-      c_id: id,
+    const response = await updateSupplierPhoto.mutateAsync({
+      s_id: id,
       photo: file,
     });
     return response;
   };
 
-  const onFinish = async (values: Omit<Customer, "c_id">) => {
+  const onFinish = async (values: Omit<Supplier, "s_id">) => {
     let photoFilename = "";
 
-    const newCustomer: Omit<Customer, "c_id"> = {
+    const newSupplier: Omit<Supplier, "s_id"> = {
       ...values,
-      c_photo: photoFilename,
+      s_photo: photoFilename,
     };
 
-    const response = await createCustomer.mutateAsync(newCustomer);
-    if (imageFile && response.c_id) {
-      photoFilename = await handleUploadImage(imageFile, response.c_id);
+    const response = await createSupplier.mutateAsync(newSupplier);
+    if (imageFile && response.s_id) {
+      photoFilename = await handleUploadImage(imageFile, response.s_id);
     }
 
     form.resetFields();
@@ -81,7 +81,7 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
       <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
-        title="Add Customer"
+        title="Add Supplier"
         open={modalOpen}
         onCancel={onClose}
         footer={null}
@@ -105,8 +105,8 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 }}
               >
                 <Image
-                  src={previewImage || "/Images/customers/placeholder.jpg"}
-                  alt={"Customer"}
+                  src={previewImage || "/Images/suppliers/placeholder.jpg"}
+                  alt={"Supplier"}
                   style={{
                     width: "100%",
                     maxHeight: "200px",
@@ -116,7 +116,7 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                   }}
                 />
                 <Upload
-                  name="c_photo"
+                  name="s_photo"
                   showUploadList={false}
                   beforeUpload={() => false} // Prevent auto-upload
                   onChange={handleImageChange}
@@ -132,26 +132,26 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_name"
-                    label="Customer Name"
+                    name="s_name"
+                    label="Supplier Name"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer name",
+                        message: "Please enter the supplier name",
                       },
                     ]}
                   >
-                    <Input placeholder="Enter customer name" />
+                    <Input placeholder="Enter supplier name" />
                   </Form.Item>
                 </Col>
               </Row>
               <Form.Item
-                name="c_email"
+                name="s_email"
                 label="Email"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer email",
+                    message: "Please enter the supplier email",
                   },
                 ]}
               >
@@ -160,12 +160,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_phone"
+                    name="s_phone"
                     label="Phone"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer phone number",
+                        message: "Please enter the supplier phone number",
                       },
                     ]}
                   >
@@ -174,12 +174,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="c_fax"
+                    name="s_fax"
                     label="Fax"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer fax",
+                        message: "Please enter the supplier fax",
                       },
                     ]}
                   >
@@ -188,12 +188,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
               </Row>
               <Form.Item
-                name="c_address"
+                name="s_address"
                 label="Address"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer address",
+                    message: "Please enter the supplier address",
                   },
                 ]}
               >
@@ -202,12 +202,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_city"
+                    name="s_city"
                     label="City"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer city",
+                        message: "Please enter the supplier city",
                       },
                     ]}
                   >
@@ -216,12 +216,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="c_country"
+                    name="s_country"
                     label="Country"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer country",
+                        message: "Please enter the supplier country",
                       },
                     ]}
                   >
@@ -230,12 +230,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
               </Row>
               <Form.Item
-                name="c_zipcode"
+                name="s_zipcode"
                 label="Zip Code"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer zipcode",
+                    message: "Please enter the supplier zipcode",
                   },
                 ]}
               >
@@ -274,4 +274,4 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
   );
 };
 
-export default AddCustomerModal;
+export default AddSupplierModal;

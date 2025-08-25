@@ -4,7 +4,7 @@ import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
-// import AddSupplierModal from "./components/AddSupplierModal";
+import AddSupplierModal from "./components/AddSupplierModal";
 interface SuppliersProps {
   isDark: boolean;
 }
@@ -100,11 +100,11 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
           <SupplierTable suppliers={suppliers ?? []} theme={theme} />
         </div>
       </div>
-      {/* <AddSupplierModal
+      <AddSupplierModal
         modalOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
-      /> */}
+      />
     </>
   );
 };
