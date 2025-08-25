@@ -1,11 +1,11 @@
 import type { Theme } from "@src/types/theme";
 
-interface EmployeeDateProps {
+interface CustomerDateProps {
   date: string;
   theme: Theme;
 }
 
-const EmployeeDate = ({ date, theme }: EmployeeDateProps) => {
+const CustomerDate = ({ date, theme }: CustomerDateProps) => {
   return (
     <div style={{ color: theme.employee.dateColor }}>
       {new Date(date).toLocaleDateString("en-GB", {
@@ -17,4 +17,4 @@ const EmployeeDate = ({ date, theme }: EmployeeDateProps) => {
   );
 };
 
-export default EmployeeDate;
+export default CustomerDate;
