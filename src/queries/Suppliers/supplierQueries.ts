@@ -21,7 +21,7 @@ export const useGetAllSuppliers = () => {
 };
 
 //Get supplier Sales by ID
-export const useGetSupplierSales = (id: number) => {
+export const useGetSupplierPurchases = (id: number) => {
   return useQuery({
     queryKey: supplierKeys.detail(id),
     queryFn: () => supplierApi.getSupplierPurchases(id),

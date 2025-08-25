@@ -2,7 +2,7 @@ import { Table } from "antd";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
-// import SupplierDetailModal from "./SupplierDetailModal";
+import SupplierDetailModal from "./SupplierDetailModal";
 import SupplierInfo from "./components/SupplierInfo";
 
 interface SupplierTableProps {
@@ -47,12 +47,12 @@ const SupplierTable = ({ suppliers, theme }: SupplierTableProps) => {
           <Column title="Phone" dataIndex="s_phone" key="phone" />
         </Table>
       </div>
-      {/* <SupplierDetailModal
+      <SupplierDetailModal
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         supplier={selectedRow}
         theme={theme}
-      /> */}
+      />
     </>
   );
 };
