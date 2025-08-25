@@ -9,7 +9,10 @@ import { ThemeProvider } from "@src/contexts/ThemeContext";
 // import PurchasesPage from "@src/components/pages/PurchasesPage";
 // import SuppliersPage from "@src/components/pages/SuppliersPage";
 // import NotFoundPage from "@src/components/NotFoundPage";
-import Login from "@src/components/Login";
+// import Login from "@src/components/Sign/Login";
+// import ForgotPassword from "./components/Sign/ForgotPassword";
+// import SignUp from "./components/Sign/SignUp";
+import Login from "./components/Sign/Login";
 
 function App() {
   return (
