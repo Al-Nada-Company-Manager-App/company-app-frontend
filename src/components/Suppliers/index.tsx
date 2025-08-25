@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useCustomers } from "@src/hooks/Customers/useCustomers";
-import CustomerTable from "./components/CustomerTable";
+import { useSuppliers } from "@src/hooks/Suppliers/useSuppliers";
+import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
-import AddCustomerModal from "./components/AddCustomerModal";
-interface CustomersProps {
+import AddSupplierModal from "./components/AddSupplierModal";
+interface SuppliersProps {
   isDark: boolean;
 }
-const CustomersPage = ({ isDark }: CustomersProps) => {
-  const { customers, theme, isLoading, error } = useCustomers(isDark);
+const SuppliersPage = ({ isDark }: SuppliersProps) => {
+  const { suppliers, theme, isLoading, error } = useSuppliers(isDark);
 
   const [showAddModal, setShowAddModal] = useState(false);
   if (isLoading) {
@@ -88,19 +88,19 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               className="text-lg font-bold"
               style={{ color: theme.title.color }}
             >
-              Customers
+              Suppliers
             </h2>
             <CustomBtn
               theme={theme}
-              btnTitle="Add New Customer"
+              btnTitle="Add New Supplier"
               onClick={() => setShowAddModal(true)}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <CustomerTable customers={customers ?? []} theme={theme} />
+          <SupplierTable suppliers={suppliers ?? []} theme={theme} />
         </div>
       </div>
-      <AddCustomerModal
+      <AddSupplierModal
         modalOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
@@ -109,4 +109,4 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
   );
 };
 
-export default CustomersPage;
+export default SuppliersPage;

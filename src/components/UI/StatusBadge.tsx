@@ -65,7 +65,7 @@ const getBadgeStyle = (status: string): React.CSSProperties => {
   }
 };
 
-const StatusBadge: React.FC<{ status: string }> = ({ status }) => (
+const StatusBadge = ({ status }: { status: string }) => (
   <span className={getBadgeClass(status)} style={getBadgeStyle(status)}>
     {status}
   </span>
