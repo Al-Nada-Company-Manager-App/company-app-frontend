@@ -23,7 +23,7 @@ export const supplierApi = {
 
   // Add new supplier
   addSupplier: async (
-    supplierData: Omit<Supplier, "c_id">
+    supplierData: Omit<Supplier, "s_id">
   ): Promise<Supplier> => {
     const response = await fetch(`${API_BASE_URL}/suppliers`, {
       method: "POST",
@@ -57,9 +57,10 @@ export const supplierApi = {
   },
 
   // Update supplier photo
-  updateSupplierPhoto: async (c_id: number, photo: File): Promise<string> => {
+  updateSupplierPhoto: async (s_id: number, photo: File): Promise<string> => {
+    console.log("Updating supplier photo for ID:", s_id);
     const formData = new FormData();
-    formData.append("c_id", String(c_id));
+    formData.append("s_id", String(s_id));
     formData.append("photo", photo);
     const response = await fetch(
       `${API_BASE_URL}/suppliers/updatesupplierphoto`,
@@ -69,7 +70,7 @@ export const supplierApi = {
       }
     );
     if (!response.ok) {
-      throw new Error(`Failed to update supplier photo for ID: ${c_id}`);
+      throw new Error(`Failed to update supplier photo for ID: ${s_id}`);
     }
     // Assuming the API returns the new photo filename
     const data = await response.json();

@@ -1,13 +1,13 @@
 import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import type { Customer } from "@src/types/Customers/customer";
+import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import {
-  useUpdateCustomer,
-  useUpdateCustomerPhoto,
-} from "@src/queries/Customers";
+  useUpdateSupplier,
+  useUpdateSupplierPhoto,
+} from "@src/queries/Suppliers";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -16,29 +16,29 @@ interface UpdateModalProps {
   modalOpen: boolean;
   onClose: () => void;
   theme: Theme;
-  customer?: Customer;
+  supplier?: Supplier;
 }
 
-const UpdateCustomerModal = ({
+const UpdateSupplierModal = ({
   modalOpen,
   onClose,
-  customer,
+  supplier,
   theme,
 }: UpdateModalProps) => {
   const { isDark } = useThemeContext();
   const [form] = Form.useForm();
-  const updateCustomer = useUpdateCustomer(isDark);
-  const updateCustomerPhoto = useUpdateCustomerPhoto(isDark);
+  const updateSupplier = useUpdateSupplier(isDark);
+  const updateSupplierPhoto = useUpdateSupplierPhoto(isDark);
 
   const [imageFile, setImageFile] = useState<UploadFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    customer?.c_photo ? `Images/customers/${customer.c_photo}` : undefined
+    supplier?.s_photo ? `Images/suppliers/${supplier.s_photo}` : undefined
   );
   useEffect(() => {
-    if (customer?.c_photo) {
-      setPreviewImage(`/Images/customers/${customer.c_photo}`);
+    if (supplier?.s_photo) {
+      setPreviewImage(`/Images/suppliers/${supplier.s_photo}`);
     }
-  }, [customer?.c_photo]);
+  }, [supplier?.s_photo]);
 
   const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     const fileObj = info.file as RcFile;
@@ -49,30 +49,30 @@ const UpdateCustomerModal = ({
   };
 
   const handleUploadImage = async (file: RcFile): Promise<string> => {
-    const response = await updateCustomerPhoto.mutateAsync({
-      c_id: customer?.c_id || -1,
+    const response = await updateSupplierPhoto.mutateAsync({
+      s_id: supplier?.s_id || -1,
       photo: file,
     });
     return response;
   };
 
-  const onFinish = async (values: Customer) => {
-    let photoFilename = customer?.c_photo;
+  const onFinish = async (values: Supplier) => {
+    let photoFilename = supplier?.s_photo;
 
     if (imageFile) {
       photoFilename = await handleUploadImage(imageFile as RcFile);
     }
 
-    const updatedCustomer: Partial<Customer> = {
+    const updatedSupplier: Partial<Supplier> = {
       ...values,
-      c_id: customer?.c_id,
-      c_photo: photoFilename,
+      s_id: supplier?.s_id,
+      s_photo: photoFilename,
     };
 
-    if (customer?.c_id) {
-      await updateCustomer.mutateAsync({
-        id: customer.c_id,
-        customerData: updatedCustomer,
+    if (supplier?.s_id) {
+      await updateSupplier.mutateAsync({
+        id: supplier.s_id,
+        supplierData: updatedSupplier,
       });
       // form.resetFields();
       onClose();
@@ -84,7 +84,7 @@ const UpdateCustomerModal = ({
       <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
-        title="Update Customer"
+        title="Update Supplier"
         open={modalOpen}
         onCancel={onClose}
         footer={null}
@@ -96,14 +96,14 @@ const UpdateCustomerModal = ({
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
-            c_name: customer?.c_name,
-            c_email: customer?.c_email,
-            c_phone: customer?.c_phone,
-            c_address: customer?.c_address,
-            c_city: customer?.c_city,
-            c_country: customer?.c_country,
-            c_zipcode: customer?.c_zipcode,
-            c_fax: customer?.c_fax,
+            s_name: supplier?.s_name,
+            s_email: supplier?.s_email,
+            s_phone: supplier?.s_phone,
+            s_address: supplier?.s_address,
+            s_city: supplier?.s_city,
+            s_country: supplier?.s_country,
+            s_zipcode: supplier?.s_zipcode,
+            s_fax: supplier?.s_fax,
           }}
           style={{ maxWidth: "100%" }}
         >
@@ -118,8 +118,8 @@ const UpdateCustomerModal = ({
                 }}
               >
                 <Image
-                  src={previewImage || "/Images/customers/placeholder.jpg"}
-                  alt={customer?.c_name}
+                  src={previewImage || "/Images/suppliers/placeholder.jpg"}
+                  alt={supplier?.s_name}
                   style={{
                     width: "100%",
                     maxHeight: "200px",
@@ -145,26 +145,26 @@ const UpdateCustomerModal = ({
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_name"
-                    label="Customer Name"
+                    name="s_name"
+                    label="Supplier Name"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer name",
+                        message: "Please enter the supplier name",
                       },
                     ]}
                   >
-                    <Input placeholder="Enter customer name" />
+                    <Input placeholder="Enter supplier name" />
                   </Form.Item>
                 </Col>
               </Row>
               <Form.Item
-                name="c_email"
+                name="s_email"
                 label="Email"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer email",
+                    message: "Please enter the supplier email",
                   },
                 ]}
               >
@@ -173,12 +173,12 @@ const UpdateCustomerModal = ({
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_phone"
+                    name="s_phone"
                     label="Phone"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer phone number",
+                        message: "Please enter the supplier phone number",
                       },
                     ]}
                   >
@@ -187,12 +187,12 @@ const UpdateCustomerModal = ({
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="c_fax"
+                    name="s_fax"
                     label="Fax"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer fax",
+                        message: "Please enter the supplier fax",
                       },
                     ]}
                   >
@@ -201,12 +201,12 @@ const UpdateCustomerModal = ({
                 </Col>
               </Row>
               <Form.Item
-                name="c_address"
+                name="s_address"
                 label="Address"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer address",
+                    message: "Please enter the supplier address",
                   },
                 ]}
               >
@@ -215,12 +215,12 @@ const UpdateCustomerModal = ({
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="c_city"
+                    name="s_city"
                     label="City"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer city",
+                        message: "Please enter the supplier city",
                       },
                     ]}
                   >
@@ -229,12 +229,12 @@ const UpdateCustomerModal = ({
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="c_country"
+                    name="s_country"
                     label="Country"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the customer country",
+                        message: "Please enter the supplier country",
                       },
                     ]}
                   >
@@ -243,12 +243,12 @@ const UpdateCustomerModal = ({
                 </Col>
               </Row>
               <Form.Item
-                name="c_zipcode"
+                name="s_zipcode"
                 label="Zip Code"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the customer zipcode",
+                    message: "Please enter the supplier zipcode",
                   },
                 ]}
               >
@@ -287,4 +287,4 @@ const UpdateCustomerModal = ({
   );
 };
 
-export default UpdateCustomerModal;
+export default UpdateSupplierModal;
