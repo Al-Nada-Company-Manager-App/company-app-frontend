@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
-import { useGetSupplierSales } from "@src/queries/Suppliers";
+import { useGetSupplierPurchases } from "@src/queries/Suppliers";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import SupplierDate from "./SupplierDate";
 import type { SupplierPurchases } from "@src/types/Suppliers/supplier";
@@ -12,11 +12,16 @@ interface SupplierSalesTableProps {
 }
 
 const { Column } = Table;
-type SalesResponse = { salesHistory: SupplierPurchases[] };
+type PurchasesResponse = { purchasesHistory: SupplierPurchases[] };
 
 const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) => {
   const { isDark } = useThemeContext();
-  const { data: salesData, isLoading, error } = useGetSupplierSales(supplierId);
+  const {
+    data: supplierPurchasesData,
+    isLoading,
+    error,
+  } = useGetSupplierPurchases(supplierId);
+  console.log("Purchases data:", supplierPurchasesData);
 
   if (isLoading) {
     return (
@@ -57,8 +62,8 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
         >
           <ErrorDisplay
             status="error"
-            title="Failed to Load Sales"
-            subTitle="There was an error loading the sales data."
+            title="Failed to Load Purchases"
+            subTitle="There was an error loading the purchases data."
             message={error.message}
             onRetry={() => window.location.reload()}
             showRetryButton={true}
@@ -77,10 +82,10 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
     );
   }
 
-  const salesHistory = Array.isArray(salesData)
-    ? salesData
-    : salesData && (salesData as SalesResponse).salesHistory
-    ? (salesData as SalesResponse).salesHistory
+  const purchasesHistory = Array.isArray(supplierPurchasesData)
+    ? supplierPurchasesData
+    : supplierPurchasesData && (supplierPurchasesData as PurchasesResponse).purchasesHistory
+    ? (supplierPurchasesData as PurchasesResponse).purchasesHistory
     : [];
 
   return (
@@ -95,10 +100,10 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
         }}
       >
         <Table
-          dataSource={salesHistory}
+          dataSource={purchasesHistory}
           showHeader={true}
           pagination={{ pageSize: 10 }}
-          rowKey="sl_id"
+          rowKey="pch_id"
           style={{ minHeight: "300px" }}
           locale={{
             emptyText: (
