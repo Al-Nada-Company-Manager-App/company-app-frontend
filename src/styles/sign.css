@@ -89,7 +89,6 @@
 }
 
 .login-text-style {
-    font-family: "Poppins";
     font-weight: "semi-bold";
     font-size: 40px;
     line-height: 60px;
@@ -98,7 +97,6 @@
 }
 
 .login-subtext-style {
-    font-family: "Poppins";
     font-weight: "medium";
     font-size: 16px;
     line-height: 24px;
@@ -122,7 +120,6 @@
     border-radius: 20px;
     background: transparent;
     color: #fff;
-    font-family: "Poppins";
     font-size: 20px;
     line-height: 3px;
     width: 340px; 
@@ -133,7 +130,6 @@
     background: transparent;
     border: none;
     color: #fff;
-    font-family: "Poppins";
     font-size: 20px;
     line-height: 3px;
     width: 90%;
@@ -145,7 +141,6 @@
     padding: 14px 10px;
     border-radius: 20px;
     color: #fff;
-    font-family: "Poppins";
     font-size: 20px;
     line-height: 20px;
     border: none;
@@ -153,7 +148,6 @@
 }
 
 .forget-style {
-    font-family: "Poppins";
     font-weight: 500;
     font-size: 16px;
     line-height: 22px;
@@ -176,7 +170,6 @@
 }
 
 .footer-text-style {
-    font-family: "Poppins";
     font-weight: 200;
     font-size: 14px;
     line-height: 22px;
@@ -198,7 +191,6 @@
 }
 
 .donot-have-account {
-    font-family: "Poppins";
     font-weight: 500;
     font-size: 14px;
     line-height: 22px;
