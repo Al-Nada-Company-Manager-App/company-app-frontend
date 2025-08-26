@@ -1,24 +1,28 @@
-.landing_bg {
+.landing-bg {
     background: #1E1E1E;
 }
 
 .blue-grow {
     width: 958px;
     height: 958px;
-    left: -151px;
-    top: 0px;
-    background: rgba(12, 35, 76, 0.37);
-    mix-blend-mode: normal;
+    left: -173px;
+    top: -40px;
+    background: rgba(29, 76, 167, 0.37);
+    mix-blend-mode: soft-light;
     filter: blur(200px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .purple-grow {
     width: 1145px;
     height: 1145px;
-    left: 756px;
-    top: -319px;
+    left: 1359px;
+    top: -194px;
     background: rgba(173, 0, 255, 0.35);
     mix-blend-mode: normal;
     opacity: 0.4;
     filter: blur(200px);
+    pointer-events: none;
+    z-index: 0;
 }
