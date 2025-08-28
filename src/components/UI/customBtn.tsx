@@ -7,9 +7,32 @@ interface CustomBtnProps {
     btnTitle: string;
     className?: string;
     onClick: () => void;
+    loading?: boolean;
 }
 
-const CustomBtn = ({ theme, btnTitle, onClick, className ="" }: CustomBtnProps) => {
+const CustomBtn = ({ theme, btnTitle, onClick, className ="" , loading = false }: CustomBtnProps) => {
+  if(loading){
+    return(
+      <Button
+        type="primary"
+        className={`${className}`}
+        style={{
+          background: theme.button?.background || "#6C79F7",
+          color: theme.button?.color || "#fff",
+          boxShadow: theme.button?.boxShadow,
+          borderRadius: theme.button?.borderRadius,
+          fontWeight: theme.button?.fontWeight,
+          fontSize: theme.button?.fontSize,
+          padding: theme.button?.padding,
+          transition: theme.button?.transition,
+          border: theme.button?.border,
+        }}
+        loading
+      >
+        {btnTitle}
+      </Button>
+    )
+  }
   return(
   <Button
     type="primary"
