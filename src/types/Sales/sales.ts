@@ -5,19 +5,22 @@ export interface Sales {
   sl_total: number;
   sl_discount: number;
   sl_tax: number;
-  sl_status: string;
-  sl_type: string;
+  sl_status: "PENDING" | "COMPLETED" | "CANCELLED";
+  sl_type: "REPAIR" | "SELLITEMS" | "SERVICE";
   sl_inamount: number;
   sl_cost: number;
   sl_billnum: number;
   sl_payed: number;
   sl_currency: string;
-  c_id: number;
+  due_date: string;
+  in_due_date: string;
+  adddum?: { [key: string]: number };
   customer?: {
-    c_name: string;
-    c_email: string;
-    c_photo: string;
-};
+    c_id?: number;
+    c_name?: string;
+    c_email?: string;
+    c_photo?: string;
+  };
 }
 
 export interface Products {

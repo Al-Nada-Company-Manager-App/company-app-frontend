@@ -86,15 +86,6 @@ const CustomerSalesTable = ({ customerId, theme }: CustomerSalesTableProps) => {
 
   return (
     <div className="custom-table p-6 ">
-      <div
-        className="w-full rounded-2xl"
-        style={{
-          background: theme.container.background,
-          backdropFilter: theme.container.backdropFilter,
-          minWidth: "1100px",
-          minHeight: "400px",
-        }}
-      >
         <Table
           dataSource={salesHistory}
           showHeader={true}
@@ -177,7 +168,6 @@ const CustomerSalesTable = ({ customerId, theme }: CustomerSalesTableProps) => {
           <Column title="Currency" dataIndex="sl_currency" key="currency" />
         </Table>
       </div>
-    </div>
   );
 };
 

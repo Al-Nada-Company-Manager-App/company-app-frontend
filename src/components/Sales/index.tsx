@@ -4,6 +4,7 @@ import SalesTable from "./components/SalesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
+import AddSaleModal from "./components/AddSaleModal";
 
 
 interface SalesPageProps {
@@ -102,6 +103,11 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
           <SalesTable sales={sales ?? []} theme={theme} />
         </div>
       </div>
+        <AddSaleModal
+            modalOpen={showAddModal}
+            onClose={() => setShowAddModal(false)}
+            theme={theme}
+        />
     </>
   );
 };
