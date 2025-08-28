@@ -57,14 +57,16 @@ const SaleBasicInfo = ({
           placeholder="Select customer"
           showSearch
           loading={loadingCustomers}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)
-              ?.toLowerCase()
-              .includes(input.toLowerCase())
-          }
+          filterOption={(input, option) => {
+            const customer = customers?.find((c) => c.c_id === option?.value);
+            if (!customer) return false;
+
+            const searchText =
+              `${customer.c_name} ${customer.c_email}`.toLowerCase();
+            return searchText.includes(input.toLowerCase());
+          }}
         >
-          {customers?.map((customer: Customer) => (
+          {customers?.map((customer) => (
             <Option key={customer.c_id} value={customer.c_id}>
               {customer.c_name} - {customer.c_email}
             </Option>
