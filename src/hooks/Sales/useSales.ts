@@ -1,20 +1,20 @@
 import { useMemo } from "react";
-import { useGetAllSuppliers } from "@src/queries/Suppliers";
+import { useGetAllSales } from "@src/queries/Sales";
 
 import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
 
-export const useSuppliers = (isDark: boolean) => {
+export const useSales = (isDark: boolean) => {
   const theme = useMemo(
     () => (isDark ? darkTheme : lightTheme),
     [isDark]
   );
 
-  // Use React Query to fetch supplier data
-  const { data: suppliers, isLoading, error } = useGetAllSuppliers();
+  // Use React Query to fetch sales data
+  const { data: sales, isLoading, error } = useGetAllSales();
 
 
   return {
-    suppliers,
+    sales,
     theme,
     isLoading,
     error,
