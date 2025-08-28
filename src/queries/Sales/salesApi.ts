@@ -27,8 +27,8 @@ export const salesApi = {
   },
 
   // Add new Sales
-  addSale: async (salesData: Omit<Sales, "sl_id">): Promise<Sales> => {
-    const response = await fetch(`${API_BASE_URL}/Ssles`, {
+  addSale: async (salesData: Partial<Sales>): Promise<Sales> => {
+    const response = await fetch(`${API_BASE_URL}/sales`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

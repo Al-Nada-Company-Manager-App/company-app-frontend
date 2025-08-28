@@ -137,11 +137,14 @@ const SaleDetailModal = ({
         </Row>
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
           <Col span={24}>
+          {sale?.sl_type === "REPAIR" || sale?.sl_type === "SELLITEMS" ? (
             <ProductSalesTable
               saleId={sale?.sl_id || -1}
               saleType={sale?.sl_type || ""}
               theme={theme}
             />
+          ) : null
+          }
           </Col>
         </Row>
       </Modal>

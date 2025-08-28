@@ -90,15 +90,6 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
 
   return (
     <div className="custom-table p-6 ">
-      <div
-        className="w-full rounded-2xl"
-        style={{
-          background: theme.container.background,
-          backdropFilter: theme.container.backdropFilter,
-          minWidth: "1100px",
-          minHeight: "400px",
-        }}
-      >
         <Table
           dataSource={purchasesHistory}
           showHeader={true}
@@ -160,7 +151,6 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
           <Column title="Custom number" dataIndex="pch_customnum" key="customnum" />
         </Table>
       </div>
-    </div>
   );
 };
 
