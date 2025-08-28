@@ -9,6 +9,7 @@ import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useState } from "react";
+import UpdateSaleModal from "./UpdateSaleModal";
 
 interface SaleDetailModalProps {
   modalOpen: boolean;
@@ -148,6 +149,12 @@ const SaleDetailModal = ({
           </Col>
         </Row>
       </Modal>
+      <UpdateSaleModal
+        modalOpen={updateOpen}
+        onClose={() => setUpdateOpen(false)}
+        sale={sale}
+        theme={theme}
+      />
     </>
   );
 };
