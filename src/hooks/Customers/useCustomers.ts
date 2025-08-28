@@ -9,7 +9,7 @@ export const useCustomers = (isDark: boolean) => {
     [isDark]
   );
 
-  // Use React Query to fetch employees data
+  // Use React Query to fetch customer data
   const { data: customers, isLoading, error } = useGetAllCustomers();
 
 
