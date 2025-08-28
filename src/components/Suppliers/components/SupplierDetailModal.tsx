@@ -73,6 +73,7 @@ const SupplierDetailModal = ({
       >
         <Row gutter={[16, 16]}>
           <Col span={8}>
+            <div style={{ marginTop: "16px", textAlign: "center" }}>
             <Image
               src={
                 supplier?.s_photo
@@ -82,6 +83,7 @@ const SupplierDetailModal = ({
               alt={supplier?.s_name}
               style={{ borderRadius: "12px", width: "100%" }}
             />
+            </div>
           </Col>
           <Col span={16}>
             <Descriptions bordered column={1}>
