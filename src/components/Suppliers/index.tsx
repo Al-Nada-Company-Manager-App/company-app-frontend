@@ -25,7 +25,7 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
         >
           <Loading
             size="large"
-            message="Loading employees..."
+            message="Loading supplliers..."
             textStyle={{ color: theme.title.color }}
             containerStyle={{
               background: "transparent",
