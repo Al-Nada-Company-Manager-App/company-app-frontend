@@ -91,6 +91,10 @@ const TableStyle = ({ theme }: { theme: Theme }) => {
           color: ${theme.title.color || "#000"} !important;
         }
 
+        .custom-table .ant-select-selector{
+           display: none !important;
+        }
+
 
 
 

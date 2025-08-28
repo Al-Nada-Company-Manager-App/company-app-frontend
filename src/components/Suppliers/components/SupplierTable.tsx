@@ -23,7 +23,7 @@ const SupplierTable = ({ suppliers, theme }: SupplierTableProps) => {
           dataSource={suppliers}
           showHeader={true}
           pagination={{ pageSize: 10 }}
-          rowKey="c_id"
+          rowKey="s_id"
           onRow={(record) => ({
             onClick: () => {
               setSelectedRow(record);
@@ -32,8 +32,8 @@ const SupplierTable = ({ suppliers, theme }: SupplierTableProps) => {
           })}
         >
           <Column
-            title="Employee"
-            dataIndex="c_name"
+            title="Supplier"
+            dataIndex="s_name"
             key="supplier"
             render={(_, record: Supplier) => (
               <SupplierInfo supplier={record} theme={theme} />

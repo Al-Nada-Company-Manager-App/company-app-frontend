@@ -103,6 +103,7 @@ const EmployeeDetailModal = ({
       >
         <Row gutter={[16, 16]}>
           <Col span={8}>
+            <div style={{ marginTop: "16px", textAlign: "center" }}>
             <Image
               src={
                 employee?.e_photo
@@ -112,6 +113,7 @@ const EmployeeDetailModal = ({
               alt={employee?.f_name}
               style={{ borderRadius: "12px", width: "100%" }}
             />
+            </div>
           </Col>
 
           <Col span={16}>

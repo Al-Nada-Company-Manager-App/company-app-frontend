@@ -32,7 +32,7 @@ const CustomerTable = ({ customers, theme }: CustomerTableProps) => {
           })}
         >
           <Column
-            title="Employee"
+            title="Customer"
             dataIndex="c_name"
             key="customer"
             render={(_, record: Customer) => (

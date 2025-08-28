@@ -15,6 +15,7 @@ export interface Sales {
   c_id: number;
   customer?: {
     c_name: string;
+    c_email: string;
     c_photo: string;
 };
 }
@@ -22,8 +23,12 @@ export interface Sales {
 export interface Products {
   p_id: number;
   sl_id: number;
+  si_quantity: number;
+  si_total: number;
   stock: {
     p_name: string;
+    p_photo: string;
+    p_costprice: number;
     serial_number: string;
   }
 };
