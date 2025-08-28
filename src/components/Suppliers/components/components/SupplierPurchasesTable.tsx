@@ -36,7 +36,7 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
         >
           <Loading
             size="large"
-            message="Loading sales..."
+            message="Loading purchases..."
             textStyle={{ color: theme.title.color }}
             containerStyle={{
               background: "transparent",

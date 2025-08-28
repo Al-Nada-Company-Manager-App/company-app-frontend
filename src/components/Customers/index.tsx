@@ -25,7 +25,7 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
         >
           <Loading
             size="large"
-            message="Loading employees..."
+            message="Loading customers..."
             textStyle={{ color: theme.title.color }}
             containerStyle={{
               background: "transparent",
