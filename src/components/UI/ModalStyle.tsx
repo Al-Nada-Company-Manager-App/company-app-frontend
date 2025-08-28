@@ -152,10 +152,14 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       /* Form Styles */
       .custom-modal .ant-form-item {
         margin-bottom: 16px !important;
+        background: ${theme?.modal?.background || "#fff"} !important;
+        color: ${theme?.modal?.color || "#222"} !important;
+        border-radius: 8px !important;
+        padding: 4px 0 !important;
       }
       
       .custom-modal .ant-form-item-label > label {
-        color: ${theme?.modal?.color || "#444"} !important;
+        color: ${theme?.modal?.color || "#222"} !important;
         font-weight: 500 !important;
         font-size: 14px !important;
       }
@@ -189,18 +193,17 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       
       /* Input Number (Salary) Specific Styles */
       .custom-modal .ant-input-affix-wrapper {
-        background: transparent !important;
-        border: none !important;
-        border-radius: 8px !important;
-        padding: 8px 12px !important;
-      }
+          border-radius: 8px !important;
+          border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+          padding: 8px 12px !important;
+            }
       .custom-modal .ant-input-number {
-        background: transparent !important;
-        border: none !important;
-      }
+          border-radius: 8px !important;
+          border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+        }
       .custom-modal .ant-input-number-input {
-        background: transparent !important;
-        color: ${theme?.modal?.color || "#222"} !important;
+        background: ${theme?.modal?.background || "#fff"} !important;
+        color: ${theme?.modal?.color} !important;
         font-size: 14px !important;
       }
       .custom-modal .ant-input-prefix {
@@ -212,14 +215,14 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       }
       .custom-modal .ant-input-number:hover,
       .custom-modal .ant-input-affix-wrapper:hover {
-        border: none !important;
-        box-shadow: none !important;
-      }
+        border-color: ${theme?.button?.background || "#6C79F7"} !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+          }
       .custom-modal .ant-input-number:focus,
       .custom-modal .ant-input-affix-wrapper:focus {
-        border: none !important;
-        box-shadow: none !important;
-      }
+        border-color: ${theme?.button?.hoverBackground || "#5A67D8"} !important;
+        box-shadow: 0 0 0 2px rgba(108,121,239,0.2) !important;
+          }
       
       /* Placeholder Styles */
       .custom-modal .ant-input::placeholder,
