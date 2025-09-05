@@ -1,4 +1,4 @@
-import { Theme } from "@src/types/theme";
+import type { Theme } from "@src/types/theme";
 
 const ModalStyle = ({ theme }: { theme: Theme }) => {
   return (
@@ -371,6 +371,40 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       /* Switch */
       .custom-modal .ant-switch-checked {
         background: ${"#01B574"} !important;
+      }
+
+      /* Card inside Modal */
+      .custom-modal .ant-card {
+        background: ${theme?.modal?.background || "#fff"} !important;
+        border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+      }
+      .custom-modal .ant-card-head {
+        border-bottom: 1px solid ${
+          theme?.row?.borderColor || "#eee"
+        } !important;
+        background: transparent !important;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 16px 24px !important;
+      }
+      .custom-modal .ant-card-head-title {
+        color: ${theme?.modal?.color || "#222"} !important;
+        font-size: 16px !important;
+        font
+        weight: 600 !important;
+      }
+      .custom-modal .ant-card-body {
+        padding: 16px 24px !important;
+      }
+      .custom-modal .ant-card-bordered {
+        border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+      }
+      .custom-modal .ant-card-hoverable:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+      }
+      .custom-modal .ant-divider-inner-text{
+        color: ${theme?.modal?.color || "#222"} !important;
       }
      
     `}</style>
