@@ -1,11 +1,11 @@
 import type { Sales,Products } from "@src/types/Sales/sales";
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "http://localhost:4000/sales";
 
 export const salesApi = {
   // Get all sales
   getAllSales: async (): Promise<Sales[]> => {
-    const response = await fetch(`${API_BASE_URL}/sales`);
+    const response = await fetch(`${API_BASE_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch Sales");
     }
@@ -28,7 +28,7 @@ export const salesApi = {
 
   // Add new Sales
   addSale: async (salesData: Partial<Sales>): Promise<Sales> => {
-    const response = await fetch(`${API_BASE_URL}/sales`, {
+    const response = await fetch(`${API_BASE_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export const salesApi = {
     id: number,
     salesData: Partial<Sales>
   ): Promise<Sales> => {
-    const response = await fetch(`${API_BASE_URL}/sales/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export const salesApi = {
 
   // Delete sale
   deleteSale: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/sales/delete/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
