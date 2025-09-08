@@ -1,14 +1,10 @@
 import { useThemeContext } from "@src/contexts/useThemeContext";
-
+import Product from "@src/components/Products";
 const StockPage = () => {
-  const { theme } = useThemeContext();
+  const { isDark } = useThemeContext();
 
   return (
-    <div className="absolute left-0 top-0 w-[1600px] h-[488.5px] flex items-center justify-center">
-      <div className="text-2xl font-bold" style={{ color: theme.textColor }}>
-        Stock Page - Coming Soon
-      </div>
-    </div>
+    <Product isDark={isDark} />
   );
 };
 

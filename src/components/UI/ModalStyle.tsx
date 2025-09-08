@@ -1,4 +1,4 @@
-import { Theme } from "@src/types/theme";
+import type { Theme } from "@src/types/theme";
 
 const ModalStyle = ({ theme }: { theme: Theme }) => {
   return (
@@ -372,7 +372,35 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       .custom-modal .ant-switch-checked {
         background: ${"#01B574"} !important;
       }
-     
+        /* Input Number Fields */
+      .custom-modal .ant-input-number {
+        border-radius: 8px !important;
+        border: 1px solid var(--modal-border, ${
+          theme?.row?.borderColor || "#d9d9d9"
+        }) !important;
+        background: ${theme?.modal?.background || "#fff"} !important;
+        color: ${theme?.modal?.color || "#222"} !important;
+        font-size: 14px !important;
+        padding: 4px 12px !important;
+        transition: all 0.2s ease !important;
+      }
+      
+      .custom-modal .ant-input-number:hover {
+        border-color: ${theme?.button?.background || "#6C79F7"} !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      }
+      
+      .custom-modal .ant-input-number-focused {
+        border-color: ${theme?.button?.hoverBackground || "#5A67D8"} !important;
+        box-shadow: 0 0 0 2px rgba(108,121,239,0.2) !important;
+      }
+      
+      .custom-modal .ant-input-number-input {
+        background: transparent !important;
+        color: ${theme?.modal?.color || "#222"} !important;
+        font-size: 14px !important;
+      }
+        
     `}</style>
   );
 };
