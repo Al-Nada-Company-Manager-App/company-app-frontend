@@ -1,4 +1,4 @@
-import { Theme } from "@src/types/theme";
+import type { Theme } from "@src/types/theme";
 
 const ModalStyle = ({ theme }: { theme: Theme }) => {
   return (

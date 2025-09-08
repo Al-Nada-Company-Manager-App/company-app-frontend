@@ -4,7 +4,7 @@ import type { Theme } from "@src/types/theme";
 import TableStyle from "../../UI/TableStyle";
 import { useState } from "react";
 import ProductDetailModal from "./ProductDetailModal";
-// import ProductInfo from "./components/ProductInfo";
+import ProductInfo from "./components/ProductInfo";
 
 interface ProductTableProps {
   title: string;
@@ -56,9 +56,9 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
             title="Product"
             dataIndex="p_name"
             key="p_name"
-            // render={(_, record: Product) => (
-            //   <ProductInfo product={record} theme={theme} />
-            // )}
+            render={(_, record: Product) => (
+              <ProductInfo product={record} theme={theme} />
+            )}
             />
               <Column
                 title="Category"

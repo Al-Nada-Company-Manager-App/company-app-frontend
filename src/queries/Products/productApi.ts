@@ -66,12 +66,13 @@ export const productsApi = {
   },
 
   // Update product photo
+  // Update product photo
   updateProductPhoto: async (id: number, file: File): Promise<Product> => {
     const formData = new FormData();
     formData.append("photo", file);
 
     const response = await fetch(`${API_BASE_URL}/products/${id}/photo`, {
-      method: "PUT",
+      method: "PATCH", 
       body: formData,
     });
     if (!response.ok) {
