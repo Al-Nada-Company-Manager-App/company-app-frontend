@@ -159,11 +159,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       <Select.Option value="Measuring & Controllers">
                         Measuring & Controllers
                       </Select.Option>
-                      <Select.Option value="Lab Equipment">
-                        Lab Equipment
+                      <Select.Option value="Laboratory Equipment">
+                        Laboratory Equipment
                       </Select.Option>
-                      <Select.Option value="Chemicals">Chemicals</Select.Option>
-                      <Select.Option value="Spares">Spares</Select.Option>
+                      <Select.Option value="Chemical">Chemical</Select.Option>
+                      <Select.Option value="Spare Part">Spare Part</Select.Option>
                       <Select.Option value="Others">Others</Select.Option>
                     </Select>
                   </Form.Item>

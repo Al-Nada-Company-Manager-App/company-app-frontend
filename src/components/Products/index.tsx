@@ -85,7 +85,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
         products={measuring || []}
         theme={theme}
       />
-      <ProductTable title="Lab Equipment" products={lab || []} theme={theme} />
+      <ProductTable title="Lab Equipments" products={lab || []} theme={theme} />
       <ProductTable
         title="Chemicals"
         products={chemicals || []}
