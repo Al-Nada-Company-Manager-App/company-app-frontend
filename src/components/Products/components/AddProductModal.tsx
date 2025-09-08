@@ -10,7 +10,7 @@ import {
   message,
   Row,
   Col,
-  Button
+  Button,
 } from "antd";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
@@ -67,10 +67,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       ...values,
       p_photo: photoFilename,
     };
-    // Create product first
     const response = await createProduct.mutateAsync(newProduct);
 
-    // Then upload photo if present
     if (imageFile && response.p_id) {
       photoFilename = await handleUploadImage(imageFile, response.p_id);
       message.success("Product image uploaded: " + photoFilename);
@@ -94,7 +92,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         onOk={() => form.submit()}
         okButtonProps={{ className: "bg-blue-500 text-white" }}
         className="custom-modal"
-        width={700}
+        width={800}
         footer={null}
       >
         <Form
@@ -138,7 +136,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             </Col>
             <Col span={16}>
               <Row gutter={[16, 16]}>
-                <Col span={16}>
+                <Col span={12}>
                   <Form.Item
                     label="Product Name"
                     name="p_name"
@@ -148,6 +146,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   >
                     <Input />
                   </Form.Item>
+                </Col>
+                <Col span={12}>
                   <Form.Item
                     label="Category"
                     name="p_category"
@@ -167,37 +167,48 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       <Select.Option value="Others">Others</Select.Option>
                     </Select>
                   </Form.Item>
-                  <Row gutter={[32, 32]}>
-                    <Col span={12}>
-                      <Form.Item
-                        label="Cost Price"
-                        name="p_costprice"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter cost price",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} suffix="EGP" className="w-full" />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="Sell Price"
-                        name="p_sellprice"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter selling price",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} suffix="EGP" className="w-full" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
+                </Col>
+              </Row>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Cost Price"
+                    name="p_costprice"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter cost price",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      min={0}
+                      suffix="EGP"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Sell Price"
+                    name="p_sellprice"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter selling price",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      min={0}
+                      suffix="EGP"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
                   <Form.Item
                     label="Quantity"
                     name="p_quantity"
@@ -205,13 +216,21 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       { required: true, message: "Please enter quantity" },
                     ]}
                   >
-                    <InputNumber min={0} suffix="EGP" className="w-full" />
+                    <InputNumber
+                      min={0}
+                      suffix="EGP"
+                      style={{ width: "100%" }}
+                    />
                   </Form.Item>
-
+                </Col>
+                <Col span={12}>
                   <Form.Item label="Model Code" name="model_code">
                     <Input />
                   </Form.Item>
-
+                </Col>
+              </Row>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
                   <Form.Item
                     label="Serial Number"
                     name="serial_number"
@@ -221,7 +240,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   >
                     <Input />
                   </Form.Item>
-
+                </Col>
+                <Col span={12}>
                   <Form.Item label="Expire Date" name="expire_date">
                     <DatePicker className="w-full" />
                   </Form.Item>
