@@ -34,10 +34,10 @@ export interface UpdateProductInput {
   p_costprice?: number;
   p_sellprice?: number;
   p_quantity?: number;
-  p_description?: string;
+  p_description?: string | null;
   p_category?: string;
   model_code?: string;
   expire_date?: string | null;
   p_status?: string | null;
-  p_photo?: string;
+  p_photo?: string | null;
 }

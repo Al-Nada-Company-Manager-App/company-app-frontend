@@ -2,9 +2,9 @@ import { Table } from "antd";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
 import TableStyle from "../../UI/TableStyle";
-// import { useState } from "react";
-// import ProductDetailModal from "./ProductDetailModal"; // create similar to CustomerDetailModal
-// import ProductInfo from "./components/ProductInfo"; // like CustomerInfo
+import { useState } from "react";
+import ProductDetailModal from "./ProductDetailModal";
+// import ProductInfo from "./components/ProductInfo";
 
 interface ProductTableProps {
   title: string;
@@ -15,8 +15,8 @@ interface ProductTableProps {
 const { Column } = Table;
 
 const ProductTable = ({ title, products, theme }: ProductTableProps) => {
-//   const [selectedRow, setSelectedRow] = useState<Product>();
-//   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<Product>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
     <>
@@ -45,21 +45,21 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
               showHeader={true}
               pagination={{ pageSize: 10 }}
               rowKey="p_id"
-              //   onRow={(record) => ({
-              //     onClick: () => {
-              //       setSelectedRow(record);
-              //       setIsModalVisible(true);
-              //     },
-              //   })}
+                onRow={(record) => ({
+                  onClick: () => {
+                    setSelectedRow(record);
+                    setIsModalVisible(true);
+                  },
+                })}
             >
-              {/* <Column
+              <Column
             title="Product"
             dataIndex="p_name"
             key="p_name"
-            render={(_, record: Product) => (
-              <ProductInfo product={record} theme={theme} />
-            )}
-          /> */}
+            // render={(_, record: Product) => (
+            //   <ProductInfo product={record} theme={theme} />
+            // )}
+            />
               <Column
                 title="Category"
                 dataIndex="p_category"
@@ -95,6 +95,12 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
           </div>
         </div>
       </div>
+      <ProductDetailModal
+        modalOpen={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        product={selectedRow}
+        theme={theme}
+      />
     </>
   );
 };
