@@ -149,9 +149,7 @@ const ProductSelection = ({
         label={saleType === "SELLITEMS" ? "Add Products" : "Add Repair Items"}
       >
         <Select
-          placeholder={`Select ${
-            saleType === "SELLITEMS" ? "products" : "items"
-          }`}
+          placeholder={`Search by name, ID, price, model, or serial...`}
           loading={loadingProducts}
           onSelect={(value) =>
             saleType === "SELLITEMS"
@@ -164,11 +162,18 @@ const ProductSelection = ({
             const product = products?.find(
               (p: Product) => p.p_id === Number(option?.value)
             );
+            const searchText = input.toLowerCase();
             return (
-              product?.p_name?.toLowerCase().includes(input.toLowerCase()) ||
+              product?.p_name?.toLowerCase().includes(searchText) ||
+              product?.p_id?.toString().includes(searchText) ||
+              product?.p_costprice?.toString().includes(searchText) ||
+              product?.p_sellprice?.toString().includes(searchText) ||
+              product?.model_code?.toLowerCase().includes(searchText) ||
+              product?.serial_number?.toLowerCase().includes(searchText) ||
               false
             );
           }}
+          notFoundContent="No products found"
         >
           {products
             ?.filter((product: Product) =>
@@ -178,7 +183,13 @@ const ProductSelection = ({
             )
             .map((product: Product) => (
               <Option key={product.p_id} value={product.p_id}>
-                {product.p_name} - {product.p_costprice} EGP
+                {product.p_name} (ID: {product.p_id} | Cost:{" "}
+                {product.p_costprice} EGP
+                {product.model_code ? ` | Model: ${product.model_code}` : ""}
+                {product.serial_number
+                  ? ` | Serial: ${product.serial_number}`
+                  : ""}
+                )
               </Option>
             ))}
         </Select>

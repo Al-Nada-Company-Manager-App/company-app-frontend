@@ -1,6 +1,5 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row, Image } from "antd";
@@ -8,7 +7,7 @@ import PurchaseDate from "./components/PurchaseDate";
 import ProductPurchasesTable from "./components/ProductPurchasesTable";
 import { useDeletePurchase } from "@src/queries/Purchases";
 import { useThemeContext } from "@src/contexts/useThemeContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UpdatePurchaseModal from "./UpdatePurchaseModal";
 
 interface PurchaseDetailModalProps {
@@ -25,9 +24,17 @@ const PurchaseDetailModal = ({
   theme,
 }: PurchaseDetailModalProps) => {
   const [updateOpen, setUpdateOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { isDark } = useThemeContext();
 
   const deletePurchase = useDeletePurchase(isDark);
+
+  // Reset refreshKey when purchase changes or modal opens
+  useEffect(() => {
+    if (modalOpen && purchase) {
+      setRefreshKey(0);
+    }
+  }, [modalOpen, purchase]);
 
   const handleDelete = async (purchaseId: number) => {
     if (purchaseId === -1) return;
@@ -36,7 +43,11 @@ const PurchaseDetailModal = ({
 
   const handleUpdateClose = () => {
     setUpdateOpen(false);
-    onClose();
+    // Add a small delay to ensure the data has been updated before refreshing
+    setTimeout(() => {
+      setRefreshKey((prev) => prev + 1);
+    }, 100);
+    // Don't close the detail modal, just refresh the data
   };
 
   return (
@@ -140,6 +151,7 @@ const PurchaseDetailModal = ({
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
           <Col span={24}>
             <ProductPurchasesTable
+              key={`${purchase?.pch_id}-${refreshKey}`}
               purchaseId={purchase?.pch_id || -1}
               theme={theme}
             />

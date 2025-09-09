@@ -382,15 +382,48 @@ const AddPurchaseModal = ({
                 style={{ width: "30%" }}
               >
                 <Select
-                  placeholder="Select product"
+                  placeholder="Search by name, ID, price, model, or serial..."
                   showSearch
                   onChange={handleProductSelect}
+                  optionFilterProp="children"
+                  filterOption={(input, option) => {
+                    const product = products?.find(
+                      (p) => p.p_id === Number(option?.value)
+                    );
+                    const searchText = input.toLowerCase();
+                    return (
+                      product?.p_name?.toLowerCase().includes(searchText) ||
+                      product?.p_id?.toString().includes(searchText) ||
+                      product?.p_sellprice?.toString().includes(searchText) ||
+                      product?.model_code?.toLowerCase().includes(searchText) ||
+                      product?.serial_number
+                        ?.toLowerCase()
+                        .includes(searchText) ||
+                      false
+                    );
+                  }}
+                  notFoundContent="No products found"
                 >
-                  {products?.map((product) => (
-                    <Select.Option key={product.p_id} value={product.p_id}>
-                      {product.p_name} (Sell: ${product.p_sellprice})
-                    </Select.Option>
-                  ))}
+                  {products
+                    ?.filter(
+                      (product) =>
+                        !selectedProducts.find(
+                          (selected) => selected.p_id === product.p_id
+                        )
+                    )
+                    ?.map((product) => (
+                      <Select.Option key={product.p_id} value={product.p_id}>
+                        {product.p_name} (ID: {product.p_id} | $
+                        {product.p_sellprice}
+                        {product.model_code
+                          ? ` | Model: ${product.model_code}`
+                          : ""}
+                        {product.serial_number
+                          ? ` | Serial: ${product.serial_number}`
+                          : ""}
+                        )
+                      </Select.Option>
+                    ))}
                 </Select>
               </Form.Item>
 

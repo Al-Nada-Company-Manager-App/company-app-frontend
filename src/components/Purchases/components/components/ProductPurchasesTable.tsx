@@ -3,6 +3,7 @@ import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetPurchasesProducts } from "@src/queries/Purchases";
 import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useEffect } from "react";
 
 interface ProductPurchasesTableProps {
   purchaseId: number;
@@ -20,7 +21,16 @@ const ProductPurchasesTable = ({
     data: products,
     isLoading,
     error,
+    refetch,
   } = useGetPurchasesProducts(purchaseId);
+
+  // Refetch data when component mounts or purchaseId changes
+  useEffect(() => {
+    if (purchaseId && purchaseId !== -1) {
+      refetch();
+    }
+  }, [purchaseId, refetch]);
+
   console.log(products);
 
   if (isLoading) {

@@ -99,6 +99,7 @@ const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
         </Table>
       </div>
       <PurchaseDetailModal
+        key={selectedRow?.pch_id}
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         purchase={selectedRow}
