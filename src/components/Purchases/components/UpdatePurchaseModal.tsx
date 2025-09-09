@@ -11,13 +11,11 @@ import {
   Table,
   Card,
   Divider,
-  Space,
   Popconfirm,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useUpdatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
@@ -72,7 +70,6 @@ const UpdatePurchaseModal = ({
   modalOpen,
   onClose,
   purchase,
-  theme,
 }: UpdatePurchaseModalProps) => {
   const [form] = Form.useForm();
   const { isDark } = useThemeContext();

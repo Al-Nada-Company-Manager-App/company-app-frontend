@@ -17,13 +17,20 @@ import type { Theme } from "@src/types/theme";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useCreatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
+import { useGetAllProducts } from "@src/queries/Products";
 
 interface AddPurchaseModalProps {
   modalOpen: boolean;
   onClose: () => void;
   theme: Theme;
+}
+
+interface ProductFormValues {
+  product_id: number;
+  quantity: number;
+  costprice: number;
 }
 
 interface PurchaseFormValues {
@@ -36,7 +43,7 @@ interface PurchaseFormValues {
   pch_tax?: number;
   pch_total: number;
   pch_currency?: string;
-  pch_date: unknown; // Dayjs object
+  pch_date: unknown;
 }
 
 interface SelectedProduct {
@@ -46,16 +53,6 @@ interface SelectedProduct {
   costprice: number;
   total: number;
 }
-
-// Dummy products for selection (later replace with API call)
-const AVAILABLE_PRODUCTS = [
-  { p_id: 206, p_name: "Laptop Dell Inspiron", p_sellprice: 250.0 },
-  { p_id: 207, p_name: "Monitor Samsung 24inch", p_sellprice: 500.0 },
-  { p_id: 208, p_name: "Keyboard Mechanical", p_sellprice: 75.0 },
-  { p_id: 209, p_name: "Mouse Wireless", p_sellprice: 100.0 },
-  { p_id: 210, p_name: "USB Cable", p_sellprice: 15.0 },
-  { p_id: 211, p_name: "External Hard Drive", p_sellprice: 120.0 },
-];
 
 const AddPurchaseModal = ({
   modalOpen,
@@ -71,11 +68,47 @@ const AddPurchaseModal = ({
     []
   );
   const [productForm] = Form.useForm();
+  const { data: products } = useGetAllProducts();
 
-  const addProduct = (values: any) => {
-    const selectedProduct = AVAILABLE_PRODUCTS.find(
-      (p) => p.p_id === values.product_id
-    );
+  // Calculate total amount based on cost, tax, customs cost, and expense
+  const calculateTotal = useCallback(() => {
+    const cost = form.getFieldValue("pch_cost") || 0;
+    const tax = form.getFieldValue("pch_tax") || 0;
+    const customsCost = form.getFieldValue("pch_customscost") || 0;
+    const expense = form.getFieldValue("pch_expense") || 0;
+
+    const total = cost + tax + customsCost + expense;
+    form.setFieldsValue({ pch_total: total });
+  }, [form]);
+
+  // Calculate products total and update cost field
+  const updateCostFromProducts = useCallback(() => {
+    const productsTotal = selectedProducts.reduce((sum, p) => sum + p.total, 0);
+    if (productsTotal > 0) {
+      form.setFieldsValue({ pch_cost: productsTotal });
+    }
+    calculateTotal();
+  }, [selectedProducts, form, calculateTotal]);
+
+  // Update cost when products change
+  useEffect(() => {
+    updateCostFromProducts();
+  }, [selectedProducts, updateCostFromProducts]);
+
+  // Initial calculation when modal opens
+  useEffect(() => {
+    if (modalOpen) {
+      // Reset all values when modal opens
+      setSelectedProducts([]);
+      form.resetFields();
+      productForm.resetFields();
+      // Set initial total to 0
+      form.setFieldsValue({ pch_total: 0 });
+    }
+  }, [modalOpen, form, productForm]);
+
+  const addProduct = (values: ProductFormValues) => {
+    const selectedProduct = products?.find((p) => p.p_id === values.product_id);
     if (selectedProduct) {
       const total = values.quantity * values.costprice;
       const newProduct: SelectedProduct = {
@@ -92,9 +125,7 @@ const AddPurchaseModal = ({
   };
 
   const handleProductSelect = (productId: number) => {
-    const selectedProduct = AVAILABLE_PRODUCTS.find(
-      (p) => p.p_id === productId
-    );
+    const selectedProduct = products?.find((p) => p.p_id === productId);
     if (selectedProduct) {
       // Auto-suggest cost price (80% of sell price as a starting point)
       const suggestedCostPrice = selectedProduct.p_sellprice * 0.8;
@@ -191,6 +222,16 @@ const AddPurchaseModal = ({
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
+          onValuesChange={(changedValues) => {
+            if (
+              changedValues.pch_cost !== undefined ||
+              changedValues.pch_tax !== undefined ||
+              changedValues.pch_customscost !== undefined ||
+              changedValues.pch_expense !== undefined
+            ) {
+              setTimeout(calculateTotal, 50);
+            }
+          }}
           style={{ maxWidth: "100%" }}
         >
           <Row gutter={[16, 16]}>
@@ -234,7 +275,7 @@ const AddPurchaseModal = ({
           <Row gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item
-                label="Total Amount"
+                label="Total Amount (Calculated)"
                 name="pch_total"
                 rules={[
                   { required: true, message: "Please enter total amount" },
@@ -245,6 +286,7 @@ const AddPurchaseModal = ({
                   min={0}
                   step={0.01}
                   placeholder="0.00"
+                  readOnly
                 />
               </Form.Item>
             </Col>
@@ -262,7 +304,7 @@ const AddPurchaseModal = ({
 
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Form.Item label="Cost" name="pch_cost">
+              <Form.Item label="Cost (Base from Products)" name="pch_cost">
                 <InputNumber
                   style={{ width: "100%" }}
                   min={0}
@@ -344,7 +386,7 @@ const AddPurchaseModal = ({
                   showSearch
                   onChange={handleProductSelect}
                 >
-                  {AVAILABLE_PRODUCTS.map((product) => (
+                  {products?.map((product) => (
                     <Select.Option key={product.p_id} value={product.p_id}>
                       {product.p_name} (Sell: ${product.p_sellprice})
                     </Select.Option>
