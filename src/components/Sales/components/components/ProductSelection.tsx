@@ -10,22 +10,22 @@ import {
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
+import type { Product } from "@src/types/Products/product";
 
 const { Option } = Select;
-const { Text, Link } = Typography;
-
-interface Product {
-  p_id: number;
-  p_name: string;
-  p_price: number;
-}
+const { Link } = Typography;
 
 interface SelectedProduct {
   p_id: number;
   p_name: string;
-  p_price: number;
+  p_costprice: number;
   si_quantity: number;
   si_total: number;
+}
+
+interface RepairItem {
+  p_id: number;
+  p_name: string;
 }
 
 interface ProductSelectionProps {
@@ -60,6 +60,26 @@ const ProductSelection = ({
   if (saleType !== "SELLITEMS" && saleType !== "REPAIR") {
     return null;
   }
+
+  const repairColumns = [
+    {
+      title: "Product Name",
+      dataIndex: "p_name",
+      key: "p_name",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (record: RepairItem) => (
+        <Button
+          type="text"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => onRepairItemRemove(record.p_id)}
+        />
+      ),
+    },
+  ];
 
   const productColumns = [
     {
@@ -140,12 +160,15 @@ const ProductSelection = ({
           }
           value={undefined}
           showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)
-              ?.toLowerCase()
-              .includes(input.toLowerCase())
-          }
+          filterOption={(input, option) => {
+            const product = products?.find(
+              (p: Product) => p.p_id === Number(option?.value)
+            );
+            return (
+              product?.p_name?.toLowerCase().includes(input.toLowerCase()) ||
+              false
+            );
+          }}
         >
           {products
             ?.filter((product: Product) =>
@@ -155,49 +178,41 @@ const ProductSelection = ({
             )
             .map((product: Product) => (
               <Option key={product.p_id} value={product.p_id}>
-                {product.p_name} - {product.p_price} EGP
+                {product.p_name} - {product.p_costprice} EGP
               </Option>
             ))}
         </Select>
       </Form.Item>
 
       {saleType === "SELLITEMS" && selectedProducts.length > 0 && (
-        <Table
-          dataSource={selectedProducts}
-          columns={productColumns}
-          pagination={false}
-          size="small"
-          rowKey="p_id"
-        />
+        <>
+          <Table
+            className="custom-table"
+            dataSource={selectedProducts}
+            columns={productColumns}
+            pagination={false}
+            size="small"
+            rowKey="p_id"
+          />
+        </>
       )}
 
       {saleType === "REPAIR" && selectedRepairItems.length > 0 && (
         <div>
-          <Text strong>Selected Repair Items:</Text>
-          <div style={{ marginTop: 8 }}>
-            {selectedRepairItems.map((itemId) => {
+          <Table
+            className="custom-table"
+            dataSource={selectedRepairItems.map((itemId) => {
               const product = products?.find((p: Product) => p.p_id === itemId);
-              return (
-                <div
-                  key={itemId}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: 4,
-                  }}
-                >
-                  <span style={{ marginRight: 8 }}>{product?.p_name}</span>
-                  <Button
-                    type="text"
-                    size="small"
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => onRepairItemRemove(itemId)}
-                  />
-                </div>
-              );
+              return {
+                p_id: itemId,
+                p_name: product?.p_name || "Unknown Product",
+              };
             })}
-          </div>
+            columns={repairColumns}
+            pagination={false}
+            size="small"
+            rowKey="p_id"
+          />
         </div>
       )}
     </>

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useCustomers } from "@src/hooks/Customers/useCustomers";
 import CustomerTable from "./components/CustomerTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
-import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
 import AddCustomerModal from "./components/AddCustomerModal";
 interface CustomersProps {
@@ -72,7 +71,6 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
   }
   return (
     <>
-      <TableStyle theme={theme} />
       <div className="p-6">
         <div
           className="w-full rounded-2xl p-6 mb-6"

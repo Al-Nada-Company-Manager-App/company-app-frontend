@@ -1,8 +1,6 @@
 import { Modal, Descriptions, Tag, Row, Col, Image, Button } from "antd";
 import { useState } from "react";
-import type {
-  Employee
-} from "../../../types/Employees/employee";
+import type { Employee } from "../../../types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import { calculateAge } from "@src/utils/calculateAge";
 
@@ -29,25 +27,23 @@ const EmployeeDetailModal = ({
   employee,
   theme,
 }: DetailModal) => {
-
   const { isDark } = useThemeContext();
   const [updateOpen, setUpdateOpen] = useState(false);
   const deleteEmployee = useDeleteEmployee(isDark);
 
   const deactivateEmployee = useDeactivateEmployee(isDark);
-    
- const handleDelete = async (employeeId: number) => {
+
+  const handleDelete = async (employeeId: number) => {
     if (employeeId === -1) return;
     await deleteEmployee.mutateAsync(employeeId);
- }
- const handleDeactivate = async (employeeId: number) => {
+  };
+  const handleDeactivate = async (employeeId: number) => {
     if (employeeId === -1) return;
     await deactivateEmployee.mutateAsync(employeeId);
-  }
-   
+  };
+
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Employee Details"
@@ -104,15 +100,15 @@ const EmployeeDetailModal = ({
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
-            <Image
-              src={
-                employee?.e_photo
-                  ? `Images/employees/${employee.e_photo}`
-                  : "/Images/employees/placeholder.jpg"
-              }
-              alt={employee?.f_name}
-              style={{ borderRadius: "12px", width: "100%" }}
-            />
+              <Image
+                src={
+                  employee?.e_photo
+                    ? `Images/employees/${employee.e_photo}`
+                    : "/Images/employees/placeholder.jpg"
+                }
+                alt={employee?.f_name}
+                style={{ borderRadius: "12px", width: "100%" }}
+              />
             </div>
           </Col>
 

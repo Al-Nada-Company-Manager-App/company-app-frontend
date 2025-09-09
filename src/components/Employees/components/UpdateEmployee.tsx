@@ -12,9 +12,7 @@ import {
   Image,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import type {
-  Employee,
-} from "../../../types/Employees/employee";
+import type { Employee } from "../../../types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
@@ -36,22 +34,21 @@ const UpdateEmployeeModal = ({
   employee,
   theme,
 }: UpdateModalProps) => {
-    const { isDark } = useThemeContext();
-    const [form] = Form.useForm();
-    const updateEmployee = useUpdateEmployee(isDark); // Assuming this mutation hook for updating employee
-    
-    const [imageFile, setImageFile] = useState<UploadFile | null>(null);
-    const [previewImage, setPreviewImage] = useState<string | undefined>(
-        employee?.e_photo ? `Images/employees/${employee.e_photo}` : undefined
-    );
-    useEffect(() => {
-      if (employee?.e_photo) {
-        setPreviewImage(`/Images/employees/${employee.e_photo}`);
-      }
-    }, [employee?.e_photo]);
+  const { isDark } = useThemeContext();
+  const [form] = Form.useForm();
+  const updateEmployee = useUpdateEmployee(isDark); // Assuming this mutation hook for updating employee
 
+  const [imageFile, setImageFile] = useState<UploadFile | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | undefined>(
+    employee?.e_photo ? `Images/employees/${employee.e_photo}` : undefined
+  );
+  useEffect(() => {
+    if (employee?.e_photo) {
+      setPreviewImage(`/Images/employees/${employee.e_photo}`);
+    }
+  }, [employee?.e_photo]);
 
-    const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
+  const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     if (info.file.status === "done") {
       setImageFile(info.file.originFileObj as RcFile);
       setPreviewImage(URL.createObjectURL(info.file.originFileObj as RcFile));
@@ -94,7 +91,6 @@ const UpdateEmployeeModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Update Employee"
@@ -207,7 +203,7 @@ const UpdateEmployeeModal = ({
                       unCheckedChildren="Inactive"
                     />
                   </Form.Item>
-                 </Col>
+                </Col>
               </Row>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
@@ -221,9 +217,13 @@ const UpdateEmployeeModal = ({
                     <Select placeholder="Select gender">
                       <Select.Option value="Manager">Manager</Select.Option>
                       <Select.Option value="SalesMan">SalesMan</Select.Option>
-                      <Select.Option  value="Accountant">Accountant</Select.Option >
-                      <Select.Option  value="Technical Support">Technical Support</Select.Option >
-                      <Select.Option  value="Secretary">Secretary</Select.Option >
+                      <Select.Option value="Accountant">
+                        Accountant
+                      </Select.Option>
+                      <Select.Option value="Technical Support">
+                        Technical Support
+                      </Select.Option>
+                      <Select.Option value="Secretary">Secretary</Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -257,8 +257,7 @@ const UpdateEmployeeModal = ({
                     />
                   </Form.Item>
                 </Col>
-                <Col span={12}>
-                </Col>
+                <Col span={12}></Col>
               </Row>
               <Form.Item
                 name="e_username"

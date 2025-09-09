@@ -2,9 +2,17 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import Sidebar from "@src/components/Sidebar";
 import Breadcrumb from "@src/components/Breadcrumb";
+import { darkTheme,lightTheme } from "@src/hooks/dark&lightthemes";
+import { useMemo } from "react";
+import ModalStyle from "../UI/ModalStyle";
+import TableStyle from "../UI/TableStyle";
 
 const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();
+    const itheme = useMemo(
+      () => (isDark ? darkTheme : lightTheme),
+      [isDark]
+    );
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,46 +49,50 @@ const Layout = () => {
   };
 
   return (
-    <div
-      className="relative w-screen h-screen"
-      style={{ backgroundColor: theme.containerBg }}
-    >
-      {/* Sidebar */}
-      <Sidebar
-        isDark={isDark}
-        onItemClick={handleSidebarItemClick}
-        currentPath={location.pathname}
-      />
+    <>
+      <ModalStyle theme={itheme}/>
+      <TableStyle theme={itheme}/>
+      <div
+        className="relative w-screen h-screen"
+        style={{ backgroundColor: theme.containerBg }}
+      >
+        {/* Sidebar */}
+        <Sidebar
+          isDark={isDark}
+          onItemClick={handleSidebarItemClick}
+          currentPath={location.pathname}
+        />
 
-      {/* Breadcrumb */}
-      <Breadcrumb
-        isDark={isDark}
-        currentPage={getCurrentPageName()}
-        onThemeToggle={toggleTheme}
-        onMenuItemClick={handleBreadcrumbItemClick}
-      />
+        {/* Breadcrumb */}
+        <Breadcrumb
+          isDark={isDark}
+          currentPage={getCurrentPageName()}
+          onThemeToggle={toggleTheme}
+          onMenuItemClick={handleBreadcrumbItemClick}
+        />
 
-      {/* Background layers */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute inset-0 scale-110 bg-cover bg-center blur-[30px]"
-          style={{ backgroundImage: `url(${theme.backgroundImage})` }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ backgroundImage: theme.gradient1 }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ backgroundImage: theme.gradient2 }}
-        />
+        {/* Background layers */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-0 scale-110 bg-cover bg-center blur-[30px]"
+            style={{ backgroundImage: `url(${theme.backgroundImage})` }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ backgroundImage: theme.gradient1 }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ backgroundImage: theme.gradient2 }}
+          />
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="scrollable-content fixed left-[298px] top-0 right-0 bottom-0 overflow-y-auto pt-[101px]">
+          <Outlet />
+        </div>
       </div>
-
-      {/* Scrollable Content Area */}
-      <div className="scrollable-content fixed left-[298px] top-0 right-0 bottom-0 overflow-y-auto pt-[101px]">
-        <Outlet />
-      </div>
-    </div>
+    </>
   );
 };
 

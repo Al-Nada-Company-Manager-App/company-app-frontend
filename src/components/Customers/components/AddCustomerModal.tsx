@@ -2,7 +2,6 @@ import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import {
   useCreateCustomer,
@@ -78,7 +77,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Add Customer"

@@ -147,7 +147,6 @@ const UpdatePermissionsModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Update Permissions"

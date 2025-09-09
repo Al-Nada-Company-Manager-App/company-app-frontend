@@ -2,10 +2,8 @@ import { useState } from "react";
 import { useSales } from "@src/hooks/Sales/useSales";
 import SalesTable from "./components/SalesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
-import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
 import AddSaleModal from "./components/AddSaleModal";
-
 
 interface SalesPageProps {
   isDark: boolean;
@@ -15,44 +13,44 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
   const { sales, theme, isLoading, error } = useSales(isDark);
   const [showAddModal, setShowAddModal] = useState(false);
 
-    if (isLoading) {
+  if (isLoading) {
     return (
-        <div className="p-6">
+      <div className="p-6">
         <div
-            className="w-full rounded-2xl"
-            style={{
+          className="w-full rounded-2xl"
+          style={{
             background: theme.container.background,
             backdropFilter: theme.container.backdropFilter,
             minHeight: "400px",
-            }}
+          }}
         >
-            <Loading
+          <Loading
             size="large"
             message="Loading sales..."
             textStyle={{ color: theme.title.color }}
             containerStyle={{
-                background: "transparent",
-                minHeight: "400px",
+              background: "transparent",
+              minHeight: "400px",
             }}
             isDark={isDark}
-            />
+          />
         </div>
-        </div>
+      </div>
     );
-    }
+  }
 
-    if (error) {
+  if (error) {
     return (
-        <div className="p-6">
+      <div className="p-6">
         <div
-            className="w-full rounded-2xl"
-            style={{
+          className="w-full rounded-2xl"
+          style={{
             background: theme.container.background,
             backdropFilter: theme.container.backdropFilter,
             minHeight: "400px",
-            }}
+          }}
         >
-            <ErrorDisplay
+          <ErrorDisplay
             status="error"
             title="Failed to Load Sales"
             subTitle="There was an error loading the sales data."
@@ -62,20 +60,19 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
             showHomeButton={false}
             isDark={isDark}
             style={{
-                background: "transparent",
-                minHeight: "400px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+              background: "transparent",
+              minHeight: "400px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            />
+          />
         </div>
-        </div>
+      </div>
     );
-    }
+  }
   return (
     <>
-      <TableStyle theme={theme} />
       <div className="p-6">
         <div
           className="w-full rounded-2xl p-6 mb-6"
@@ -103,11 +100,11 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
           <SalesTable sales={sales ?? []} theme={theme} />
         </div>
       </div>
-        <AddSaleModal
-            modalOpen={showAddModal}
-            onClose={() => setShowAddModal(false)}
-            theme={theme}
-        />
+      <AddSaleModal
+        modalOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        theme={theme}
+      />
     </>
   );
 };

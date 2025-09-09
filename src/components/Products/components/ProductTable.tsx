@@ -1,7 +1,6 @@
 import { Table } from "antd";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
-import TableStyle from "../../UI/TableStyle";
 import { useState } from "react";
 import ProductDetailModal from "./ProductDetailModal";
 import ProductInfo from "./components/ProductInfo";
@@ -20,7 +19,6 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
 
   return (
     <>
-      <TableStyle theme={theme} />
       <div className="p-6">
         <div
           className="w-full rounded-2xl p-6 mb-6"

@@ -38,7 +38,6 @@ const ProductDetailModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Product Details"
@@ -120,11 +119,11 @@ const ProductDetailModal = ({
         </Row>
       </Modal>
       <UpdateProduct
-      key={product?.p_id}
-      modalOpen={updateOpen}
-      onClose={handleUpdateClose}
-      product={product}
-      theme={theme}
+        key={product?.p_id}
+        modalOpen={updateOpen}
+        onClose={handleUpdateClose}
+        product={product}
+        theme={theme}
       />
     </>
   );

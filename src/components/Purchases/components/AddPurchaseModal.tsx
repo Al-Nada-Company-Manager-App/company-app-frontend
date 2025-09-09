@@ -3,7 +3,6 @@ import {
   Form,
   Row,
   Col,
-  Input,
   DatePicker,
   Select,
   InputNumber,
@@ -15,8 +14,6 @@ import {
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
-import TableStyle from "@src/components/UI/TableStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useCreatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
@@ -180,8 +177,6 @@ const AddPurchaseModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
-      <TableStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Add New Purchase"

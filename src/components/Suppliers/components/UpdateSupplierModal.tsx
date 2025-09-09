@@ -81,7 +81,6 @@ const UpdateSupplierModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Update Supplier"

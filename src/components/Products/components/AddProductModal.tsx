@@ -83,7 +83,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         centered
         title="Add New Product"
@@ -163,7 +162,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                         Laboratory Equipment
                       </Select.Option>
                       <Select.Option value="Chemical">Chemical</Select.Option>
-                      <Select.Option value="Spare Part">Spare Part</Select.Option>
+                      <Select.Option value="Spare Part">
+                        Spare Part
+                      </Select.Option>
                       <Select.Option value="Others">Others</Select.Option>
                     </Select>
                   </Form.Item>

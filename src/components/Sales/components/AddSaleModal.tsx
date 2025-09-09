@@ -1,10 +1,10 @@
 import { Modal, Form, Row, Divider } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useCreateSale } from "@src/queries/Sales";
 import { useGetAllCustomers } from "@src/queries/Customers";
+import { useGetAllProducts } from "@src/queries/Products";
 import { useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 
@@ -13,6 +13,7 @@ import SaleBasicInfo from "./components/SaleBasicInfo";
 import SaleFinancialInfo from "./components/SaleFinancialInfo";
 import ProductSelection from "./components/ProductSelection";
 import SaleModalButtons from "./components/SaleModalButtons";
+import type { Product } from "@src/types/Products/product";
 
 interface AddSaleModalProps {
   modalOpen: boolean;
@@ -20,17 +21,11 @@ interface AddSaleModalProps {
   theme: Theme;
 }
 
-interface Product {
-  p_id: number;
-  p_name: string;
-  p_price: number;
-  // Add other product properties as needed
-}
 
 interface SelectedProduct {
   p_id: number;
   p_name: string;
-  p_price: number;
+  p_costprice: number;
   si_quantity: number;
   si_total: number;
 }
@@ -46,10 +41,7 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
   const [form] = Form.useForm();
   const createSale = useCreateSale(isDark);
   const { data: customers, isLoading: loadingCustomers } = useGetAllCustomers();
-  const { data: products, isLoading: loadingProducts } = {
-    data: [] as Product[],
-    isLoading: false,
-  };
+  const { data: products, isLoading: loadingProducts } = useGetAllProducts();
 
   // State management
   const [saleType, setSaleType] = useState<string>("");
@@ -106,7 +98,13 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
 
   useEffect(() => {
     calculateTotal();
-  }, [selectedProducts, discountPercentage, taxPercentage, saleType, calculateTotal]);
+  }, [
+    selectedProducts,
+    discountPercentage,
+    taxPercentage,
+    saleType,
+    calculateTotal,
+  ]);
 
   // Event handlers
   const handleSaleTypeChange = (value: string) => {
@@ -121,9 +119,9 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
       const newProduct: SelectedProduct = {
         p_id: product.p_id,
         p_name: product.p_name,
-        p_price: product.p_price,
+        p_costprice: product.p_costprice,
         si_quantity: 1,
-        si_total: product.p_price,
+        si_total: product.p_costprice,
       };
       setSelectedProducts([...selectedProducts, newProduct]);
     }
@@ -136,7 +134,7 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
           ? {
               ...product,
               si_quantity: quantity,
-              si_total: product.p_price * quantity,
+              si_total: product.p_costprice * quantity,
             }
           : product
       )
@@ -239,7 +237,6 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Add New Sale"

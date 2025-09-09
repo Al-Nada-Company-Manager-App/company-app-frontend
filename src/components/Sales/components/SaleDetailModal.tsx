@@ -1,9 +1,8 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Modal, Row , Image} from "antd";
+import { Col, Descriptions, Modal, Row, Image } from "antd";
 import SaleDate from "./components/SaleDate";
 import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
@@ -26,7 +25,7 @@ const SaleDetailModal = ({
 }: SaleDetailModalProps) => {
   const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
-  
+
   const deleteSale = useDeleteSale(isDark);
 
   const handleDelete = async (saleId: number) => {
@@ -35,7 +34,6 @@ const SaleDetailModal = ({
   };
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Sale Details"
@@ -71,15 +69,15 @@ const SaleDetailModal = ({
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
-            <Image
-              src={
-                sale?.customer?.c_photo
-                  ? `/Images/customers/${sale?.customer.c_photo}`
-                  : "/Images/customers/placeholder.jpg"
-              }
-              alt={sale?.customer?.c_name}
-              style={{ borderRadius: "12px", width: "100%" }}
-            />
+              <Image
+                src={
+                  sale?.customer?.c_photo
+                    ? `/Images/customers/${sale?.customer.c_photo}`
+                    : "/Images/customers/placeholder.jpg"
+                }
+                alt={sale?.customer?.c_name}
+                style={{ borderRadius: "12px", width: "100%" }}
+              />
               <div
                 style={{
                   fontWeight: 600,
@@ -138,14 +136,13 @@ const SaleDetailModal = ({
         </Row>
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
           <Col span={24}>
-          {sale?.sl_type === "REPAIR" || sale?.sl_type === "SELLITEMS" ? (
-            <ProductSalesTable
-              saleId={sale?.sl_id || -1}
-              saleType={sale?.sl_type || ""}
-              theme={theme}
-            />
-          ) : null
-          }
+            {sale?.sl_type === "REPAIR" || sale?.sl_type === "SELLITEMS" ? (
+              <ProductSalesTable
+                saleId={sale?.sl_id || -1}
+                saleType={sale?.sl_type || ""}
+                theme={theme}
+              />
+            ) : null}
           </Col>
         </Row>
       </Modal>

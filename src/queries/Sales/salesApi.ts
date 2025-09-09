@@ -18,7 +18,7 @@ export const salesApi = {
     saleType: string
   ): Promise<Products[]> => {
     const response = await fetch(
-      `${API_BASE_URL}/sales/${id}/products/${saleType}`
+      `${API_BASE_URL}/${id}/products/${saleType}`
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch products for Sale ID: ${id}`);

@@ -12,7 +12,6 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useUpdateProduct, useUpdateProductPhoto } from "@src/queries/Products";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
@@ -68,37 +67,34 @@ const UpdateProduct = ({
     return response.p_photo ? response.p_photo : "";
   };
 
-const onFinish = async (values: Product) => {
-  let photoFilename = product?.p_photo;
+  const onFinish = async (values: Product) => {
+    let photoFilename = product?.p_photo;
 
-  if (imageFile) {
-    photoFilename = await handleUploadImage(
-      imageFile as RcFile,
-      product?.p_id || -1
-    );
-  }
+    if (imageFile) {
+      photoFilename = await handleUploadImage(
+        imageFile as RcFile,
+        product?.p_id || -1
+      );
+    }
 
-  const updatedProduct: UpdateProductInput = {
-    ...values,
-    p_id: product?.p_id || -1,
-    p_photo: photoFilename,
-    p_description: values.p_description ?? undefined,
-    model_code: values.model_code ?? undefined,
-    expire_date: values.expire_date ?? undefined,
-    p_status: values.p_status ?? undefined,
+    const updatedProduct: UpdateProductInput = {
+      ...values,
+      p_id: product?.p_id || -1,
+      p_photo: photoFilename,
+      p_description: values.p_description ?? undefined,
+      model_code: values.model_code ?? undefined,
+      expire_date: values.expire_date ?? undefined,
+      p_status: values.p_status ?? undefined,
+    };
+
+    if (product?.p_id) {
+      await updateProduct.mutateAsync(updatedProduct);
+      onClose();
+    }
   };
-
-
-  if (product?.p_id) {
-    await updateProduct.mutateAsync(updatedProduct);
-    onClose();
-  }
-};
-
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Update Product"

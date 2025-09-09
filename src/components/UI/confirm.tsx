@@ -12,7 +12,15 @@ interface ConfirmProps {
   className?: string;
   theme: Theme;
 }
-const Confirm = ({ type, isdanger, btnTitle ,onOk,onCancel, className , theme}: ConfirmProps) => {
+const Confirm = ({
+  type,
+  isdanger,
+  btnTitle,
+  onOk,
+  onCancel,
+  className,
+  theme,
+}: ConfirmProps) => {
   const [modal, contextHolder] = Modal.useModal();
 
   const showConfirm = () => {
@@ -39,29 +47,27 @@ const Confirm = ({ type, isdanger, btnTitle ,onOk,onCancel, className , theme}: 
 
   return (
     <>
-      <ModalStyle theme={theme} />
       {contextHolder}
-      <Button type = {type || "primary"} 
+      <Button
+        type={type || "primary"}
         danger={isdanger}
         className={className || "px-6 py-2"}
-        style={
-          {
-            color: theme.button?.color || "#fff",
-            boxShadow: theme.button?.boxShadow,
-            borderRadius: theme.button?.borderRadius,
-            fontWeight: theme.button?.fontWeight,
-            fontSize: theme.button?.fontSize,
-            padding: theme.button?.padding,
-            transition: theme.button?.transition,
-            border: theme.button?.border,
-          }
-        }
-        onClick={showConfirm}>
-        
+        style={{
+          color: theme.button?.color || "#fff",
+          boxShadow: theme.button?.boxShadow,
+          borderRadius: theme.button?.borderRadius,
+          fontWeight: theme.button?.fontWeight,
+          fontSize: theme.button?.fontSize,
+          padding: theme.button?.padding,
+          transition: theme.button?.transition,
+          border: theme.button?.border,
+        }}
+        onClick={showConfirm}
+      >
         {btnTitle || "Confirm"}
       </Button>
     </>
   );
 };
 
-    export default Confirm;
+export default Confirm;

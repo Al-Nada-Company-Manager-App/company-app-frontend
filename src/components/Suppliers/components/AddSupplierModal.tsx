@@ -78,7 +78,6 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Add Supplier"

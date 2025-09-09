@@ -1,5 +1,4 @@
 import ConfirmBtn from "@src/components/UI/confirm";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row } from "antd";
@@ -38,7 +37,6 @@ const CustomerDetailModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Customer Details"
@@ -73,16 +71,16 @@ const CustomerDetailModal = ({
       >
         <Row gutter={[16, 16]}>
           <Col span={8}>
-           <div style={{ marginTop: "16px", textAlign: "center" }}>
-            <Image
-              src={
-                customer?.c_photo
-                  ? `Images/customers/${customer.c_photo}`
-                  : "/Images/customers/placeholder.jpg"
-              }
-              alt={customer?.c_name}
-              style={{ borderRadius: "12px", width: "100%" }}
-            />
+            <div style={{ marginTop: "16px", textAlign: "center" }}>
+              <Image
+                src={
+                  customer?.c_photo
+                    ? `Images/customers/${customer.c_photo}`
+                    : "/Images/customers/placeholder.jpg"
+                }
+                alt={customer?.c_name}
+                style={{ borderRadius: "12px", width: "100%" }}
+              />
             </div>
           </Col>
           <Col span={16}>

@@ -41,7 +41,6 @@ const PurchaseDetailModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Purchase Details"

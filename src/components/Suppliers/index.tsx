@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSuppliers } from "@src/hooks/Suppliers/useSuppliers";
 import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
-import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
 import AddSupplierModal from "./components/AddSupplierModal";
 interface SuppliersProps {
@@ -72,7 +71,6 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
   }
   return (
     <>
-      <TableStyle theme={theme} />
       <div className="p-6">
         <div
           className="w-full rounded-2xl p-6 mb-6"

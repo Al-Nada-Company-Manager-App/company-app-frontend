@@ -2,7 +2,6 @@ import { useState } from "react";
 import { usePurchases } from "@src/hooks/Purchases/usePurchases";
 import PurchasesTable from "./components/PurchasesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
-import TableStyle from "../UI/TableStyle";
 import CustomBtn from "../UI/customBtn";
 import AddPurchaseModal from "./components/AddPurchaseModal";
 
@@ -75,7 +74,6 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
 
   return (
     <>
-      <TableStyle theme={theme} />
       <div className="p-6">
         <div
           className="w-full rounded-2xl p-6 mb-6"

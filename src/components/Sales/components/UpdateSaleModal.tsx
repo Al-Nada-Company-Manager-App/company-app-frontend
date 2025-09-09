@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Form,
-  Button,
-  Row,
-  Col,
-  Select,
-  InputNumber,
-} from "antd";
+import { Modal, Form, Button, Row, Col, Select, InputNumber } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
@@ -23,8 +15,6 @@ interface UpdateSaleModalProps {
   theme: Theme;
   sale?: Partial<Sales>;
 }
-
-
 
 const UpdateSaleModal = ({
   modalOpen,
@@ -72,7 +62,6 @@ const UpdateSaleModal = ({
 
   return (
     <>
-      <ModalStyle theme={theme} />
       <Modal
         className="custom-modal"
         title="Update Sale"
