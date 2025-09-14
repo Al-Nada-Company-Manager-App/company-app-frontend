@@ -1,16 +1,9 @@
 export interface RepairProcess {
   stock: {
     p_id: number;
-    p_name: string | null;
-    p_costprice: number | null;
-    p_sellprice: number | null;
-    p_quantity: number | null;
-    p_photo: string | null;
-    p_description: string | null;
-    p_category: string | null;
+    p_name: string;
+    p_quantity: number;
     model_code: string | null;
-    expire_date: string | null;
-    p_status: "Pending" | "Repairing" | "Completed" | null;
     serial_number: string | null;
   };
 }

@@ -1,8 +1,8 @@
 import { Table } from "antd";
 import type { Repair, RepairProcess } from "@src/types/Repairs/repair";
 import type { Theme } from "@src/types/theme";
-// import { useState } from "react";
-// import RepairDetailModal from "./RepairDetailModal";
+import { useState } from "react";
+import RepairDetailModal from "./RepairDetailModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 import StatusBadge from "@src/components/UI/StatusBadge";
 
@@ -13,9 +13,9 @@ interface RepairProcessTableProps {
 
 const { Column } = Table;
 
-const RepairProcessTable = ({ repairs }: RepairProcessTableProps) => {
-  //   const [selectedRow, setSelectedRow] = useState<Repair>();
-  //   const [isModalVisible, setIsModalVisible] = useState(false);
+const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
+    const [selectedRow, setSelectedRow] = useState<Repair>();
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
     <>
@@ -24,6 +24,12 @@ const RepairProcessTable = ({ repairs }: RepairProcessTableProps) => {
           dataSource={repairs}
           pagination={{ pageSize: 10 }}
           rowKey="rep_id"
+          onRow={(record) => ({
+            onClick: () => {
+              setSelectedRow(record);
+              setIsModalVisible(true);
+            },
+          })}
         >
           <Column title="Repair ID" dataIndex="rep_id" key="rep_id" />
 
@@ -71,12 +77,12 @@ const RepairProcessTable = ({ repairs }: RepairProcessTableProps) => {
         </Table>
       </div>
 
-      {/* <RepairDetailModal
+      <RepairDetailModal
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         repair={selectedRow}
         theme={theme}
-      /> */}
+      />
     </>
   );
 };

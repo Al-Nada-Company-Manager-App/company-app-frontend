@@ -2,6 +2,8 @@ export interface SparePart {
   p_id: number;
   p_name: string;
   p_quantity: number;
+  model_code: string | null;
+  serial_number: string | null;
 }
 
 export interface SelectedSparePart {
