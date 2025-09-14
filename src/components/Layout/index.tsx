@@ -22,6 +22,8 @@ const Layout = () => {
       employees: "/employees",
       customers: "/customers",
       stock: "/stock",
+      products: "/stock/products",
+      repairs: "/stock/repairs",
       sales: "/sales",
       purchases: "/purchases",
       suppliers: "/suppliers",

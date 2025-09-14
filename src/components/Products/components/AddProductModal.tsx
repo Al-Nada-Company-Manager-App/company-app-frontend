@@ -12,7 +12,6 @@ import {
   Col,
   Button,
 } from "antd";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import type { CreateProductInput } from "@src/types/Products/product";

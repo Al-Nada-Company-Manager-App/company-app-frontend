@@ -2,7 +2,8 @@ import { useSidebar } from "@src/hooks/Sidebar/useSidebar";
 import type { SidebarProps } from "@src/types/Sidebar/sidebar";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-
+import type { MouseEvent } from "react";
+import { useState } from "react";
 import SidebarMenuItem from "./SidebarMenuItem";
 
 const NavigationMenu = ({
@@ -11,11 +12,18 @@ const NavigationMenu = ({
   onItemClick,
 }: SidebarProps) => {
   const { items, theme } = useSidebar(isDark, currentPath);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
 
   const handleItemClick = (itemId: string) => {
+
     if (onItemClick) {
       onItemClick(itemId);
     }
+  };
+
+  const toggleExpand = (id: string) => {
+    setExpanded(expanded === id ? null : id);
   };
 
   const getIcon = (iconName: string) => {
@@ -26,13 +34,37 @@ const NavigationMenu = ({
   return (
     <div className="px-8 mt-16">
       {items.map((item) => (
-        <SidebarMenuItem
-          key={item.id}
-          item={item}
-          theme={theme}
-          onClick={() => handleItemClick(item.id)}
-          getIcon={getIcon}
-        />
+        <div key={item.id}>
+          <SidebarMenuItem
+            item={item}
+            theme={theme}
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
+              e.stopPropagation();
+              if (item.children) {
+                toggleExpand(item.id);
+              } else {
+                handleItemClick(item.id);
+              }
+            }}
+            getIcon={getIcon}
+          />
+          {item.children && expanded === item.id && (
+            <div className="ml-8 mt-1">
+              {item.children.map((child) => (
+                <SidebarMenuItem
+                  key={child.id}
+                  item={child}
+                  theme={theme}
+                  onClick={(e: MouseEvent<HTMLDivElement>) => {
+                    e.stopPropagation();
+                    handleItemClick(child.id);
+                  }}
+                  getIcon={getIcon}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );

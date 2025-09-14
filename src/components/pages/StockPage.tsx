@@ -1,10 +1,10 @@
-import { useThemeContext } from "@src/contexts/useThemeContext";
-import Product from "@src/components/Products";
+import { Outlet } from "react-router-dom";
 const StockPage = () => {
-  const { isDark } = useThemeContext();
 
   return (
-    <Product isDark={isDark} />
+    <div>
+      <Outlet />
+    </div>
   );
 };
 

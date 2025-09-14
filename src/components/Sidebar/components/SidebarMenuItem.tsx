@@ -1,4 +1,5 @@
 import type { SidebarMenuItemProps } from "@src/types/Sidebar/sidebar";
+import type { MouseEvent } from "react";
 
 const SidebarMenuItem = ({
   item,
@@ -13,7 +14,13 @@ const SidebarMenuItem = ({
     <div
       className="flex items-center mb-1 p-2 rounded-2xl cursor-pointer transition-all duration-200 hover:opacity-80"
       style={{ background: itemTheme.background }}
-      onClick={onClick}
+      onClick={(e: MouseEvent<HTMLDivElement>) => {
+        // prevent parent handlers from also firing
+        e.stopPropagation();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
     >
       <div
         className="w-7.5 h-7.5 rounded-xl flex items-center justify-center mr-4"

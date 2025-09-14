@@ -6,6 +6,8 @@ const getBadgeClass = (status: string) => {
       return "badge-pending";
     case "completed":
       return "badge-completed";
+    case "repairing":
+      return "badge-repairing";
     case "active":
       return "badge-success";
     case "inactive":
@@ -30,6 +32,15 @@ const getBadgeStyle = (status: string): React.CSSProperties => {
       return {
         background: "#b7eb8f",
         color: "#255c0a",
+        borderRadius: "8px",
+        padding: "4px 12px",
+        fontWeight: 600,
+        fontSize: "0.95em",
+      };
+    case "repairing":
+      return {
+        background: "#91d5ff",
+        color: "#003a8c",
         borderRadius: "8px",
         padding: "4px 12px",
         fontWeight: 600,

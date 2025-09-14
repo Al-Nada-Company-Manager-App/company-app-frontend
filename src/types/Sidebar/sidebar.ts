@@ -1,8 +1,11 @@
+import type { MouseEvent } from "react";
+
 export interface SidebarItem {
   id: string;
   label: string;
   icon: string;
   isActive?: boolean;
+  children?: SidebarItem[];
 }
 
 export interface SidebarTheme {
@@ -47,6 +50,6 @@ export interface SidebarProps {
 export interface SidebarMenuItemProps {
   item: SidebarItem;
   theme: SidebarTheme;
-  onClick: () => void;
+  onClick: (e: MouseEvent<HTMLDivElement>) => void;
   getIcon: (iconName: string) => React.ReactNode;
 }

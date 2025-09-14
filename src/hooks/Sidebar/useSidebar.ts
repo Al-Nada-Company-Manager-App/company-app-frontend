@@ -24,7 +24,20 @@ export const getSidebarItems = (currentPath: string): SidebarItem[] => [
     id: "stock",
     label: "Stock",
     icon: "Package",
-    isActive: currentPath === "/stock",
+    children: [
+      {
+        id: "products",
+        label: "Products",
+        icon: "Box",
+        isActive: currentPath === "/stock/products",
+      },
+      {
+        id: "repairs",
+        label: "Repairs",
+        icon: "Wrench",
+        isActive: currentPath === "/stock/repairs",
+      },
+    ],
   },
   {
     id: "sales",

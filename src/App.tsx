@@ -9,6 +9,8 @@ import SalesPage from "@src/components/pages/SalesPage";
 import PurchasesPage from "@src/components/pages/PurchasesPage";
 import SuppliersPage from "@src/components/pages/SuppliersPage";
 import NotFoundPage from "@src/components/NotFoundPage";
+import ProductPage from "@src/components/pages/ProductPage";
+import RepairPage from "@src/components/pages/RepairPage";
 
 function App() {
   return (
@@ -19,7 +21,10 @@ function App() {
             <Route index element={<ManagerDashboards />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="customers" element={<CustomersPage />} />
-            <Route path="stock" element={<StockPage />} />
+            <Route path="stock" element={<StockPage />}>
+              <Route path="products" element={<ProductPage />} />
+              <Route path="repairs" element={<RepairPage />} />
+            </Route>
             <Route path="sales" element={<SalesPage />} />
             <Route path="purchases" element={<PurchasesPage />} />
             <Route path="suppliers" element={<SuppliersPage />} />
