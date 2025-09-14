@@ -98,10 +98,9 @@ const RepairDetailModal = ({
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
           <Col span={24}>
             <SparePartsTable
-              spareParts={repair?.repair_process.map(
-                (process) => process.stock
-              )}
+              spareParts={repair?.repair_process}
               theme={theme}
+              repair={repair}
             />
           </Col>
         </Row>

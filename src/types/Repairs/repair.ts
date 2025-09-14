@@ -1,8 +1,9 @@
 export interface RepairProcess {
+  sp_id: number; // spare part id
+  sp_quantity: number; // quantity used in this repair
   stock: {
     p_id: number;
     p_name: string;
-    p_quantity: number;
     model_code: string | null;
     serial_number: string | null;
   };
@@ -38,4 +39,6 @@ export interface UpdateRepairInput {
   p_status: "Pending" | "Repairing" | "Completed";
   remarks?: string;
   rep_date?: string | null;
+  spare_parts?: { sp_id: number; sp_quantity: number }[];
 }
+
