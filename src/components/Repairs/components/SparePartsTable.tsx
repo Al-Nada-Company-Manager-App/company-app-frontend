@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import type { SparePart } from "@src/types/SpareParts/sparePart";
 import type { Theme } from "@src/types/theme";
+import ConfirmBtn from "@src/components/UI/customBtn";
 
 interface SparePartsTableProps {
   spareParts?: SparePart[];
@@ -27,6 +28,12 @@ const SparePartsTable = ({ spareParts, theme }: SparePartsTableProps) => {
           >
             {"Spare Parts Used"}
           </h2>
+          <ConfirmBtn
+            btnTitle="Add Spare Part"
+            className="px-6 py-2 mb-5 mr-5 w-55"
+            onClick={() => {}}
+            theme={theme}
+          />
         </div>
 
         <div className="custom-table">

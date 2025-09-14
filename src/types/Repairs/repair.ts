@@ -32,3 +32,10 @@ export interface CreateRepairInput {
   };
   spare_parts: { sp_id: number; sp_quantity: number }[];
 }
+
+export interface UpdateRepairInput {
+  p_id: number;
+  p_status: "Pending" | "Repairing" | "Completed";
+  remarks?: string;
+  rep_date?: string | null;
+}
