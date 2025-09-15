@@ -1,6 +1,5 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
-import ModalStyle from "./ModalStyle";
 import type { Theme } from "@src/types/theme";
 
 interface ConfirmProps {

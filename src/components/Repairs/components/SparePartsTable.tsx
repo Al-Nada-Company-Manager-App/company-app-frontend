@@ -5,6 +5,7 @@ import { useState } from "react";
 import AddSparepartsModal from "./AddSparePartsModal";
 import type { Repair } from "@src/types/Repairs/repair";
 import type { RepairProcess } from "@src/types/Repairs/repair";
+import SparePartOperationsModal from "./SparePartOperationsModal";
 
 interface SparePartsTableProps {
   spareParts?: RepairProcess[];
@@ -20,10 +21,11 @@ const SparePartsTable = ({
   repair,
 }: SparePartsTableProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<RepairProcess>();
+  const [showOperationsModal, setShowOperationsModal] = useState(false);
   console.log("SparePartsTable spareParts:", spareParts);
 
   const safeData = (spareParts ?? []).map((sp, idx) => ({
-    // ensure there is always a unique key/identifier and keep original fields
     ...sp,
     __rowKey: String(
       (sp as RepairProcess).sp_id ??
@@ -64,6 +66,12 @@ const SparePartsTable = ({
               showHeader={true}
               pagination={{ pageSize: 10 }}
               rowKey={(record) => record.__rowKey}
+              onRow={(record) => ({
+                onClick: () => {
+                  setSelectedRow(record);
+                  setShowOperationsModal(true);
+                },
+              })}
             >
               <Column
                 title="Product"
@@ -98,6 +106,15 @@ const SparePartsTable = ({
           modalOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           repair={repair}
+          theme={theme}
+        />
+      )}
+      {showOperationsModal && selectedRow && repair &&(
+        <SparePartOperationsModal
+          modalOpen={showOperationsModal}
+          onClose={() => setShowOperationsModal(false)}
+          repair={repair}
+          selectedSparePart={selectedRow}
           theme={theme}
         />
       )}

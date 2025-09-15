@@ -61,6 +61,8 @@ export const useUpdateRepair = (isDark = false) => {
 
       client.invalidateQueries({ queryKey: repairKeys.lists() });
       client.invalidateQueries({ queryKey: sparePartKeys.lists() });
+      client.invalidateQueries({ queryKey: productKeys.lists() });
+      
       showSuccessMessage("Repair updated successfully!", "🛠️");
     },
     onError: () => {
