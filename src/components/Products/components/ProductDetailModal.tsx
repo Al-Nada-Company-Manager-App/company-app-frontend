@@ -74,8 +74,8 @@ const ProductDetailModal = ({
             <Image
               src={
                 product?.p_photo
-                  ? `Images Products/${product.p_photo}`
-                  : "/Images Products/placeholder.jpg"
+                  ? `/Images/products/${product.p_photo}`
+                  : "/Images/products/placeholder.jpg"
               }
               alt={product?.p_name}
               style={{ borderRadius: "12px", width: "100%" }}
