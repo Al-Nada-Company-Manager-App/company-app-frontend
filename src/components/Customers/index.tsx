@@ -4,11 +4,13 @@ import CustomerTable from "./components/CustomerTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddCustomerModal from "./components/AddCustomerModal";
+import { useSearchContext } from "@src/contexts/search";
 interface CustomersProps {
   isDark: boolean;
 }
 const CustomersPage = ({ isDark }: CustomersProps) => {
   const { customers, theme, isLoading, error } = useCustomers(isDark);
+  const { searchQuery } = useSearchContext();
 
   const [showAddModal, setShowAddModal] = useState(false);
   if (isLoading) {
@@ -69,6 +71,26 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
       </div>
     );
   }
+
+  // Filter customers by name, email, fax, or phone
+  const filteredCustomers = customers?.filter((customer) => {
+    const name = customer.c_name?.toLowerCase() || "";
+    const email = customer.c_email?.toLowerCase() || "";
+    const fax = customer.c_fax?.toLowerCase() || "";
+    const phone = customer.c_phone?.toLowerCase() || "";
+    const query = searchQuery.toLowerCase();
+
+    return (
+      name.includes(query) ||
+      email.includes(query) ||
+      fax.includes(query) ||
+      phone.includes(query)
+    );
+  });
+
+  const customersToShow =
+    searchQuery.trim() === "" ? customers : filteredCustomers;
+
   return (
     <>
       <div className="p-6">
@@ -95,7 +117,7 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <CustomerTable customers={customers ?? []} theme={theme} />
+          <CustomerTable customers={customersToShow ?? []} theme={theme} />
         </div>
       </div>
       <AddCustomerModal

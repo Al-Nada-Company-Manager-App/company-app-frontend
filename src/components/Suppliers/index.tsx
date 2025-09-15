@@ -4,11 +4,13 @@ import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddSupplierModal from "./components/AddSupplierModal";
+import { useSearchContext } from "@src/contexts/search";
 interface SuppliersProps {
   isDark: boolean;
 }
 const SuppliersPage = ({ isDark }: SuppliersProps) => {
   const { suppliers, theme, isLoading, error } = useSuppliers(isDark);
+  const { searchQuery } = useSearchContext();
 
   const [showAddModal, setShowAddModal] = useState(false);
   if (isLoading) {
@@ -69,6 +71,26 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
       </div>
     );
   }
+
+  // Filter suppliers by name, email, fax, or phone
+  const filteredSuppliers = suppliers?.filter((supplier) => {
+    const name = supplier.s_name?.toLowerCase() || "";
+    const email = supplier.s_email?.toLowerCase() || "";
+    const fax = supplier.s_fax?.toLowerCase() || "";
+    const phone = supplier.s_phone?.toLowerCase() || "";
+    const query = searchQuery.toLowerCase();
+
+    return (
+      name.includes(query) ||
+      email.includes(query) ||
+      fax.includes(query) ||
+      phone.includes(query)
+    );
+  });
+
+  const suppliersToShow =
+    searchQuery.trim() === "" ? suppliers : filteredSuppliers;
+
   return (
     <>
       <div className="p-6">
@@ -95,7 +117,7 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <SupplierTable suppliers={suppliers ?? []} theme={theme} />
+          <SupplierTable suppliers={suppliersToShow ?? []} theme={theme} />
         </div>
       </div>
       <AddSupplierModal
