@@ -5,6 +5,7 @@ import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddProductModal from "./components/AddProductModal";
 import type { Product } from "@src/types/Products/product";
+import { useSearchContext } from "@src/contexts/search";
 
 interface ProductsProps {
   isDark: boolean;
@@ -14,6 +15,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   const { theme, isLoading, error, measuring, lab, chemicals, spares, others } =
     useProducts(isDark);
   const [showAddModal, setShowAddModal] = useState(false);
+  const { searchQuery } = useSearchContext();
 
   const filterInStock = (products: Product[] | undefined) =>
     products?.filter((product) => product.p_status !== "Out of Stock") || [];
@@ -21,18 +23,43 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   const filterOutOfStock = (products: Product[] | undefined) =>
     products?.filter((product) => product.p_status === "Out of Stock") || [];
 
-  const inStockMeasuring = filterInStock(measuring);
-  const inStockLab = filterInStock(lab);
-  const inStockChemicals = filterInStock(chemicals);
-  const inStockSpares = filterInStock(spares);
-  const inStockOthers = filterInStock(others);
+  // Filter products by search query (name, model code, serial number)
+  const filterBySearch = (products: Product[] | undefined) => {
+    if (!products || searchQuery.trim() === "") return products || [];
+
+    return products.filter((product) => {
+      const name = product.p_name?.toLowerCase() || "";
+      const modelCode = product.model_code?.toLowerCase() || "";
+      const serialNumber = product.serial_number?.toLowerCase() || "";
+      const query = searchQuery.toLowerCase();
+
+      return (
+        name.includes(query) ||
+        modelCode.includes(query) ||
+        serialNumber.includes(query)
+      );
+    });
+  };
+
+  // Apply search filter first, then stock filter
+  const searchFilteredMeasuring = filterBySearch(measuring);
+  const searchFilteredLab = filterBySearch(lab);
+  const searchFilteredChemicals = filterBySearch(chemicals);
+  const searchFilteredSpares = filterBySearch(spares);
+  const searchFilteredOthers = filterBySearch(others);
+
+  const inStockMeasuring = filterInStock(searchFilteredMeasuring);
+  const inStockLab = filterInStock(searchFilteredLab);
+  const inStockChemicals = filterInStock(searchFilteredChemicals);
+  const inStockSpares = filterInStock(searchFilteredSpares);
+  const inStockOthers = filterInStock(searchFilteredOthers);
 
   const outOfStockProducts = [
-    ...filterOutOfStock(measuring),
-    ...filterOutOfStock(lab),
-    ...filterOutOfStock(chemicals),
-    ...filterOutOfStock(spares),
-    ...filterOutOfStock(others),
+    ...filterOutOfStock(searchFilteredMeasuring),
+    ...filterOutOfStock(searchFilteredLab),
+    ...filterOutOfStock(searchFilteredChemicals),
+    ...filterOutOfStock(searchFilteredSpares),
+    ...filterOutOfStock(searchFilteredOthers),
   ];
 
   if (isLoading) {
@@ -109,24 +136,34 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           showCategory={true}
         />
       )}
-      <ProductTable
-        title="Measuring & Controllers"
-        products={inStockMeasuring}
-        theme={theme}
-      />
-      <ProductTable
-        title="Lab Equipments"
-        products={inStockLab}
-        theme={theme}
-      />
-      <ProductTable
-        title="Chemicals"
-        products={inStockChemicals}
-        theme={theme}
-        showExpireDate={true}
-      />
-      <ProductTable title="Spares" products={inStockSpares} theme={theme} />
-      <ProductTable title="Others" products={inStockOthers} theme={theme} />
+      {inStockMeasuring.length > 0 && (
+        <ProductTable
+          title="Measuring & Controllers"
+          products={inStockMeasuring}
+          theme={theme}
+        />
+      )}
+      {inStockLab.length > 0 && (
+        <ProductTable
+          title="Lab Equipments"
+          products={inStockLab}
+          theme={theme}
+        />
+      )}
+      {inStockChemicals.length > 0 && (
+        <ProductTable
+          title="Chemicals"
+          products={inStockChemicals}
+          theme={theme}
+          showExpireDate={true}
+        />
+      )}
+      {inStockSpares.length > 0 && (
+        <ProductTable title="Spares" products={inStockSpares} theme={theme} />
+      )}
+      {inStockOthers.length > 0 && (
+        <ProductTable title="Others" products={inStockOthers} theme={theme} />
+      )}
       {showAddModal && (
         <AddProductModal
           open={showAddModal}

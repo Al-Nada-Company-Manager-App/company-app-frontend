@@ -4,6 +4,7 @@ import PurchasesTable from "./components/PurchasesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddPurchaseModal from "./components/AddPurchaseModal";
+import { useSearchContext } from "@src/contexts/search";
 
 interface PurchasesPageProps {
   isDark: boolean;
@@ -11,6 +12,7 @@ interface PurchasesPageProps {
 
 const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
   const { purchases, theme, isLoading, error } = usePurchases(isDark);
+  const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
 
   if (isLoading) {
@@ -72,6 +74,23 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
     );
   }
 
+  // Filter purchases by supplier name, supplier email, or bill number
+  const filteredPurchases = purchases?.filter((purchase) => {
+    const supplierName = purchase.supplier?.s_name?.toLowerCase() || "";
+    const supplierEmail = purchase.supplier?.s_email?.toLowerCase() || "";
+    const billNumber = purchase.pch_billnum?.toString().toLowerCase() || "";
+    const query = searchQuery.toLowerCase();
+
+    return (
+      supplierName.includes(query) ||
+      supplierEmail.includes(query) ||
+      billNumber.includes(query)
+    );
+  });
+
+  const purchasesToShow =
+    searchQuery.trim() === "" ? purchases : filteredPurchases;
+
   return (
     <>
       <div className="p-6">
@@ -98,7 +117,7 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <PurchasesTable purchases={purchases ?? []} theme={theme} />
+          <PurchasesTable purchases={purchasesToShow ?? []} theme={theme} />
         </div>
       </div>
       <AddPurchaseModal
