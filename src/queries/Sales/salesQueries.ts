@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { salesApi } from "./salesApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
 import type { Sales } from "@src/types/Sales/sales";
+import { productKeys } from "../Products/productQueries";
 
 export const salesKeys = {
   all: ["sales"] as const,
@@ -16,7 +17,7 @@ export const salesKeys = {
 export const useGetAllSales = () => {
   return useQuery({
     queryKey: salesKeys.lists(),
-    queryFn: salesApi.getAllSales
+    queryFn: salesApi.getAllSales,
   });
 };
 
@@ -40,6 +41,9 @@ export const useCreateSale = (isDark: boolean = false) => {
       // Invalidate and refetch sales list
       queryClient.invalidateQueries({ queryKey: salesKeys.lists() });
 
+      // Invalidate and refetch products list (quantities changed after sale)
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() });
+
       showSuccessMessage(
         `The Sale Process for Bill Number ${newSale.sl_billnum} created successfully!`,
         "✅"
@@ -58,16 +62,14 @@ export const useUpdateSale = (isDark: boolean = false) => {
   const { showSuccessMessage, showErrorMessage } = useThemedMessage(isDark);
 
   return useMutation({
-    mutationFn: ({
-      id,
-      saleData,
-    }: {
-      id: number;
-      saleData: Partial<Sales>;
-    }) => salesApi.updateSale(id, saleData),
+    mutationFn: ({ id, saleData }: { id: number; saleData: Partial<Sales> }) =>
+      salesApi.updateSale(id, saleData),
     onSuccess: (updatedSale) => {
       // Invalidate and refetch sales list
       queryClient.invalidateQueries({ queryKey: salesKeys.lists() });
+
+      // Invalidate and refetch products list (quantities might have changed)
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() });
 
       showSuccessMessage(
         `Sale with Bill Number ${updatedSale.sl_billnum} updated successfully!`,

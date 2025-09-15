@@ -64,7 +64,7 @@ const SparePartsTable = ({
             <Table<RepairProcess & { __rowKey: string }>
               dataSource={safeData}
               showHeader={true}
-              pagination={{ pageSize: 10 }}
+              pagination={{ pageSize: 5 }}
               rowKey={(record) => record.__rowKey}
               onRow={(record) => ({
                 onClick: () => {

@@ -97,14 +97,35 @@ const ProductSelection = ({
       title: "Quantity",
       dataIndex: "si_quantity",
       key: "si_quantity",
-      render: (quantity: number, record: SelectedProduct) => (
-        <InputNumber
-          min={1}
-          value={quantity}
-          onChange={(value) => onProductQuantityChange(record.p_id, value || 1)}
-          style={{ width: 80 }}
-        />
-      ),
+      render: (quantity: number, record: SelectedProduct) => {
+        const availableStock =
+          products?.find((p) => p.p_id === record.p_id)?.p_quantity || 1;
+        const hasError = quantity > availableStock;
+
+        return (
+          <Form.Item
+            validateStatus={hasError ? "error" : ""}
+            help={
+              hasError ? `Only ${availableStock} items available in stock!` : ""
+            }
+            style={{ margin: 0 }}
+          >
+            <InputNumber
+              min={1}
+              value={quantity}
+              onChange={(value) => {
+                onProductQuantityChange(record.p_id, value || 1);
+                if (value && value > availableStock) {
+                  setTimeout(() => {
+                    onProductQuantityChange(record.p_id, availableStock);
+                  }, 2000);
+                }
+              }}
+              style={{ width: 80 }}
+            />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Total",
