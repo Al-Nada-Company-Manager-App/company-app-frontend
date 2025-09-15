@@ -22,7 +22,7 @@ const RepairDetailModal = ({
   repair,
   theme,
 }: RepairDetailModalProps) => {
-    const [updateOpen, setUpdateOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
   const deleteRepair = useDeleteRepair(isDark);
 
@@ -31,10 +31,10 @@ const RepairDetailModal = ({
     await deleteRepair.mutateAsync(repairId);
   };
 
-    const handleUpdateClose = () => {
-      setUpdateOpen(false);
-      onClose();
-    };
+  const handleUpdateClose = () => {
+    setUpdateOpen(false);
+    onClose();
+  };
 
   return (
     <>
@@ -94,7 +94,7 @@ const RepairDetailModal = ({
             theme={theme}
           />
         </Row>
-        
+
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
           <Col span={24}>
             <SparePartsTable
