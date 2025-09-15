@@ -2,7 +2,7 @@ import { Table, Image } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetPurchasesProducts } from "@src/queries/Purchases";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useEffect } from "react";
 
 interface ProductPurchasesTableProps {

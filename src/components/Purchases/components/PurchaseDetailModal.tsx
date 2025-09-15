@@ -5,7 +5,7 @@ import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row, Image } from "antd";
 import ProductPurchasesTable from "./components/ProductPurchasesTable";
 import { useDeletePurchase } from "@src/queries/Purchases";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useState, useEffect } from "react";
 import UpdatePurchaseModal from "./UpdatePurchaseModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";

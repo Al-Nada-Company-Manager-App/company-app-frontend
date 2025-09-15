@@ -5,7 +5,7 @@ import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row, Image } from "antd";
 import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useState } from "react";
 import UpdateSaleModal from "./UpdateSaleModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";

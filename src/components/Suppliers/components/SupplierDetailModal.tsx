@@ -7,7 +7,7 @@ import { useState } from "react";
 import SupplierPurchasesTable from "./components/SupplierPurchasesTable";
 import UpdateSupplierModal from "./UpdateSupplierModal";
 import { useDeleteSupplier } from "@src/queries/Suppliers";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 
 interface DetailModal {

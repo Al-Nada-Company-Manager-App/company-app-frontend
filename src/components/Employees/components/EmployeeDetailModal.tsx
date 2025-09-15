@@ -10,7 +10,7 @@ import {
   useDeleteEmployee,
   useDeactivateEmployee,
 } from "@src/queries/Employees";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import UpdatePermissionsModal from "./UpdatePermissions";
 
 interface DetailModal {

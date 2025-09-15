@@ -5,7 +5,7 @@ import { useState } from "react";
 import SparePartsTable from "./SparePartsTable";
 import CustomBtn from "@src/components/UI/customBtn";
 import { useDeleteRepair } from "@src/queries/Repairs";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import type { Repair } from "@src/types/Repairs/repair";
 import UpdateStatusModal from "./UpdateStatusModal";
 

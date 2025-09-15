@@ -13,7 +13,7 @@ import {
   Image,
 } from "antd";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import type { CreateProductInput } from "@src/types/Products/product";
 import { UploadOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
@@ -189,10 +189,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       },
                     ]}
                   >
-                    <InputNumber
-                      min={0}
-                      style={{ width: "100%" }}
-                    />
+                    <InputNumber min={0} style={{ width: "100%" }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -206,10 +203,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       },
                     ]}
                   >
-                    <InputNumber
-                      min={0}
-                      style={{ width: "100%" }}
-                    />
+                    <InputNumber min={0} style={{ width: "100%" }} />
                   </Form.Item>
                 </Col>
               </Row>

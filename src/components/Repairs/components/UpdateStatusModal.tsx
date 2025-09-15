@@ -4,7 +4,7 @@ import CustomBtn from "@src/components/UI/customBtn";
 import type { Theme } from "@src/types/theme";
 import { useUpdateRepair } from "@src/queries/Repairs";
 import type { Repair, UpdateRepairInput } from "@src/types/Repairs/repair";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import dayjs from "dayjs";
 
 interface UpdateStatusModalProps {
@@ -70,7 +70,6 @@ const UpdateStatusModal = ({
       console.error("Update failed", error);
     }
   };
-
 
   return (
     <Modal

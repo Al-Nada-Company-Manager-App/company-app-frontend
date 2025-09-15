@@ -1,4 +1,4 @@
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 
 const ManagerDashboards = () => {
   const { theme } = useThemeContext();

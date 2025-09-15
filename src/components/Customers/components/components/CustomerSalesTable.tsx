@@ -2,7 +2,7 @@ import { Table } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetCustomerSales } from "@src/queries/Customers";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import StatusBadge from "@src/components/UI/StatusBadge";
 import type { CustomerSales } from "@src/types/Customers/customer";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";

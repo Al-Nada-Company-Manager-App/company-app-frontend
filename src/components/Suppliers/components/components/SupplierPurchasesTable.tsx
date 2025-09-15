@@ -2,7 +2,7 @@ import { Table } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetSupplierPurchases } from "@src/queries/Suppliers";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import type { SupplierPurchases } from "@src/types/Suppliers/supplier";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 

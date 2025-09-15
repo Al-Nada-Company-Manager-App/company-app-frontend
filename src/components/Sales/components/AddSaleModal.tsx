@@ -1,7 +1,7 @@
 import { Modal, Form, Row, Divider } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useCreateSale } from "@src/queries/Sales";
 import { useGetAllCustomers } from "@src/queries/Customers";
 import { useGetAllProducts } from "@src/queries/Products";

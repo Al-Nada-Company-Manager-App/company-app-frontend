@@ -1,7 +1,6 @@
 import { Modal, Form, Switch, Row, Col, Button, Typography, Spin } from "antd";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 
 import {
   useGetPermissions,

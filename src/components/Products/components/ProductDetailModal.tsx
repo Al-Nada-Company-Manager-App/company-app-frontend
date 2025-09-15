@@ -5,7 +5,7 @@ import { Col, Descriptions, Image, Modal, Row } from "antd";
 import { useState } from "react";
 import UpdateProduct from "./UpdateProduct";
 import { useDeleteProduct } from "@src/queries/Products/productQueries";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
