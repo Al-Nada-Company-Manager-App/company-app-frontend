@@ -50,7 +50,7 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
                   },
                 })}
             >
-              <Column
+            <Column
             title="Product"
             dataIndex="p_name"
             key="p_name"

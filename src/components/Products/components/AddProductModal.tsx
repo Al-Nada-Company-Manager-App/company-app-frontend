@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Form,
@@ -11,11 +11,12 @@ import {
   Row,
   Col,
   Button,
+  Image,
 } from "antd";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import type { CreateProductInput } from "@src/types/Products/product";
-import { PlusOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
 import { useCreateProduct, useUpdateProductPhoto } from "@src/queries/Products";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -39,6 +40,15 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   );
   const createProduct = useCreateProduct(isDark);
   const updateProductPhoto = useUpdateProductPhoto(isDark);
+
+  // Reset form and image preview when modal opens
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      setImageFile(null);
+      setPreviewImage(undefined);
+    }
+  }, [open, form]);
 
   const handleUploadImage = async (
     file: RcFile,
@@ -109,27 +119,28 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   gap: "16px",
                 }}
               >
-                <Form.Item label="Upload Photo" name="p_photo">
-                  <Upload
-                    listType="picture-card"
-                    beforeUpload={() => false}
-                    showUploadList={false}
-                    onChange={handleImageChange}
-                  >
-                    {previewImage ? (
-                      <img
-                        src={previewImage}
-                        alt="preview"
-                        style={{ width: "100%" }}
-                      />
-                    ) : (
-                      <div>
-                        <PlusOutlined />
-                        <div style={{ marginTop: 8 }}>Upload</div>
-                      </div>
-                    )}
-                  </Upload>
-                </Form.Item>
+                <Image
+                  src={previewImage || "/Images/products/placeholder.jpg"}
+                  alt={"Product"}
+                  style={{
+                    width: "100%",
+                    maxHeight: "200px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                    border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
+                  }}
+                />
+                <Upload
+                  name="p_photo"
+                  showUploadList={false}
+                  beforeUpload={() => false} // Prevent auto-upload
+                  onChange={handleImageChange}
+                  accept="image/*"
+                >
+                  <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
+                    Upload Photo
+                  </Button>
+                </Upload>
               </div>
             </Col>
             <Col span={16}>
@@ -172,7 +183,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    label="Cost Price"
+                    label="Cost Price (EGP)"
                     name="p_costprice"
                     rules={[
                       {
@@ -183,14 +194,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   >
                     <InputNumber
                       min={0}
-                      suffix="EGP"
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Sell Price"
+                    label="Sell Price (EGP)"
                     name="p_sellprice"
                     rules={[
                       {
@@ -201,7 +211,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   >
                     <InputNumber
                       min={0}
-                      suffix="EGP"
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
@@ -216,11 +225,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       { required: true, message: "Please enter quantity" },
                     ]}
                   >
-                    <InputNumber
-                      min={0}
-                      suffix="EGP"
-                      style={{ width: "100%" }}
-                    />
+                    <InputNumber min={0} style={{ width: "100%" }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>

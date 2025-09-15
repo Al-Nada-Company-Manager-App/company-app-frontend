@@ -6,7 +6,6 @@ import { calculateAge } from "@src/utils/calculateAge";
 
 import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import {
   useDeleteEmployee,
   useDeactivateEmployee,
