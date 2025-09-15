@@ -1,25 +1,20 @@
 import { Table } from "antd";
-import type {
-  Employee,
-} from "../../../types/Employees/employee";
+import type { Employee } from "../../../types/Employees/employee";
 import type { Theme } from "@src/types/theme";
-import EmployeeInfo from "./components/EmployeeInfo";
-import EmployeeRole from "./components/EmployeeRole";
-import StatusBadge from "@src/components/UI/StatusBadge";
-import EmployeeDate from "./components/EmployeeDate";
 import { useState } from "react";
 import EmployeeDetailModal from "./EmployeeDetailModal";
+import { getEmployeeColumns } from "./employeeColumns";
 
 interface EmployeeTableProps {
   employees: Employee[];
   theme: Theme;
 }
 
-const { Column } = Table;
-
 const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Employee>();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const columns = getEmployeeColumns(theme);
 
   return (
     <>
@@ -29,44 +24,15 @@ const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
           showHeader={true}
           pagination={{ pageSize: 10 }}
           rowKey="e_id"
+          columns={columns}
+          showSorterTooltip={{ target: "sorter-icon" }}
           onRow={(record) => ({
             onClick: () => {
               setSelectedRow(record);
               setIsModalVisible(true);
             },
           })}
-        >
-          <Column
-            title="Employee"
-            dataIndex="f_name"
-            key="employee"
-            render={(_, record: Employee) => (
-              <EmployeeInfo employee={record} theme={theme} />
-            )}
-          />
-          <Column
-            title="FUNCTION"
-            dataIndex="e_role"
-            key="function"
-            render={(_, record: Employee) => (
-              <EmployeeRole employee={record} theme={theme} />
-            )}
-          />
-          <Column
-            title="STATUS"
-            dataIndex="e_active"
-            key="status"
-            render={() => <StatusBadge  status="active" />} 
-          />
-          <Column
-            title="EMPLOYED"
-            dataIndex="birth_date"
-            key="employed"
-            render={(date: string) => (
-              <EmployeeDate date={date} theme={theme} />
-            )}
-          />
-        </Table>
+        />
       </div>
       <EmployeeDetailModal
         modalOpen={isModalVisible}

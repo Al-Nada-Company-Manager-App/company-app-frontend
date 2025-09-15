@@ -15,21 +15,18 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
     useProducts(isDark);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Filter out "Out of Stock" products and create separate arrays
   const filterInStock = (products: Product[] | undefined) =>
     products?.filter((product) => product.p_status !== "Out of Stock") || [];
 
   const filterOutOfStock = (products: Product[] | undefined) =>
     products?.filter((product) => product.p_status === "Out of Stock") || [];
 
-  // Filter each category for in-stock products
   const inStockMeasuring = filterInStock(measuring);
   const inStockLab = filterInStock(lab);
   const inStockChemicals = filterInStock(chemicals);
   const inStockSpares = filterInStock(spares);
   const inStockOthers = filterInStock(others);
 
-  // Collect all out-of-stock products from all categories
   const outOfStockProducts = [
     ...filterOutOfStock(measuring),
     ...filterOutOfStock(lab),
@@ -109,6 +106,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           title="Out of Stock Products"
           products={outOfStockProducts}
           theme={theme}
+          showCategory={true}
         />
       )}
       <ProductTable

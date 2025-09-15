@@ -3,50 +3,36 @@ import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import CustomerDetailModal from "./CustomerDetailModal";
-import CustomerInfo from "./components/CustomerInfo";
+import { getCustomerColumns } from "./customerColumns";
 
 interface CustomerTableProps {
   customers: Customer[];
   theme: Theme;
 }
 
-const { Column } = Table;
-
 const CustomerTable = ({ customers, theme }: CustomerTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Customer>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const columns = getCustomerColumns(theme);
+
   return (
     <>
-      <div className="custom-table">
         <Table<Customer>
+          className="custom-table"
           dataSource={customers}
           showHeader={true}
           pagination={{ pageSize: 10 }}
           rowKey="c_id"
+          columns={columns}
+          showSorterTooltip={{ target: "sorter-icon" }}
           onRow={(record) => ({
             onClick: () => {
               setSelectedRow(record);
               setIsModalVisible(true);
             },
           })}
-        >
-          <Column
-            title="Customer"
-            dataIndex="c_name"
-            key="customer"
-            render={(_, record: Customer) => (
-              <CustomerInfo customer={record} theme={theme} />
-            )}
-          />
-          <Column title="Address" dataIndex="c_address" key="address" />
-          <Column title="City" dataIndex="c_city" key="city" />
-          <Column title="Country" dataIndex="c_country" key="country" />
-          <Column title="Zipcode" dataIndex="c_zipcode" key="zipcode" />
-          <Column title="Fax" dataIndex="c_fax" key="fax" />
-          <Column title="Phone" dataIndex="c_phone" key="phone" />
-        </Table>
-      </div>
+        />
       <CustomerDetailModal
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
