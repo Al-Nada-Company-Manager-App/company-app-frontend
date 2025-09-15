@@ -7,7 +7,6 @@ import {
   DatePicker,
   Upload,
   Select,
-  message,
   Row,
   Col,
   Button,
@@ -80,10 +79,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
     if (imageFile && response.p_id) {
       photoFilename = await handleUploadImage(imageFile, response.p_id);
-      message.success("Product image uploaded: " + photoFilename);
     }
 
-    message.success("Product created successfully!");
     form.resetFields();
     setImageFile(null);
     setPreviewImage(undefined);
