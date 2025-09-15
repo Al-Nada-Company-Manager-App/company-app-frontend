@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import type { Repair, RepairProcess } from "@src/types/Repairs/repair";
+import type { Repair } from "@src/types/Repairs/repair";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import { useGetRepairById } from "@src/queries/Repairs/repairQueries";
@@ -62,23 +62,6 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
             dataIndex={["stock", "p_status"]}
             key="p_status"
             render={(status: string) => <StatusBadge status={status} />}
-          />
-
-          <Column<RepairProcess>
-            title="Spare Parts"
-            dataIndex="repair_process"
-            key="repair_process"
-            render={(processes: RepairProcess[]) =>
-              processes && processes.length > 0
-                ? processes.map((proc, i) => (
-                    <div key={i}>
-                      {proc.stock.p_name ?? "Unnamed"} ( SN:{" "}
-                      {proc.stock.serial_number ?? "N/A"}) ( Qty:{" "}
-                      {proc.sp_quantity} )
-                    </div>
-                  ))
-                : "No process details"
-            }
           />
         </Table>
       </div>

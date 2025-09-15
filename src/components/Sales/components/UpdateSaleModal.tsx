@@ -2,7 +2,7 @@ import { Modal, Form, Button, Row, Col, Select, InputNumber } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateSale } from "@src/queries/Sales";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";

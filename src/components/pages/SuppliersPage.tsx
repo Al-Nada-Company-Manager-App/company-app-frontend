@@ -1,4 +1,4 @@
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import SuppliersComponent from "@src/components/Suppliers";
 const SuppliersPage = () => {
   const { isDark } = useThemeContext();

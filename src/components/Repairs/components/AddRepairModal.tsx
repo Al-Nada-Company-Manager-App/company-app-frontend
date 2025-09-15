@@ -9,11 +9,10 @@ import {
   Row,
   Col,
   Button,
-  message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import CustomBtn from "@src/components/UI/customBtn";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import type { Theme } from "@src/types/theme";
 import { useGetAllDevices } from "@src/queries/Devices";
 import { useSpareParts } from "@src/queries/SpareParts";
@@ -91,16 +90,12 @@ const onFinish = async (values: {
       })),
   };
 
-  try {
     await createRepair.mutateAsync(payload);
-    message.success("Repair process added successfully!");
     form.resetFields();
     setSelectedSpareParts([]);
     setSelectedDeviceStatus(null);
     onClose();
-  } catch {
-    message.error("Failed to add repair process!");
-  }
+  
 };
 
 

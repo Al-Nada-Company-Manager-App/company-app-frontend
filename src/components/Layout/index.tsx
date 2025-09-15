@@ -1,18 +1,15 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import Sidebar from "@src/components/Sidebar";
 import Breadcrumb from "@src/components/Breadcrumb";
-import { darkTheme,lightTheme } from "@src/hooks/dark&lightthemes";
+import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
 import { useMemo } from "react";
 import ModalStyle from "../UI/ModalStyle";
 import TableStyle from "../UI/TableStyle";
 
 const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();
-    const itheme = useMemo(
-      () => (isDark ? darkTheme : lightTheme),
-      [isDark]
-    );
+  const itheme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,8 +49,8 @@ const Layout = () => {
 
   return (
     <>
-      <ModalStyle theme={itheme}/>
-      <TableStyle theme={itheme}/>
+      <ModalStyle theme={itheme} />
+      <TableStyle theme={itheme} />
       <div
         className="relative w-screen h-screen"
         style={{ backgroundColor: theme.containerBg }}

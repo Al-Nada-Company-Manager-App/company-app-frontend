@@ -1,4 +1,4 @@
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import EmployeesComponent from "@src/components/Employees";
 
 const EmployeesPage = () => {

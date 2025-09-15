@@ -4,6 +4,7 @@ import SalesTable from "./components/SalesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddSaleModal from "./components/AddSaleModal";
+import { useSearchContext } from "@src/contexts/search";
 
 interface SalesPageProps {
   isDark: boolean;
@@ -11,6 +12,7 @@ interface SalesPageProps {
 
 const SalesPage = ({ isDark }: SalesPageProps) => {
   const { sales, theme, isLoading, error } = useSales(isDark);
+  const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
 
   if (isLoading) {
@@ -71,6 +73,23 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
       </div>
     );
   }
+
+  // Filter sales by customer name, customer email, or bill number
+  const filteredSales = sales?.filter((sale) => {
+    const customerName = sale.customer?.c_name?.toLowerCase() || "";
+    const customerEmail = sale.customer?.c_email?.toLowerCase() || "";
+    const billNumber = sale.sl_billnum?.toString().toLowerCase() || "";
+    const query = searchQuery.toLowerCase();
+
+    return (
+      customerName.includes(query) ||
+      customerEmail.includes(query) ||
+      billNumber.includes(query)
+    );
+  });
+
+  const salesToShow = searchQuery.trim() === "" ? sales : filteredSales;
+
   return (
     <>
       <div className="p-6">
@@ -97,7 +116,7 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <SalesTable sales={sales ?? []} theme={theme} />
+          <SalesTable sales={salesToShow ?? []} theme={theme} />
         </div>
       </div>
       <AddSaleModal

@@ -3,7 +3,7 @@ import { Modal, Select, InputNumber, Button, Form } from "antd";
 import { useSpareParts } from "@src/queries/SpareParts";
 import { useUpdateRepair } from "@src/queries/Repairs";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import type { Repair } from "@src/types/Repairs/repair";
 import CustomBtn from "@src/components/UI/customBtn";
 

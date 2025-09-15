@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Form, Input, Select, message, Row, Col, Button } from "antd";
+import { Modal, Form, Input, Select, Row, Col, Button } from "antd";
 import type { Theme } from "@src/types/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 import { useAddDevice } from "@src/queries/Devices";
@@ -21,14 +21,9 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({
   const createDevice = useAddDevice();
 
   const onFinish = async (values: CreateDeviceInput) => {
-    try {
       await createDevice.mutateAsync(values);
-      message.success("Device added successfully!");
       form.resetFields();
       onClose();
-    } catch {
-      message.error("Failed to add device");
-    }
   };
 
   return (

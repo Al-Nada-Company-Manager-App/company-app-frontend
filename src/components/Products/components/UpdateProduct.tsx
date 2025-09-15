@@ -12,7 +12,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateProduct, useUpdateProductPhoto } from "@src/queries/Products";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";

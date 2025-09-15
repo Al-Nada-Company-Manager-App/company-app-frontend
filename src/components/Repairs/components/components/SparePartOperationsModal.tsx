@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal, Form, InputNumber, Button, Space } from "antd";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateRepair } from "@src/queries/Repairs";
 import type {
   Repair,
@@ -45,7 +45,6 @@ const SparePartOperationsModal = ({
       showErrorMessage("Quantity must be at least 1.");
       return;
     }
-
 
     const updatedSpareParts = repair.repair_process.map((sp) =>
       sp.sp_id === selectedSparePart.sp_id
@@ -93,7 +92,7 @@ const SparePartOperationsModal = ({
       });
       showSuccessMessage("Spare part deleted successfully!");
       onClose();
-    } catch{
+    } catch {
       showErrorMessage("Failed to delete spare part.");
     }
   };

@@ -5,8 +5,9 @@ import { Col, Descriptions, Image, Modal, Row } from "antd";
 import { useState } from "react";
 import UpdateProduct from "./UpdateProduct";
 import { useDeleteProduct } from "@src/queries/Products/productQueries";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -74,8 +75,8 @@ const ProductDetailModal = ({
             <Image
               src={
                 product?.p_photo
-                  ? `Images Products/${product.p_photo}`
-                  : "/Images Products/placeholder.jpg"
+                  ? `/Images/products/${product.p_photo}`
+                  : "/Images/products/placeholder.jpg"
               }
               alt={product?.p_name}
               style={{ borderRadius: "12px", width: "100%" }}
@@ -105,7 +106,7 @@ const ProductDetailModal = ({
                 {product?.p_sellprice || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Expire Date">
-                {product?.expire_date || "N/A"}
+                {convertTimestampToDate(product?.expire_date) || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Status">
                 {product?.p_status || "N/A"}

@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useCreatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
 import { useState, useEffect, useCallback } from "react";

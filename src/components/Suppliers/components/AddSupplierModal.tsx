@@ -3,7 +3,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import {
   useCreateSupplier,
   useUpdateSupplierPhoto,

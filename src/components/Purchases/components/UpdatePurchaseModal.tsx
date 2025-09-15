@@ -16,7 +16,7 @@ import {
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useUpdatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
 import { useState, useEffect, useCallback } from "react";

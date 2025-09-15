@@ -6,12 +6,11 @@ import { calculateAge } from "@src/utils/calculateAge";
 
 import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import {
   useDeleteEmployee,
   useDeactivateEmployee,
 } from "@src/queries/Employees";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import UpdatePermissionsModal from "./UpdatePermissions";
 
 interface DetailModal {

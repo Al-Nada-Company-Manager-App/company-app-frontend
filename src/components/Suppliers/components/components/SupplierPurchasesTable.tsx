@@ -2,9 +2,9 @@ import { Table } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetSupplierPurchases } from "@src/queries/Suppliers";
-import { useThemeContext } from "@src/contexts/useThemeContext";
-import SupplierDate from "./SupplierDate";
+import { useThemeContext } from "@src/contexts/theme";
 import type { SupplierPurchases } from "@src/types/Suppliers/supplier";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface SupplierSalesTableProps {
   supplierId: number;
@@ -14,7 +14,10 @@ interface SupplierSalesTableProps {
 const { Column } = Table;
 type PurchasesResponse = { purchasesHistory: SupplierPurchases[] };
 
-const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) => {
+const SupplierPurchasesTable = ({
+  supplierId,
+  theme,
+}: SupplierSalesTableProps) => {
   const { isDark } = useThemeContext();
   const {
     data: supplierPurchasesData,
@@ -84,7 +87,8 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
 
   const purchasesHistory = Array.isArray(supplierPurchasesData)
     ? supplierPurchasesData
-    : supplierPurchasesData && (supplierPurchasesData as PurchasesResponse).purchasesHistory
+    : supplierPurchasesData &&
+      (supplierPurchasesData as PurchasesResponse).purchasesHistory
     ? (supplierPurchasesData as PurchasesResponse).purchasesHistory
     : [];
 
@@ -123,9 +127,7 @@ const SupplierPurchasesTable = ({ supplierId, theme }: SupplierSalesTableProps) 
           title="Date"
           dataIndex="pch_date"
           key="date"
-          render={(_, record) => (
-            <SupplierDate date={record.pch_date} theme={theme} />
-          )}
+          render={(date) => convertTimestampToDate(date) || "N/A"}
         />
         <Column
           title="Total"

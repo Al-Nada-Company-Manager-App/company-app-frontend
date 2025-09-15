@@ -2,7 +2,7 @@ import { Table, Image } from "antd";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import type { Theme } from "@src/types/theme";
 import { useGetSalesProducts } from "@src/queries/Sales";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 
 interface ProductSalesTableProps {
   saleId: number;
@@ -12,10 +12,17 @@ interface ProductSalesTableProps {
 
 const { Column } = Table;
 
-const ProductSalesTable = ({ saleId,saleType, theme }: ProductSalesTableProps) => {
-
+const ProductSalesTable = ({
+  saleId,
+  saleType,
+  theme,
+}: ProductSalesTableProps) => {
   const { isDark } = useThemeContext();
-  const { data: products, isLoading, error } = useGetSalesProducts(saleId, saleType);
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useGetSalesProducts(saleId, saleType);
   console.log(products);
   if (isLoading) {
     return (
@@ -117,41 +124,43 @@ const ProductSalesTable = ({ saleId,saleType, theme }: ProductSalesTableProps) =
           key="p_name"
           render={(_, record) => record.stock?.p_name || "N/A"}
         />
-        { products && products.length > 0 && products[0].stock && products[0].stock.serial_number &&
-        <Column
-          title="Serial Number"
-          dataIndex={["stock", "serial_number"]}
-          key="serial_number"
-          render={(_, record) => record.stock?.serial_number || "N/A"}
-        />
-        }
-        { products && products.length > 0 && products[0].stock && products[0].stock.p_costprice &&
-        <Column
-          title="Cost Price"
-          dataIndex={["stock", "p_costprice"]}
-          key="p_costprice"
-          render={(_, record) =>
-            record.stock?.p_costprice
-              ? record.stock.p_costprice.toFixed(2)
-              : "N/A"
-          }
-        />
-        }
-        { products && products.length > 0 && products[0].si_quantity &&
+        {products &&
+          products.length > 0 &&
+          products[0].stock &&
+          products[0].stock.serial_number && (
+            <Column
+              title="Serial Number"
+              dataIndex={["stock", "serial_number"]}
+              key="serial_number"
+              render={(_, record) => record.stock?.serial_number || "N/A"}
+            />
+          )}
+        {products &&
+          products.length > 0 &&
+          products[0].stock &&
+          products[0].stock.p_costprice && (
+            <Column
+              title="Cost Price"
+              dataIndex={["stock", "p_costprice"]}
+              key="p_costprice"
+              render={(_, record) =>
+                record.stock?.p_costprice
+                  ? record.stock.p_costprice.toFixed(2)
+                  : "N/A"
+              }
+            />
+          )}
+        {products && products.length > 0 && products[0].si_quantity && (
+          <Column title="Quantity" dataIndex="si_quantity" key="si_quantity" />
+        )}
+        {products && products.length > 0 && products[0].si_total && (
           <Column
-          title="Quantity"
-          dataIndex="si_quantity"
-          key="si_quantity"
-        />
-        }
-        { products && products.length > 0 && products[0].si_total &&
-          <Column
-          title="Total Price"
-          dataIndex="si_total"
-          key="si_total"
-          render={(value: number) => value?.toFixed(2)}
-        />
-        }
+            title="Total Price"
+            dataIndex="si_total"
+            key="si_total"
+            render={(value: number) => value?.toFixed(2)}
+          />
+        )}
       </Table>
     </div>
   );

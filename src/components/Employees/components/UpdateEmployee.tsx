@@ -15,7 +15,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { Employee } from "../../../types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateEmployee } from "@src/queries/Employees"; // Assuming this hook exists for updating employee data
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import moment from "moment"; // For handling dates

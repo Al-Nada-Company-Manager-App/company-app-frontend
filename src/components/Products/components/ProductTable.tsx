@@ -3,19 +3,27 @@ import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import ProductDetailModal from "./ProductDetailModal";
-import ProductInfo from "./components/ProductInfo";
+import { getProductColumns } from "./productColumns";
 
 interface ProductTableProps {
   title: string;
   products: Product[];
   theme: Theme;
+  showExpireDate?: boolean;
+  showCategory?: boolean;
 }
 
-const { Column } = Table;
-
-const ProductTable = ({ title, products, theme }: ProductTableProps) => {
+const ProductTable = ({
+  title,
+  products,
+  theme,
+  showExpireDate = false,
+  showCategory = false,
+}: ProductTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Product>();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const columns = getProductColumns(theme, showExpireDate, showCategory);
 
   return (
     <>
@@ -43,53 +51,15 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
               showHeader={true}
               pagination={{ pageSize: 10 }}
               rowKey="p_id"
-                onRow={(record) => ({
-                  onClick: () => {
-                    setSelectedRow(record);
-                    setIsModalVisible(true);
-                  },
-                })}
-            >
-              <Column
-            title="Product"
-            dataIndex="p_name"
-            key="p_name"
-            render={(_, record: Product) => (
-              <ProductInfo product={record} theme={theme} />
-            )}
+              columns={columns}
+              showSorterTooltip={{ target: "sorter-icon" }}
+              onRow={(record) => ({
+                onClick: () => {
+                  setSelectedRow(record);
+                  setIsModalVisible(true);
+                },
+              })}
             />
-              <Column
-                title="Category"
-                dataIndex="p_category"
-                key="p_category"
-              />
-              <Column
-                title="Cost Price"
-                dataIndex="p_costprice"
-                key="p_costprice"
-              />
-              <Column
-                title="Sell Price"
-                dataIndex="p_sellprice"
-                key="p_sellprice"
-              />
-              <Column
-                title="Quantity"
-                dataIndex="p_quantity"
-                key="p_quantity"
-              />
-              <Column
-                title="Model Code"
-                dataIndex="model_code"
-                key="model_code"
-              />
-              <Column
-                title="Expire Date"
-                dataIndex="expire_date"
-                key="expire_date"
-              />
-              <Column title="Status" dataIndex="p_status" key="p_status" />
-            </Table>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
 import UpdateCustomerModal from "./UpdateCustomerModal";
 import { useDeleteCustomer } from "@src/queries/Customers";
-import { useThemeContext } from "@src/contexts/useThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 
 interface DetailModal {
