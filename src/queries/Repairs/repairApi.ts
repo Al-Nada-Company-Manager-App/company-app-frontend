@@ -1,4 +1,8 @@
-import type { Repair, CreateRepairInput, UpdateRepairInput } from "@src/types/Repairs/repair";
+import type {
+  Repair,
+  CreateRepairInput,
+  UpdateRepairInput,
+} from "@src/types/Repairs/repair";
 
 const API_BASE_URL = "http://localhost:4000/repairs";
 
@@ -9,6 +13,12 @@ export const repairApi = {
     return res.json();
   },
 
+  getRepairById: async (id: number): Promise<Repair> => {
+    const res = await fetch(`${API_BASE_URL}/${id}`);
+    if (!res.ok) throw new Error(`Failed to fetch repair ${id}`);
+    return res.json();
+  },
+  
   createRepair: async (
     data: CreateRepairInput
   ): Promise<{ success: boolean }> => {

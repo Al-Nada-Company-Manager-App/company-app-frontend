@@ -1,7 +1,7 @@
 import React from "react";
 
 const getBadgeClass = (status: string) => {
-  switch (status.toLowerCase()) {
+  switch (status?.toLowerCase()) {
     case "pending":
       return "badge-pending";
     case "completed":
@@ -18,7 +18,7 @@ const getBadgeClass = (status: string) => {
 };
 
 const getBadgeStyle = (status: string): React.CSSProperties => {
-  switch (status.toLowerCase()) {
+  switch (status?.toLowerCase()) {
     case "pending":
       return {
         background: "#ffe58f",

@@ -1,10 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { repairApi } from "./repairApi";
-import type { CreateRepairInput, Repair, UpdateRepairInput } from "@src/types/Repairs/repair";
+import type {
+  CreateRepairInput,
+  Repair,
+  UpdateRepairInput,
+} from "@src/types/Repairs/repair";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
 import { productKeys } from "@src/queries/Products";
 import { sparePartKeys } from "@src/queries/SpareParts";
-import { deviceKeys } from "../Devices";
 
 export const repairKeys = {
   all: ["repairs"] as const,
@@ -27,7 +30,6 @@ export const useCreateRepair = (isDark = false) => {
   return useMutation({
     mutationFn: (data: CreateRepairInput) => repairApi.createRepair(data),
     onSuccess: () => {
-      // 🔄 refresh repairs, spare parts, and products
       client.invalidateQueries({ queryKey: repairKeys.lists() });
       client.invalidateQueries({ queryKey: sparePartKeys.lists() });
       client.invalidateQueries({ queryKey: productKeys.lists() });
@@ -47,32 +49,25 @@ export const useUpdateRepair = (isDark = false) => {
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: UpdateRepairInput }) =>
       repairApi.updateRepair(id, data),
-    onSuccess: (_, { id, data }) => {
-      // Optimistically update cached detail
-      client.setQueryData(repairKeys.detail(id), (old: Repair | undefined) =>
-        old
-          ? {
-              ...old,
-              ...data,
-              stock: { ...old.stock, p_status: data.p_status },
-            }
-          : old
+    onSuccess: (updatedRepair: Repair, { id }) => {
+      client.setQueryData(repairKeys.detail(id), updatedRepair);
+
+      client.setQueryData(repairKeys.lists(), (old: Repair[] | undefined) =>
+        old?.map((r) => (r.rep_id === id ? updatedRepair : r))
       );
 
-      // Revalidate lists
+      // ensure the detail query is refetched from the server (so nested stock/spare data is populated)
+      client.invalidateQueries({ queryKey: repairKeys.detail(id) });
+
       client.invalidateQueries({ queryKey: repairKeys.lists() });
       client.invalidateQueries({ queryKey: sparePartKeys.lists() });
-      client.invalidateQueries({ queryKey: productKeys.lists() });
-      client.invalidateQueries({ queryKey: deviceKeys.lists() });
-
-      showSuccessMessage("Repair updated successfully!", "✏️");
+      showSuccessMessage("Repair updated successfully!", "🛠️");
     },
     onError: () => {
       showErrorMessage("Failed to update repair.");
     },
   });
 };
-
 
 // Delete repair
 export const useDeleteRepair = (isDark = false) => {
@@ -83,12 +78,9 @@ export const useDeleteRepair = (isDark = false) => {
     mutationFn: (id: number) => repairApi.deleteRepair(id),
     onSuccess: (_, id) => {
       client.removeQueries({ queryKey: repairKeys.detail(id) });
-
-      // 🔄 refresh related data
       client.invalidateQueries({ queryKey: repairKeys.lists() });
       client.invalidateQueries({ queryKey: sparePartKeys.lists() });
       client.invalidateQueries({ queryKey: productKeys.lists() });
-
       showSuccessMessage("Repair deleted successfully!", "🗑️");
     },
     onError: () => {
@@ -96,3 +88,11 @@ export const useDeleteRepair = (isDark = false) => {
     },
   });
 };
+
+export const useGetRepairById = (id?: number, enabled = false) =>
+  useQuery({
+    queryKey: id ? repairKeys.detail(id) : ["repairs", "detail", -1],
+    queryFn: () => (id ? repairApi.getRepairById(id) : Promise.reject()),
+    enabled: Boolean(id && enabled),
+    staleTime: 0,
+  });

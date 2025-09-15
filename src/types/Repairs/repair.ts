@@ -1,6 +1,6 @@
 export interface RepairProcess {
-  sp_id: number; // spare part id
-  sp_quantity: number; // quantity used in this repair
+  sp_id: number;
+  sp_quantity: number;
   stock: {
     p_id: number;
     p_name: string;

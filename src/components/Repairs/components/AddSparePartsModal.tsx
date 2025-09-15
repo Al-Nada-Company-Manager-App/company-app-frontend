@@ -43,9 +43,27 @@ const AddSparepartsModal = ({
     if (!selectedPart) return;
 
     if (selectedPart.p_quantity < quantity) {
-      // handle with themed message (e.g., Not enough stock available)
       return;
     }
+
+    // Merge existing spare parts quantities
+    const currentSpareParts =
+      repair.repair_process?.reduce((acc, sp) => {
+        acc[sp.sp_id] = (acc[sp.sp_id] || 0) + sp.sp_quantity;
+        return acc;
+      }, {} as Record<number, number>) || {};
+
+    // Add or increment the selected spare part
+    currentSpareParts[selectedSpId] =
+      (currentSpareParts[selectedSpId] || 0) + quantity;
+
+    // Convert back to array format for UpdateRepairInput
+    const spare_parts = Object.entries(currentSpareParts).map(
+      ([sp_id, sp_quantity]) => ({
+        sp_id: +sp_id,
+        sp_quantity,
+      })
+    );
 
     try {
       await updateRepair.mutateAsync({
@@ -55,13 +73,7 @@ const AddSparepartsModal = ({
           remarks: repair.remarks,
           p_status: repair.stock.p_status,
           rep_date: repair.rep_date,
-          spare_parts: [
-            ...(repair.repair_process?.map((sp) => ({
-              sp_id: sp.sp_id, // use repair_process sp_id
-              sp_quantity: sp.sp_quantity, // already the used quantity
-            })) || []),
-            { sp_id: selectedSpId, sp_quantity: quantity }, // new part
-          ],
+          spare_parts,
         },
       });
 
@@ -71,6 +83,8 @@ const AddSparepartsModal = ({
     }
   };
 
+  // Filter spare parts to only show those with p_quantity > 0
+  const filteredSpareParts = spareParts.filter((sp) => sp.p_quantity > 0);
 
   return (
     <Modal
@@ -88,22 +102,19 @@ const AddSparepartsModal = ({
         onFinish={onFinish}
         className="space-y-2"
       >
-        {/* Spare Part Selector */}
         <Form.Item label="Select Spare Part" required>
           <Select
             placeholder="Select Spare Part"
             value={selectedSpId ?? undefined}
             onChange={(val) => setSelectedSpId(val)}
           >
-            {spareParts.map((sp) => (
+            {filteredSpareParts.map((sp) => (
               <Select.Option key={sp.p_id} value={sp.p_id}>
                 {sp.p_name} (Available: {sp.p_quantity})
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
-
-        {/* Quantity Input */}
         <Form.Item label="Quantity" required>
           <InputNumber
             min={1}
@@ -113,7 +124,6 @@ const AddSparepartsModal = ({
           />
         </Form.Item>
 
-        {/* Buttons */}
         <Form.Item>
           <div className="flex justify-end gap-4 mt-6">
             <Button

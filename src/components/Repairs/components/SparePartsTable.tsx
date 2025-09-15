@@ -14,8 +14,23 @@ interface SparePartsTableProps {
 
 const { Column } = Table;
 
-const SparePartsTable = ({ spareParts, theme, repair }: SparePartsTableProps) => {
+const SparePartsTable = ({
+  spareParts,
+  theme,
+  repair,
+}: SparePartsTableProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
+  console.log("SparePartsTable spareParts:", spareParts);
+
+  const safeData = (spareParts ?? []).map((sp, idx) => ({
+    // ensure there is always a unique key/identifier and keep original fields
+    ...sp,
+    __rowKey: String(
+      (sp as RepairProcess).sp_id ??
+      sp.stock?.p_id ??
+      `missing-${idx}-${sp.sp_quantity}`
+    ),
+  }));
 
   return (
     <>
@@ -44,31 +59,35 @@ const SparePartsTable = ({ spareParts, theme, repair }: SparePartsTableProps) =>
           </div>
 
           <div className="custom-table">
-            <Table<RepairProcess>
-              dataSource={spareParts}
+            <Table<RepairProcess & { __rowKey: string }>
+              dataSource={safeData}
               showHeader={true}
               pagination={{ pageSize: 10 }}
-              rowKey={(record) => record.stock.p_id}
+              rowKey={(record) => record.__rowKey}
             >
               <Column
                 title="Product"
-                dataIndex={["stock", "p_name"]}
                 key="p_name"
+                render={(_, record) =>
+                  record.stock?.p_name ??
+                  `Part ID: ${(record as RepairProcess).sp_id ?? "N/A"}`
+                }
               />
               <Column
                 title="Quantity Used"
                 dataIndex="sp_quantity"
                 key="sp_quantity"
+                render={(qty: number) => qty ?? 0}
               />
               <Column
                 title="Model Code"
-                dataIndex={["stock", "model_code"]}
                 key="model_code"
+                render={(_, record) => record.stock?.model_code ?? "N/A"}
               />
               <Column
                 title="Serial Number"
-                dataIndex={["stock", "serial_number"]}
                 key="serial_number"
+                render={(_, record) => record.stock?.serial_number ?? "N/A"}
               />
             </Table>
           </div>

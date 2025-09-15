@@ -2,6 +2,7 @@ import { Table } from "antd";
 import type { Repair, RepairProcess } from "@src/types/Repairs/repair";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
+import { useGetRepairById } from "@src/queries/Repairs/repairQueries";
 import RepairDetailModal from "./RepairDetailModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 import StatusBadge from "@src/components/UI/StatusBadge";
@@ -14,8 +15,12 @@ interface RepairProcessTableProps {
 const { Column } = Table;
 
 const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
-    const [selectedRow, setSelectedRow] = useState<Repair>();
-    const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<Repair>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { data: freshSelectedRepair } = useGetRepairById(
+    selectedRow?.rep_id,
+    isModalVisible
+  );
 
   return (
     <>
@@ -68,7 +73,8 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
                 ? processes.map((proc, i) => (
                     <div key={i}>
                       {proc.stock.p_name ?? "Unnamed"} ( SN:{" "}
-                      {proc.stock.serial_number ?? "N/A"})
+                      {proc.stock.serial_number ?? "N/A"}) ( Qty:{" "}
+                      {proc.sp_quantity} )
                     </div>
                   ))
                 : "No process details"
@@ -80,7 +86,7 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
       <RepairDetailModal
         modalOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        repair={selectedRow}
+        repair={freshSelectedRepair ?? selectedRow}
         theme={theme}
       />
     </>
