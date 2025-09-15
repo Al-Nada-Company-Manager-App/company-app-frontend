@@ -4,6 +4,7 @@ import ProductTable from "./components/ProductTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddProductModal from "./components/AddProductModal";
+import type { Product } from "@src/types/Products/product";
 
 interface ProductsProps {
   isDark: boolean;
@@ -12,7 +13,30 @@ interface ProductsProps {
 const ProductsPage = ({ isDark }: ProductsProps) => {
   const { theme, isLoading, error, measuring, lab, chemicals, spares, others } =
     useProducts(isDark);
-    const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  // Filter out "Out of Stock" products and create separate arrays
+  const filterInStock = (products: Product[] | undefined) =>
+    products?.filter((product) => product.p_status !== "Out of Stock") || [];
+
+  const filterOutOfStock = (products: Product[] | undefined) =>
+    products?.filter((product) => product.p_status === "Out of Stock") || [];
+
+  // Filter each category for in-stock products
+  const inStockMeasuring = filterInStock(measuring);
+  const inStockLab = filterInStock(lab);
+  const inStockChemicals = filterInStock(chemicals);
+  const inStockSpares = filterInStock(spares);
+  const inStockOthers = filterInStock(others);
+
+  // Collect all out-of-stock products from all categories
+  const outOfStockProducts = [
+    ...filterOutOfStock(measuring),
+    ...filterOutOfStock(lab),
+    ...filterOutOfStock(chemicals),
+    ...filterOutOfStock(spares),
+    ...filterOutOfStock(others),
+  ];
 
   if (isLoading) {
     return (
@@ -80,19 +104,31 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           className="px-6 py-3 font-semibold border-none"
         />
       </div>
+      {outOfStockProducts.length > 0 && (
+        <ProductTable
+          title="Out of Stock Products"
+          products={outOfStockProducts}
+          theme={theme}
+        />
+      )}
       <ProductTable
         title="Measuring & Controllers"
-        products={measuring || []}
+        products={inStockMeasuring}
         theme={theme}
       />
-      <ProductTable title="Lab Equipments" products={lab || []} theme={theme} />
+      <ProductTable
+        title="Lab Equipments"
+        products={inStockLab}
+        theme={theme}
+      />
       <ProductTable
         title="Chemicals"
-        products={chemicals || []}
+        products={inStockChemicals}
         theme={theme}
+        showExpireDate={true}
       />
-      <ProductTable title="Spares" products={spares || []} theme={theme} />
-      <ProductTable title="Others" products={others || []} theme={theme} />
+      <ProductTable title="Spares" products={inStockSpares} theme={theme} />
+      <ProductTable title="Others" products={inStockOthers} theme={theme} />
       {showAddModal && (
         <AddProductModal
           open={showAddModal}

@@ -10,11 +10,17 @@ interface ProductTableProps {
   title: string;
   products: Product[];
   theme: Theme;
+  showExpireDate?: boolean;
 }
 
 const { Column } = Table;
 
-const ProductTable = ({ title, products, theme }: ProductTableProps) => {
+const ProductTable = ({
+  title,
+  products,
+  theme,
+  showExpireDate = false,
+}: ProductTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Product>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -84,14 +90,16 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
                 dataIndex="model_code"
                 key="model_code"
               />
-              <Column
-                title="Expire Date"
-                dataIndex="expire_date"
-                key="expire_date"
-                render={(expire_date) =>
-                  convertTimestampToDate(expire_date) || "N/A"
-                }
-              />
+              {showExpireDate && (
+                <Column
+                  title="Expire Date"
+                  dataIndex="expire_date"
+                  key="expire_date"
+                  render={(expire_date) =>
+                    convertTimestampToDate(expire_date) || "N/A"
+                  }
+                />
+              )}
               <Column title="Status" dataIndex="p_status" key="p_status" />
             </Table>
           </div>
