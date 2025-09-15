@@ -3,12 +3,12 @@ import CustomBtn from "@src/components/UI/customBtn";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row, Image } from "antd";
-import SaleDate from "./components/SaleDate";
 import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useState } from "react";
 import UpdateSaleModal from "./UpdateSaleModal";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface SaleDetailModalProps {
   modalOpen: boolean;
@@ -99,9 +99,7 @@ const SaleDetailModal = ({
           <Col span={16}>
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Sale Date">
-                {sale?.sl_date && (
-                  <SaleDate date={sale.sl_date} theme={theme} />
-                )}
+                {convertTimestampToDate(sale?.sl_date) || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Total">
                 {sale?.sl_total?.toFixed(2)}

@@ -4,7 +4,7 @@ import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import SupplierInfo from "./components/SupplierInfo";
 import PurchaseDetailModal from "./PurchaseDetailModal";
-import PurchaseDate from "./components/PurchaseDate";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface PurchasesTableProps {
   purchases: Purchases[];
@@ -73,9 +73,7 @@ const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
             title="Date"
             dataIndex="pch_date"
             key="date"
-            render={(date: string) => (
-              <PurchaseDate date={date} theme={theme} />
-            )}
+            render={(date: string) => convertTimestampToDate(date) || "N/A"}
           />
           <Column title="Bill Number" dataIndex="pch_billnum" key="billnum" />
           <Column title="Currency" dataIndex="pch_currency" key="currency" />

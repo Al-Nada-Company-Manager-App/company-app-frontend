@@ -4,6 +4,7 @@ import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import ProductDetailModal from "./ProductDetailModal";
 import ProductInfo from "./components/ProductInfo";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface ProductTableProps {
   title: string;
@@ -43,21 +44,21 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
               showHeader={true}
               pagination={{ pageSize: 10 }}
               rowKey="p_id"
-                onRow={(record) => ({
-                  onClick: () => {
-                    setSelectedRow(record);
-                    setIsModalVisible(true);
-                  },
-                })}
+              onRow={(record) => ({
+                onClick: () => {
+                  setSelectedRow(record);
+                  setIsModalVisible(true);
+                },
+              })}
             >
-            <Column
-            title="Product"
-            dataIndex="p_name"
-            key="p_name"
-            render={(_, record: Product) => (
-              <ProductInfo product={record} theme={theme} />
-            )}
-            />
+              <Column
+                title="Product"
+                dataIndex="p_name"
+                key="p_name"
+                render={(_, record: Product) => (
+                  <ProductInfo product={record} theme={theme} />
+                )}
+              />
               <Column
                 title="Category"
                 dataIndex="p_category"
@@ -87,6 +88,9 @@ const ProductTable = ({ title, products, theme }: ProductTableProps) => {
                 title="Expire Date"
                 dataIndex="expire_date"
                 key="expire_date"
+                render={(expire_date) =>
+                  convertTimestampToDate(expire_date) || "N/A"
+                }
               />
               <Column title="Status" dataIndex="p_status" key="p_status" />
             </Table>

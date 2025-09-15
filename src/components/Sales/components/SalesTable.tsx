@@ -4,8 +4,8 @@ import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import CustomerInfo from "./components/CustomerInfo";
 import SaleDetailModal from "./SaleDetailModal";
-import SaleDate from "./components/SaleDate";
 import StatusBadge from "@src/components/UI/StatusBadge";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface SalesTableProps {
   sales: Sales[];
@@ -64,7 +64,7 @@ const SalesTable = ({ sales, theme }: SalesTableProps) => {
             title="Date"
             dataIndex="sl_date"
             key="date"
-            render={(date: string) => <SaleDate date={date} theme={theme} />}
+            render={(date: string) => convertTimestampToDate(date) || "N/A"}
           />
           <Column
             title="Status"

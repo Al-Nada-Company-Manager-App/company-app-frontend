@@ -3,12 +3,12 @@ import CustomBtn from "@src/components/UI/customBtn";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row, Image } from "antd";
-import PurchaseDate from "./components/PurchaseDate";
 import ProductPurchasesTable from "./components/ProductPurchasesTable";
 import { useDeletePurchase } from "@src/queries/Purchases";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import { useState, useEffect } from "react";
 import UpdatePurchaseModal from "./UpdatePurchaseModal";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface PurchaseDetailModalProps {
   modalOpen: boolean;
@@ -117,9 +117,7 @@ const PurchaseDetailModal = ({
           <Col span={16}>
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Purchase Date">
-                {purchase?.pch_date && (
-                  <PurchaseDate date={purchase.pch_date} theme={theme} />
-                )}
+                {convertTimestampToDate(purchase?.pch_date) || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Total">
                 {purchase?.pch_total?.toFixed(2)}

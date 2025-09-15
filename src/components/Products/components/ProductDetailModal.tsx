@@ -7,6 +7,7 @@ import UpdateProduct from "./UpdateProduct";
 import { useDeleteProduct } from "@src/queries/Products/productQueries";
 import { useThemeContext } from "@src/contexts/useThemeContext";
 import CustomBtn from "@src/components/UI/customBtn";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -105,7 +106,7 @@ const ProductDetailModal = ({
                 {product?.p_sellprice || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Expire Date">
-                {product?.expire_date || "N/A"}
+                {convertTimestampToDate(product?.expire_date) || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Status">
                 {product?.p_status || "N/A"}
