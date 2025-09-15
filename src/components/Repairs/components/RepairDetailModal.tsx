@@ -2,7 +2,7 @@ import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Modal, Row } from "antd";
 import { useState } from "react";
-import SparePartsTable from "./SparePartsTable";
+import SparePartsTable from "./components/SparePartsTable";
 import CustomBtn from "@src/components/UI/customBtn";
 import { useDeleteRepair } from "@src/queries/Repairs";
 import { useThemeContext } from "@src/contexts/theme";
