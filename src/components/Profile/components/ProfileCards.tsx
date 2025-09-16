@@ -14,9 +14,16 @@ interface ProfileCardsProps {
   user: Employee;
   theme: Theme;
   isDark: boolean;
+  onEditProfile: () => void;
+  onChangePassword: () => void;
 }
 
-const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
+const ProfileCards = ({
+  user,
+  theme,
+  onEditProfile,
+  onChangePassword,
+}: ProfileCardsProps) => {
   const InfoItem = ({
     icon: Icon,
     label,
@@ -155,6 +162,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
               color: theme.profile?.actions.editButton.color,
               border: theme.profile?.actions.editButton.border,
             }}
+            onClick={onEditProfile}
             onMouseOver={(e) => {
               e.currentTarget.style.background =
                 theme.profile?.actions.editButton.hoverBackground || "";
@@ -178,6 +186,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
               color: theme.profile?.actions.changePasswordButton.color,
               border: theme.profile?.actions.changePasswordButton.border,
             }}
+            onClick={onChangePassword}
             onMouseOver={(e) => {
               e.currentTarget.style.background =
                 theme.profile?.actions.changePasswordButton.hoverBackground ||
