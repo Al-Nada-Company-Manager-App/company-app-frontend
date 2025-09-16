@@ -4,6 +4,7 @@ import type {
   UserMenuItem,
 } from "@src/types/Breadcrumb/breadcrumb";
 import NotificationIcon from "./NotificationIcon";
+import SettingsDropdown from "./SettingsDropdown";
 
 interface UserMenuProps {
   theme: BreadcrumbTheme;
@@ -79,6 +80,18 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
               theme={theme}
               onItemClick={onItemClick}
               isDark={isDark}
+            />
+          );
+        }
+
+        // Special handling for settings dropdown
+        if (item.id === "settings") {
+          return (
+            <SettingsDropdown
+              key={item.id}
+              theme={theme}
+              isDark={isDark}
+              onItemClick={onItemClick}
             />
           );
         }

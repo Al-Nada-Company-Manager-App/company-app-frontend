@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
+import { AuthProvider } from "@src/contexts/auth";
 import { SearchProvider, useSearchContext } from "@src/contexts/search";
 import Layout from "@src/components/Layout";
 import ManagerDashboards from "@src/components/dashboards/managerDashboards";
@@ -15,6 +16,7 @@ import StockPage from "@src/components/pages/StockPage";
 import SalesPage from "@src/components/pages/SalesPage";
 import PurchasesPage from "@src/components/pages/PurchasesPage";
 import SuppliersPage from "@src/components/pages/SuppliersPage";
+import ProfilePage from "@src/components/pages/ProfilePage";
 import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
@@ -35,6 +37,7 @@ function RouteHandler() {
         <Route index element={<ManagerDashboards />} />
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="customers" element={<CustomersPage />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="stock" element={<StockPage />}>
           <Route path="products" element={<ProductPage />} />
           <Route path="repairs" element={<RepairPage />} />
@@ -51,11 +54,13 @@ function RouteHandler() {
 function App() {
   return (
     <ThemeProvider>
-      <SearchProvider>
-        <Router>
-          <RouteHandler />
-        </Router>
-      </SearchProvider>
+      <AuthProvider>
+        <SearchProvider>
+          <Router>
+            <RouteHandler />
+          </Router>
+        </SearchProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
