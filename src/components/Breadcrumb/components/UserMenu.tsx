@@ -28,8 +28,7 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
       {/* User Profile */}
       {profileItem && (
         <div
-          className="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
-          onClick={() => handleItemClick(profileItem.id)}
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
           style={{
             backgroundColor: theme.userProfile.containerBackground,
             border: `1px solid ${theme.userProfile.containerBorder}`,

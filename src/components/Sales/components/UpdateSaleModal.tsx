@@ -1,7 +1,6 @@
 import { Modal, Form, Button, Row, Col, Select, InputNumber } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateSale } from "@src/queries/Sales";
 import { useState, useEffect } from "react";
@@ -86,7 +85,8 @@ const UpdateSaleModal = ({
             <Col span={24}>
               <div
                 style={{
-                  background: theme.card?.background || "#f5f5f5",
+                  background: theme.container.background || "#f5f5f5",
+                  color: theme.headers.color || "#000",
                   padding: "16px",
                   borderRadius: "8px",
                   marginBottom: "16px",

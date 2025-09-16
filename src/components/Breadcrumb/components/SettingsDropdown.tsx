@@ -81,7 +81,7 @@ const SettingsDropdown = ({
       {/* Settings Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg transition-all duration-200 hover:opacity-70 cursor-pointer"
+        className="rounded-lg transition-all duration-200 hover:opacity-70 cursor-pointer"
       >
         <Settings size={20} color={theme.userMenu.iconColor} />
       </button>

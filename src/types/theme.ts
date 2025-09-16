@@ -114,4 +114,51 @@ export interface Theme {
       textColor: string;
     };
   };
+  profile?: {
+    card: {
+      background: string;
+      borderColor: string;
+      borderRadius: string;
+      padding: string;
+      marginBottom: string;
+    };
+    avatar: {
+      borderColor: string;
+      background: string;
+      borderWidth: string;
+    };
+    text: {
+      primary: string;
+      secondary: string;
+      label: string;
+    };
+    header: {
+      nameColor: string;
+      roleColor: string;
+    };
+    icon: {
+      color: string;
+    };
+    status: {
+      active: string;
+      inactive: string;
+      borderColor: string;
+    };
+    actions: {
+      editButton: {
+        background: string;
+        color: string;
+        hoverBackground: string;
+        hoverColor: string;
+        border: string;
+      };
+      changePasswordButton: {
+        background: string;
+        color: string;
+        hoverBackground: string;
+        hoverColor: string;
+        border: string;
+      };
+    };
+  };
 }

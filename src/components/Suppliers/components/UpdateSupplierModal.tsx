@@ -2,7 +2,6 @@ import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import { useThemeContext } from "@src/contexts/theme";
 import {
   useUpdateSupplier,

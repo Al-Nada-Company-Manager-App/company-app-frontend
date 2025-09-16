@@ -1,5 +1,4 @@
 import ConfirmBtn from "@src/components/UI/confirm";
-import ModalStyle from "@src/components/UI/ModalStyle";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row } from "antd";
