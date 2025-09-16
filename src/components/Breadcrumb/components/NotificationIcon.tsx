@@ -2,7 +2,8 @@ import { Bell } from "lucide-react";
 import { useState } from "react";
 import type { BreadcrumbTheme } from "@src/types/Breadcrumb/breadcrumb";
 import NotificationBox from "./NotificationBox";
-import { useGetAllNotifications } from "@src/queries/Notifications/notificationQueries";
+import { dummyNotifications } from "@src/data/dummyNotifications";
+// import { useGetAllNotifications } from "@src/queries/Notifications/notificationQueries";
 
 interface NotificationIconProps {
   theme: BreadcrumbTheme;
@@ -16,10 +17,21 @@ const NotificationIcon = ({
   isDark = false,
 }: NotificationIconProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: notifications = [] } = useGetAllNotifications();
+  // const { data: notifications = [] } = useGetAllNotifications();
+  const notifications = dummyNotifications;
+
+  // Sort notifications to show unread first (same sorting as in NotificationBox)
+  const sortedNotifications = [...notifications].sort((a, b) => {
+    // Unread notifications (Pending) first
+    if (a.n_status === "Pending" && b.n_status !== "Pending") return -1;
+    if (a.n_status !== "Pending" && b.n_status === "Pending") return 1;
+
+    // Then sort by date (most recent first)
+    return new Date(b.n_date).getTime() - new Date(a.n_date).getTime();
+  });
 
   // Count unread notifications
-  const unreadCount = notifications.filter(
+  const unreadCount = sortedNotifications.filter(
     (notification) => notification.n_status === "Pending"
   ).length;
 
@@ -61,7 +73,7 @@ const NotificationIcon = ({
           {/* Notification Box */}
           <div className="absolute top-8 right-0 z-50">
             <NotificationBox
-              notifications={notifications}
+              notifications={sortedNotifications}
               onClose={handleClose}
               isDark={isDark}
             />

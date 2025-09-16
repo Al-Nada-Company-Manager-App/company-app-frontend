@@ -1,7 +1,8 @@
 import { X } from "lucide-react";
+import { useState } from "react";
 import { lightTheme, darkTheme } from "@src/hooks/dark&lightthemes";
 import type { Notification } from "@src/types/Notifications/notifications";
-import { useDeleteNotification } from "@src/queries/Notifications/notificationQueries";
+// import { useDeleteNotification } from "@src/queries/Notifications/notificationQueries";
 
 interface NotificationBoxProps {
   notifications: Notification[];
@@ -15,10 +16,12 @@ const NotificationBox = ({
   isDark = false,
 }: NotificationBoxProps) => {
   const currentTheme = isDark ? darkTheme : lightTheme;
-  const deleteNotificationMutation = useDeleteNotification();
+  const [showAll, setShowAll] = useState(false);
+  // const deleteNotificationMutation = useDeleteNotification();
 
   const handleDeleteNotification = (notificationId: number) => {
-    deleteNotificationMutation.mutate(notificationId);
+    // deleteNotificationMutation.mutate(notificationId);
+    console.log(`Deleting notification ${notificationId}`);
   };
 
   const formatTimeAgo = (dateString: string) => {
@@ -65,7 +68,12 @@ const NotificationBox = ({
   };
 
   const getLeftBorderColor = (notification: Notification) => {
-    // You can customize this based on notification type
+    // Only show colored border for unread notifications
+    if (notification.n_status !== "Pending") {
+      return "transparent"; // No border for read notifications
+    }
+
+    // You can customize this based on notification type for unread notifications
     switch (notification.n_type) {
       case "stock":
         return "#ED1316"; // Red for stock alerts
@@ -80,7 +88,9 @@ const NotificationBox = ({
 
   return (
     <div
-      className="w-[512px] max-h-[400px] rounded-lg overflow-hidden shadow-lg"
+      className={`w-[512px] rounded-lg overflow-hidden shadow-lg ${
+        showAll ? "max-h-[400px]" : "max-h-auto"
+      }`}
       style={{
         backgroundColor: currentTheme.notification?.container.background,
         border: `1px solid ${currentTheme.notification?.container.border}`,
@@ -108,7 +118,7 @@ const NotificationBox = ({
       </div>
 
       {/* Notifications List */}
-      <div className="max-h-[260px] overflow-y-auto">
+      <div className={showAll ? "max-h-[260px] overflow-y-auto" : ""}>
         {notifications.length === 0 ? (
           <div
             className="p-8 text-center"
@@ -117,97 +127,108 @@ const NotificationBox = ({
             No notifications available
           </div>
         ) : (
-          notifications.slice(0, 5).map((notification) => (
-            <div
-              key={notification.n_id}
-              className="relative px-4 py-3 border-b hover:bg-opacity-50 transition-colors cursor-pointer group"
-              style={{
-                backgroundColor: currentTheme.notification?.item.background,
-                borderBottomColor: currentTheme.notification?.item.borderBottom,
-                borderLeft: `6px solid ${getLeftBorderColor(notification)}`,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  currentTheme.notification?.item.hoverBackground || "";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  currentTheme.notification?.item.background || "";
-              }}
-            >
-              {/* Delete Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteNotification(notification.n_id);
-                }}
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 rounded"
+          (showAll ? notifications : notifications.slice(0, 3)).map(
+            (notification) => (
+              <div
+                key={notification.n_id}
+                className="relative px-4 py-3 border-b hover:bg-opacity-50 transition-colors cursor-pointer group"
                 style={{
-                  color: currentTheme.notification?.item.deleteButtonColor,
+                  backgroundColor: currentTheme.notification?.item.background,
+                  borderBottomColor:
+                    currentTheme.notification?.item.borderBottom,
+                  borderLeft:
+                    notification.n_status === "Pending"
+                      ? `6px solid ${getLeftBorderColor(notification)}`
+                      : "none",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color =
-                    currentTheme.notification?.item.deleteButtonHoverColor ||
-                    "";
+                  e.currentTarget.style.backgroundColor =
+                    currentTheme.notification?.item.hoverBackground || "";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color =
-                    currentTheme.notification?.item.deleteButtonColor || "";
+                  e.currentTarget.style.backgroundColor =
+                    currentTheme.notification?.item.background || "";
                 }}
               >
-                <X size={14} />
-              </button>
+                {/* Delete Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteNotification(notification.n_id);
+                  }}
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 rounded"
+                  style={{
+                    color: currentTheme.notification?.item.deleteButtonColor,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color =
+                      currentTheme.notification?.item.deleteButtonHoverColor ||
+                      "";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color =
+                      currentTheme.notification?.item.deleteButtonColor || "";
+                  }}
+                >
+                  <X size={14} />
+                </button>
 
-              <div className="flex items-start gap-3">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  <img
-                    src={getNotificationImage(notification)}
-                    alt={getNotificationName(notification)}
-                    className="w-12 h-12 rounded-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "/Images/employees/placeholder.jpg";
-                    }}
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4
-                      className="font-medium text-base truncate pr-6"
-                      style={{
-                        color: currentTheme.notification?.item.nameColor,
+                <div
+                  className={`flex items-start gap-3 ${
+                    notification.n_status === "Read" ? "opacity-70" : ""
+                  }`}
+                >
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    <img
+                      src={getNotificationImage(notification)}
+                      alt={getNotificationName(notification)}
+                      className="w-12 h-12 rounded-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "/Images/employees/placeholder.jpg";
                       }}
-                    >
-                      {getNotificationName(notification)}
-                    </h4>
-                    <span
-                      className="text-sm whitespace-nowrap"
-                      style={{
-                        color: currentTheme.notification?.item.timeColor,
-                      }}
-                    >
-                      {formatTimeAgo(notification.n_date)}
-                    </span>
+                    />
                   </div>
-                  <p
-                    className="text-sm mt-1 leading-relaxed pr-6"
-                    style={{
-                      color: currentTheme.notification?.item.messageColor,
-                    }}
-                  >
-                    {notification.n_message}
-                  </p>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <h4
+                        className="font-medium text-base truncate pr-6"
+                        style={{
+                          color: currentTheme.notification?.item.nameColor,
+                        }}
+                      >
+                        {getNotificationName(notification)}
+                      </h4>
+                      <span
+                        className="text-sm whitespace-nowrap"
+                        style={{
+                          color: currentTheme.notification?.item.timeColor,
+                        }}
+                      >
+                        {formatTimeAgo(notification.n_date)}
+                      </span>
+                    </div>
+                    <p
+                      className="text-sm mt-1 leading-relaxed pr-6"
+                      style={{
+                        color: currentTheme.notification?.item.messageColor,
+                      }}
+                    >
+                      {notification.n_message}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            )
+          )
         )}
       </div>
 
       {/* Footer */}
-      {notifications.length > 0 && (
+      {notifications.length > 3 && (
         <div
           className="px-4 py-3 text-center border-t"
           style={{
@@ -229,11 +250,10 @@ const NotificationBox = ({
                 currentTheme.notification?.footer.linkColor || "";
             }}
             onClick={() => {
-              // Handle view all notifications
-              console.log("View all notifications");
+              setShowAll(!showAll);
             }}
           >
-            View All
+            {showAll ? "Show Less" : "View All"}
           </button>
         </div>
       )}
