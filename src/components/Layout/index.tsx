@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useThemeContext } from "@src/contexts/theme";
+import { useAuthContext } from "@src/contexts/auth";
 import Sidebar from "@src/components/Sidebar";
 import Breadcrumb from "@src/components/Breadcrumb";
 import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
@@ -9,6 +10,7 @@ import TableStyle from "../UI/TableStyle";
 
 const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();
+  const { logout } = useAuthContext();
   const itheme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,6 +34,26 @@ const Layout = () => {
 
   const handleBreadcrumbItemClick = (itemId: string) => {
     console.log("Breadcrumb item clicked:", itemId);
+
+    // Handle profile navigation
+    if (itemId === "profile") {
+      navigate("/profile");
+    }
+    // Handle settings or other menu items here
+    if (itemId === "settings") {
+      navigate("/profile"); // For now, redirect settings to profile
+    }
+    // Handle help
+    if (itemId === "help") {
+      // Open help modal or navigate to help page
+      console.log("Opening help...");
+      // You can implement help modal or help page here
+    }
+    // Handle logout
+    if (itemId === "logout") {
+      logout();
+      navigate("/"); // Redirect to dashboard after logout
+    }
   };
 
   const getCurrentPageName = () => {
@@ -40,6 +62,7 @@ const Layout = () => {
       "/employees": "Employees",
       "/customers": "Customers",
       "/stock": "Stock",
+      "/profile": "Profile",
       "/sales": "Sales",
       "/purchases": "Purchases",
       "/suppliers": "Suppliers",

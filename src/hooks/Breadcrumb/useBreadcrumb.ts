@@ -1,22 +1,9 @@
 import { useMemo } from "react";
+import { useAuthContext } from "@src/contexts/auth";
 
 import type { BreadcrumbTheme } from "@src/types/Breadcrumb/breadcrumb";
 
 import type { UserMenuItem } from "@src/types/Breadcrumb/breadcrumb";
-
-export const USER_MENU_ITEMS: UserMenuItem[] = [
-  {
-    id: "profile",
-    label: "John Doe",
-    icon: "User",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&auto=format",
-    isProfile: true,
-  },
-  { id: "settings", label: "Settings", icon: "Settings" },
-  { id: "notifications", label: "Notifications", icon: "Bell" },
-  { id: "theme", label: "Toggle Theme", icon: "Moon" },
-];
 
 const lightBreadcrumbTheme: BreadcrumbTheme = {
   container: {
@@ -45,6 +32,11 @@ const lightBreadcrumbTheme: BreadcrumbTheme = {
   },
   breadcrumbText: {
     color: "#6C79EF",
+  },
+  notification: {
+    iconColor: "#6C79EF",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
   },
 };
 
@@ -76,6 +68,11 @@ const darkBreadcrumbTheme: BreadcrumbTheme = {
   breadcrumbText: {
     color: "#828CE8",
   },
+  notification: {
+    iconColor: "#828CE8",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
+  },
 };
 
 const lightBreadcrumbScrolledTheme: BreadcrumbTheme = {
@@ -105,6 +102,11 @@ const lightBreadcrumbScrolledTheme: BreadcrumbTheme = {
   },
   breadcrumbText: {
     color: "#6C79EF",
+  },
+  notification: {
+    iconColor: "#6C79EF",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
   },
 };
 
@@ -136,9 +138,16 @@ const darkBreadcrumbScrolledTheme: BreadcrumbTheme = {
   breadcrumbText: {
     color: "#828CE8",
   },
+  notification: {
+    iconColor: "#828CE8",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
+  },
 };
 
 export const useBreadcrumb = (isDark: boolean) => {
+  const { user } = useAuthContext();
+
   const theme = useMemo(
     () => (isDark ? darkBreadcrumbTheme : lightBreadcrumbTheme),
     [isDark]
@@ -149,9 +158,27 @@ export const useBreadcrumb = (isDark: boolean) => {
     [isDark]
   );
 
+  const userMenuItems: UserMenuItem[] = useMemo(
+    () => [
+      {
+        id: "profile",
+        label: user ? `${user.f_name} ${user.l_name}` : "John Doe",
+        icon: "User",
+        image:
+          user?.e_photo ||
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&auto=format",
+        isProfile: true,
+      },
+      { id: "settings", label: "Settings", icon: "Settings" },
+      { id: "notifications", label: "Notifications", icon: "Bell" },
+      { id: "theme", label: "Toggle Theme", icon: "Moon" },
+    ],
+    [user]
+  );
+
   return {
     theme,
     scrolledTheme,
-    userMenuItems: USER_MENU_ITEMS,
+    userMenuItems,
   };
 };

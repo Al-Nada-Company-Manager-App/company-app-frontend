@@ -70,6 +70,86 @@ export const lightTheme: Theme = {
     confirmButtonHoverBg: "#5A67D8",
     confirmButtonHoverColor: "#FFFFFF",
   },
+  notification: {
+    container: {
+      background: "#FFFFFF",
+      border: "#E2E8F0",
+      shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    },
+    header: {
+      background: "#F7FAFC",
+      textColor: "#2D3748",
+      borderBottom: "#E2E8F0",
+    },
+    item: {
+      background: "#FFFFFF",
+      hoverBackground: "#F7FAFC",
+      borderBottom: "#E2E8F0",
+      nameColor: "#2D3748",
+      messageColor: "#718096",
+      timeColor: "#A0AEC0",
+      deleteButtonColor: "#E53E3E",
+      deleteButtonHoverColor: "#C53030",
+      leftBorderColor: "#ED1316",
+    },
+    footer: {
+      background: "#EDF3FF",
+      textColor: "#2D3748",
+      linkColor: "#24BEFE",
+      linkHoverColor: "#1E90FF",
+    },
+    badge: {
+      background: "#ED1316",
+      textColor: "#FFFFFF",
+    },
+  },
+  profile: {
+    card: {
+      background: "rgba(255, 255, 255, 0.9)",
+      borderColor: "#E2E8F0",
+      borderRadius: "12px",
+      padding: "24px",
+      marginBottom: "24px",
+    },
+    avatar: {
+      borderColor: "#E2E8F0",
+      background: "#F7FAFC",
+      borderWidth: "4px",
+    },
+    text: {
+      primary: "#2D3748",
+      secondary: "#718096",
+      label: "#A0AEC0",
+    },
+    header: {
+      nameColor: "#2D3748",
+      roleColor: "#718096",
+    },
+    icon: {
+      color: "#A0AEC0",
+    },
+    status: {
+      active: "#01B574",
+      inactive: "#E53E3E",
+      borderColor: "#FFFFFF",
+    },
+    actions: {
+      editButton: {
+        background: "#6C79F7",
+        color: "#FFFFFF",
+        hoverBackground: "#5A67D8",
+        hoverColor: "#FFFFFF",
+        border: "none",
+      },
+      changePasswordButton: {
+        background: "transparent",
+        color: "#2D3748",
+        hoverBackground: "#F7FAFC",
+        hoverColor: "#2D3748",
+        border: "1px solid #E2E8F0",
+      },
+    },
+  },
 };
 
 export const darkTheme: Theme = {
@@ -141,5 +221,85 @@ export const darkTheme: Theme = {
     confirmButtonColor: "#FFFFFF",
     confirmButtonHoverBg: "#5A67D8",
     confirmButtonHoverColor: "#FFFFFF",
+  },
+  notification: {
+    container: {
+      background: "rgba(16, 20, 50, 0.95)",
+      border: "#56577A",
+      shadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+    },
+    header: {
+      background: "rgba(6, 11, 40, 0.8)",
+      textColor: "#FFFFFF",
+      borderBottom: "#56577A",
+    },
+    item: {
+      background: "rgba(16, 20, 50, 0.95)",
+      hoverBackground: "rgba(255, 255, 255, 0.05)",
+      borderBottom: "#56577A",
+      nameColor: "#FFFFFF",
+      messageColor: "#CBD5E0",
+      timeColor: "#A0AEC0",
+      deleteButtonColor: "#F56565",
+      deleteButtonHoverColor: "#E53E3E",
+      leftBorderColor: "#ED1316",
+    },
+    footer: {
+      background: "rgba(6, 11, 40, 0.9)",
+      textColor: "#FFFFFF",
+      linkColor: "#24BEFE",
+      linkHoverColor: "#63B3ED",
+    },
+    badge: {
+      background: "#ED1316",
+      textColor: "#FFFFFF",
+    },
+  },
+  profile: {
+    card: {
+      background: "rgba(16, 20, 50, 0.9)",
+      borderColor: "#56577A",
+      borderRadius: "12px",
+      padding: "24px",
+      marginBottom: "24px",
+    },
+    avatar: {
+      borderColor: "#56577A",
+      background: "rgba(6, 11, 40, 0.8)",
+      borderWidth: "4px",
+    },
+    text: {
+      primary: "#FFFFFF",
+      secondary: "#CBD5E0",
+      label: "#A0AEC0",
+    },
+    header: {
+      nameColor: "#FFFFFF",
+      roleColor: "#CBD5E0",
+    },
+    icon: {
+      color: "#A0AEC0",
+    },
+    status: {
+      active: "#01B574",
+      inactive: "#F56565",
+      borderColor: "rgba(16, 20, 50, 0.95)",
+    },
+    actions: {
+      editButton: {
+        background: "#6C79F7",
+        color: "#FFFFFF",
+        hoverBackground: "#5A67D8",
+        hoverColor: "#FFFFFF",
+        border: "none",
+      },
+      changePasswordButton: {
+        background: "transparent",
+        color: "#CBD5E0",
+        hoverBackground: "rgba(255, 255, 255, 0.1)",
+        hoverColor: "#FFFFFF",
+        border: "1px solid #56577A",
+      },
+    },
   },
 };

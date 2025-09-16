@@ -3,6 +3,8 @@ import type {
   BreadcrumbTheme,
   UserMenuItem,
 } from "@src/types/Breadcrumb/breadcrumb";
+import NotificationIcon from "./NotificationIcon";
+import SettingsDropdown from "./SettingsDropdown";
 
 interface UserMenuProps {
   theme: BreadcrumbTheme;
@@ -26,8 +28,7 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
       {/* User Profile */}
       {profileItem && (
         <div
-          className="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
-          onClick={() => handleItemClick(profileItem.id)}
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
           style={{
             backgroundColor: theme.userProfile.containerBackground,
             border: `1px solid ${theme.userProfile.containerBorder}`,
@@ -67,6 +68,30 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
                 <Icons.Moon size={20} color={theme.userMenu.iconColor} />
               )}
             </div>
+          );
+        }
+
+        // Special handling for notifications
+        if (item.id === "notifications") {
+          return (
+            <NotificationIcon
+              key={item.id}
+              theme={theme}
+              onItemClick={onItemClick}
+              isDark={isDark}
+            />
+          );
+        }
+
+        // Special handling for settings dropdown
+        if (item.id === "settings") {
+          return (
+            <SettingsDropdown
+              key={item.id}
+              theme={theme}
+              isDark={isDark}
+              onItemClick={onItemClick}
+            />
           );
         }
 

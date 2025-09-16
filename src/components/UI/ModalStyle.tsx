@@ -190,6 +190,117 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
         border-color: ${theme?.button?.hoverBackground || "#5A67D8"} !important;
         box-shadow: 0 0 0 2px rgba(108,121,239,0.2) !important;
       }
+
+      /* Password Input Wrapper */
+      .custom-modal .ant-input-affix-wrapper {
+        border-radius: 8px !important;
+        border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+        background: ${theme?.modal?.background || "#fff"} !important;
+        color: ${theme?.modal?.color || "#222"} !important;
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        transition: all 0.2s ease !important;
+      }
+
+      .custom-modal .ant-input-affix-wrapper:hover {
+        border-color: ${theme?.button?.background || "#6C79F7"} !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      }
+
+      .custom-modal .ant-input-affix-wrapper-focused {
+        border-color: ${theme?.button?.hoverBackground || "#5A67D8"} !important;
+        box-shadow: 0 0 0 2px rgba(108,121,239,0.2) !important;
+      }
+
+      /* Password Input Field Inside Wrapper */
+      .custom-modal .ant-input-affix-wrapper .ant-input {
+        border: none !important;
+        background: transparent !important;
+        color: ${theme?.modal?.color || "#222"} !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .custom-modal .ant-input-affix-wrapper .ant-input:focus {
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+
+      /* Password Input Prefix (Lock Icon) */
+      .custom-modal .ant-input-prefix {
+        color: ${theme?.employee?.emailColor || "#A0AEC0"} !important;
+        font-size: 14px !important;
+        margin-right: 8px !important;
+      }
+
+      .custom-modal .ant-input-prefix .anticon {
+        color: ${theme?.employee?.emailColor || "#A0AEC0"} !important;
+      }
+
+      /* Password Input Suffix (Eye Icon) */
+      .custom-modal .ant-input-suffix {
+        color: ${theme?.employee?.emailColor || "#A0AEC0"} !important;
+        font-size: 14px !important;
+        margin-left: 8px !important;
+      }
+
+      .custom-modal .ant-input-suffix .anticon {
+        color: ${theme?.employee?.emailColor || "#A0AEC0"} !important;
+        cursor: pointer !important;
+        transition: color 0.2s ease !important;
+      }
+
+      .custom-modal .ant-input-suffix .anticon:hover {
+        color: ${theme?.button?.background || "#6C79F7"} !important;
+      }
+
+      /* Password Icon Specific */
+      .custom-modal .ant-input-password-icon {
+        color: ${theme?.employee?.emailColor || "#A0AEC0"} !important;
+        cursor: pointer !important;
+        transition: color 0.2s ease !important;
+      }
+
+      .custom-modal .ant-input-password-icon:hover {
+        color: ${theme?.button?.background || "#6C79F7"} !important;
+      }
+
+      /* Form Item Control */
+      .custom-modal .ant-form-item-control {
+        line-height: 1.5715 !important;
+      }
+
+      .custom-modal .ant-form-item-control-input {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        min-height: 40px !important;
+      }
+
+      .custom-modal .ant-form-item-control-input-content {
+        flex: auto !important;
+        max-width: 100% !important;
+      }
+
+      /* Outlined Input Styles */
+      .custom-modal .ant-input-outlined,
+      .custom-modal .ant-input-affix-wrapper.ant-input-outlined {
+        background: ${theme?.modal?.background || "#fff"} !important;
+        border: 1px solid ${theme?.row?.borderColor || "#d9d9d9"} !important;
+        border-radius: 8px !important;
+      }
+
+      .custom-modal .ant-input-outlined:hover,
+      .custom-modal .ant-input-affix-wrapper.ant-input-outlined:hover {
+        border-color: ${theme?.button?.background || "#6C79F7"} !important;
+      }
+
+      .custom-modal .ant-input-outlined:focus,
+      .custom-modal .ant-input-affix-wrapper.ant-input-outlined:focus-within {
+        border-color: ${theme?.button?.hoverBackground || "#5A67D8"} !important;
+        box-shadow: 0 0 0 2px rgba(108,121,239,0.2) !important;
+      }
       
       /* Input Number (Salary) Specific Styles */
       .custom-modal .ant-input-affix-wrapper {

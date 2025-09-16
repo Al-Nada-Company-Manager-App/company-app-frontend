@@ -1,77 +1,68 @@
-import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
+import { Modal, Form, Input, Upload, Button, Row, Col, Image, DatePicker } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import type { Supplier } from "@src/types/Suppliers/supplier";
+import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
-import { useThemeContext } from "@src/contexts/theme";
-import {
-  useCreateSupplier,
-  useUpdateSupplierPhoto,
-} from "@src/queries/Suppliers";
+import { useAuthContext } from "@src/contexts/auth";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
+import moment from "moment";
 
-interface AddModalProps {
+interface UpdateProfileModalProps {
   modalOpen: boolean;
   onClose: () => void;
   theme: Theme;
+  user?: Employee;
 }
 
-const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
-  const { isDark } = useThemeContext();
+const UpdateProfileModal = ({
+  modalOpen,
+  onClose,
+  user,
+  theme,
+}: UpdateProfileModalProps) => {
+  const { login } = useAuthContext(); // We'll use this to update the dummy data
   const [form] = Form.useForm();
-  const createSupplier = useCreateSupplier(isDark);
-  const updateSupplierPhoto = useUpdateSupplierPhoto(isDark);
 
-  const [imageFile, setImageFile] = useState<RcFile | null>(null);
+  const [imageFile, setImageFile] = useState<UploadFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    undefined
+    user?.e_photo ? user.e_photo : undefined
   );
 
-  // Reset form and image preview when modal opens
   useEffect(() => {
-    if (modalOpen) {
-      form.resetFields();
-      setImageFile(null);
-      setPreviewImage(undefined);
+    if (user?.e_photo) {
+      setPreviewImage(user.e_photo);
     }
-  }, [modalOpen, form]);
+  }, [user?.e_photo]);
 
   const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     const fileObj = info.file as RcFile;
     if (fileObj) {
-      setImageFile(fileObj);
+      setImageFile(info.file);
       setPreviewImage(URL.createObjectURL(fileObj));
     }
   };
 
-  const handleUploadImage = async (
-    file: RcFile,
-    id: number
-  ): Promise<string> => {
-    const response = await updateSupplierPhoto.mutateAsync({
-      s_id: id,
-      photo: file,
-    });
-    return response;
-  };
+  const onFinish = async (values: Partial<Employee>) => {
+    let photoFilename = user?.e_photo;
 
-  const onFinish = async (values: Omit<Supplier, "s_id">) => {
-    let photoFilename = "";
-
-    const newSupplier: Omit<Supplier, "s_id"> = {
-      ...values,
-      s_photo: photoFilename,
-    };
-
-    const response = await createSupplier.mutateAsync(newSupplier);
-    if (imageFile && response.s_id) {
-      photoFilename = await handleUploadImage(imageFile, response.s_id);
+    // For now, just simulate updating the photo if a new one is selected
+    if (imageFile) {
+      // In a real app, you would upload the image and get the filename
+      photoFilename = `/public/Images/employees/updated_${user?.e_id}.jpg`;
     }
 
-    form.resetFields();
-    setImageFile(null);
-    setPreviewImage(undefined);
+    // Update the dummy user data
+    const updatedUser: Employee = {
+      ...user!,
+      ...values,
+      birth_date: values.birth_date ? moment(values.birth_date).format('YYYY-MM-DD') : user!.birth_date,
+      e_photo: photoFilename || user!.e_photo,
+    };
+
+    // Update the auth context with the new user data (simulating API update)
+    login(updatedUser);
+    
     onClose();
   };
 
@@ -79,7 +70,7 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
     <>
       <Modal
         className="custom-modal"
-        title="Add Supplier"
+        title="Update Profile"
         open={modalOpen}
         onCancel={onClose}
         footer={null}
@@ -90,6 +81,18 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
           form={form}
           layout="vertical"
           onFinish={onFinish}
+          initialValues={{
+            f_name: user?.f_name,
+            l_name: user?.l_name,
+            e_email: user?.e_email,
+            e_phone: user?.e_phone,
+            e_address: user?.e_address,
+            e_city: user?.e_city,
+            e_country: user?.e_country,
+            e_zipcode: user?.e_zipcode,
+            e_username: user?.e_username,
+            birth_date: user?.birth_date ? moment(user.birth_date) : undefined,
+          }}
           style={{ maxWidth: "100%" }}
         >
           <Row gutter={[24, 24]}>
@@ -103,8 +106,8 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 }}
               >
                 <Image
-                  src={previewImage || "/Images/suppliers/placeholder.jpg"}
-                  alt={"Supplier"}
+                  src={previewImage || "/public/Images/employees/placeholder.jpg"}
+                  alt={`${user?.f_name} ${user?.l_name}`}
                   style={{
                     width: "100%",
                     maxHeight: "200px",
@@ -114,14 +117,14 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                   }}
                 />
                 <Upload
-                  name="s_photo"
+                  name="e_photo"
                   showUploadList={false}
                   beforeUpload={() => false} // Prevent auto-upload
                   onChange={handleImageChange}
                   accept="image/*"
                 >
                   <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
-                    Upload Photo
+                    Change Photo
                   </Button>
                 </Upload>
               </div>
@@ -130,68 +133,104 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="s_name"
-                    label="Supplier Name"
+                    name="f_name"
+                    label="First Name"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the supplier name",
+                        message: "Please enter the first name",
                       },
                     ]}
                   >
-                    <Input placeholder="Enter supplier name" />
+                    <Input placeholder="Enter first name" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="l_name"
+                    label="Last Name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the last name",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter last name" />
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item
-                name="s_email"
-                label="Email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter the supplier email",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter email" />
-              </Form.Item>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="s_phone"
+                    name="e_email"
+                    label="Email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the email",
+                      },
+                      {
+                        type: "email",
+                        message: "Please enter a valid email",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter email" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="e_phone"
                     label="Phone"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the supplier phone number",
+                        message: "Please enter the phone number",
                       },
                     ]}
                   >
                     <Input placeholder="Enter phone number" />
                   </Form.Item>
                 </Col>
+              </Row>
+              <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="s_fax"
-                    label="Fax"
+                    name="e_username"
+                    label="Username"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the supplier fax",
+                        message: "Please enter the username",
                       },
                     ]}
                   >
-                    <Input placeholder="Enter fax number" />
+                    <Input placeholder="Enter username" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="birth_date"
+                    label="Birth Date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select the birth date",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} placeholder="Select birth date" />
                   </Form.Item>
                 </Col>
               </Row>
               <Form.Item
-                name="s_address"
+                name="e_address"
                 label="Address"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the supplier address",
+                    message: "Please enter the address",
                   },
                 ]}
               >
@@ -200,12 +239,12 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
-                    name="s_city"
+                    name="e_city"
                     label="City"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the supplier city",
+                        message: "Please enter the city",
                       },
                     ]}
                   >
@@ -214,12 +253,12 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="s_country"
+                    name="e_country"
                     label="Country"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter the supplier country",
+                        message: "Please enter the country",
                       },
                     ]}
                   >
@@ -228,12 +267,12 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 </Col>
               </Row>
               <Form.Item
-                name="s_zipcode"
+                name="e_zipcode"
                 label="Zip Code"
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the supplier zipcode",
+                    message: "Please enter the zipcode",
                   },
                 ]}
               >
@@ -261,7 +300,7 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               </Button>
               <CustomBtn
                 theme={theme}
-                btnTitle="Add"
+                btnTitle="Update"
                 onClick={() => form.submit()}
               />
             </div>
@@ -272,4 +311,4 @@ const AddSupplierModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
   );
 };
 
-export default AddSupplierModal;
+export default UpdateProfileModal;

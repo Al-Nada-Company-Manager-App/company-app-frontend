@@ -81,4 +81,84 @@ export interface Theme {
     confirmButtonHoverBg?: string;
     confirmButtonHoverColor?: string;
   };
+  notification?: {
+    container: {
+      background: string;
+      border: string;
+      shadow: string;
+    };
+    header: {
+      background: string;
+      textColor: string;
+      borderBottom: string;
+    };
+    item: {
+      background: string;
+      hoverBackground: string;
+      borderBottom: string;
+      nameColor: string;
+      messageColor: string;
+      timeColor: string;
+      deleteButtonColor: string;
+      deleteButtonHoverColor: string;
+      leftBorderColor: string;
+    };
+    footer: {
+      background: string;
+      textColor: string;
+      linkColor: string;
+      linkHoverColor: string;
+    };
+    badge: {
+      background: string;
+      textColor: string;
+    };
+  };
+  profile?: {
+    card: {
+      background: string;
+      borderColor: string;
+      borderRadius: string;
+      padding: string;
+      marginBottom: string;
+    };
+    avatar: {
+      borderColor: string;
+      background: string;
+      borderWidth: string;
+    };
+    text: {
+      primary: string;
+      secondary: string;
+      label: string;
+    };
+    header: {
+      nameColor: string;
+      roleColor: string;
+    };
+    icon: {
+      color: string;
+    };
+    status: {
+      active: string;
+      inactive: string;
+      borderColor: string;
+    };
+    actions: {
+      editButton: {
+        background: string;
+        color: string;
+        hoverBackground: string;
+        hoverColor: string;
+        border: string;
+      };
+      changePasswordButton: {
+        background: string;
+        color: string;
+        hoverBackground: string;
+        hoverColor: string;
+        border: string;
+      };
+    };
+  };
 }
