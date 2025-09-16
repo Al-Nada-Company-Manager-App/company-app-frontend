@@ -81,4 +81,37 @@ export interface Theme {
     confirmButtonHoverBg?: string;
     confirmButtonHoverColor?: string;
   };
+  notification?: {
+    container: {
+      background: string;
+      border: string;
+      shadow: string;
+    };
+    header: {
+      background: string;
+      textColor: string;
+      borderBottom: string;
+    };
+    item: {
+      background: string;
+      hoverBackground: string;
+      borderBottom: string;
+      nameColor: string;
+      messageColor: string;
+      timeColor: string;
+      deleteButtonColor: string;
+      deleteButtonHoverColor: string;
+      leftBorderColor: string;
+    };
+    footer: {
+      background: string;
+      textColor: string;
+      linkColor: string;
+      linkHoverColor: string;
+    };
+    badge: {
+      background: string;
+      textColor: string;
+    };
+  };
 }

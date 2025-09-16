@@ -3,6 +3,7 @@ import type {
   BreadcrumbTheme,
   UserMenuItem,
 } from "@src/types/Breadcrumb/breadcrumb";
+import NotificationIcon from "./NotificationIcon";
 
 interface UserMenuProps {
   theme: BreadcrumbTheme;
@@ -67,6 +68,18 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
                 <Icons.Moon size={20} color={theme.userMenu.iconColor} />
               )}
             </div>
+          );
+        }
+
+        // Special handling for notifications
+        if (item.id === "notifications") {
+          return (
+            <NotificationIcon
+              key={item.id}
+              theme={theme}
+              onItemClick={onItemClick}
+              isDark={isDark}
+            />
           );
         }
 

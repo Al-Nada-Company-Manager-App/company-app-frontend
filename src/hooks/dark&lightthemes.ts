@@ -70,6 +70,39 @@ export const lightTheme: Theme = {
     confirmButtonHoverBg: "#5A67D8",
     confirmButtonHoverColor: "#FFFFFF",
   },
+  notification: {
+    container: {
+      background: "#FFFFFF",
+      border: "#E2E8F0",
+      shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    },
+    header: {
+      background: "#F7FAFC",
+      textColor: "#2D3748",
+      borderBottom: "#E2E8F0",
+    },
+    item: {
+      background: "#FFFFFF",
+      hoverBackground: "#F7FAFC",
+      borderBottom: "#E2E8F0",
+      nameColor: "#2D3748",
+      messageColor: "#718096",
+      timeColor: "#A0AEC0",
+      deleteButtonColor: "#E53E3E",
+      deleteButtonHoverColor: "#C53030",
+      leftBorderColor: "#ED1316",
+    },
+    footer: {
+      background: "#EDF3FF",
+      textColor: "#2D3748",
+      linkColor: "#24BEFE",
+      linkHoverColor: "#1E90FF",
+    },
+    badge: {
+      background: "#ED1316",
+      textColor: "#FFFFFF",
+    },
+  },
 };
 
 export const darkTheme: Theme = {
@@ -141,5 +174,38 @@ export const darkTheme: Theme = {
     confirmButtonColor: "#FFFFFF",
     confirmButtonHoverBg: "#5A67D8",
     confirmButtonHoverColor: "#FFFFFF",
+  },
+  notification: {
+    container: {
+      background: "rgba(16, 20, 50, 0.95)",
+      border: "#56577A",
+      shadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+    },
+    header: {
+      background: "rgba(6, 11, 40, 0.8)",
+      textColor: "#FFFFFF",
+      borderBottom: "#56577A",
+    },
+    item: {
+      background: "rgba(16, 20, 50, 0.95)",
+      hoverBackground: "rgba(255, 255, 255, 0.05)",
+      borderBottom: "#56577A",
+      nameColor: "#FFFFFF",
+      messageColor: "#CBD5E0",
+      timeColor: "#A0AEC0",
+      deleteButtonColor: "#F56565",
+      deleteButtonHoverColor: "#E53E3E",
+      leftBorderColor: "#ED1316",
+    },
+    footer: {
+      background: "rgba(6, 11, 40, 0.9)",
+      textColor: "#FFFFFF",
+      linkColor: "#24BEFE",
+      linkHoverColor: "#63B3ED",
+    },
+    badge: {
+      background: "#ED1316",
+      textColor: "#FFFFFF",
+    },
   },
 };

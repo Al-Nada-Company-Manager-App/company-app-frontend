@@ -33,6 +33,11 @@ export interface BreadcrumbTheme {
   breadcrumbText: {
     color: string;
   };
+  notification: {
+    iconColor: string;
+    badgeBackground: string;
+    badgeTextColor: string;
+  };
 }
 
 export interface UserMenuItem {

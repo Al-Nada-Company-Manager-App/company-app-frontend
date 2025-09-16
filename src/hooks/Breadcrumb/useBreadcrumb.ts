@@ -46,6 +46,11 @@ const lightBreadcrumbTheme: BreadcrumbTheme = {
   breadcrumbText: {
     color: "#6C79EF",
   },
+  notification: {
+    iconColor: "#6C79EF",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
+  },
 };
 
 const darkBreadcrumbTheme: BreadcrumbTheme = {
@@ -75,6 +80,11 @@ const darkBreadcrumbTheme: BreadcrumbTheme = {
   },
   breadcrumbText: {
     color: "#828CE8",
+  },
+  notification: {
+    iconColor: "#828CE8",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
   },
 };
 
@@ -106,6 +116,11 @@ const lightBreadcrumbScrolledTheme: BreadcrumbTheme = {
   breadcrumbText: {
     color: "#6C79EF",
   },
+  notification: {
+    iconColor: "#6C79EF",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
+  },
 };
 
 const darkBreadcrumbScrolledTheme: BreadcrumbTheme = {
@@ -135,6 +150,11 @@ const darkBreadcrumbScrolledTheme: BreadcrumbTheme = {
   },
   breadcrumbText: {
     color: "#828CE8",
+  },
+  notification: {
+    iconColor: "#828CE8",
+    badgeBackground: "#ED1316",
+    badgeTextColor: "#FFFFFF",
   },
 };
 
