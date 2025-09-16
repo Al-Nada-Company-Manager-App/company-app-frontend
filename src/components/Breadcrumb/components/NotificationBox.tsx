@@ -107,10 +107,11 @@ const NotificationBox = ({
         }}
       >
         <div className="flex items-center justify-between">
+          <div></div>
           <h3 className="font-semibold text-lg">Notifications</h3>
           <button
             onClick={onClose}
-            className="p-1 hover:opacity-70 transition-opacity"
+            className="p-1 hover:opacity-70 transition-opacity cursor-pointer rounded-full hover:bg-white/10"
           >
             <X size={18} />
           </button>
@@ -150,31 +151,8 @@ const NotificationBox = ({
                     currentTheme.notification?.item.background || "";
                 }}
               >
-                {/* Delete Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteNotification(notification.n_id);
-                  }}
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 rounded"
-                  style={{
-                    color: currentTheme.notification?.item.deleteButtonColor,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color =
-                      currentTheme.notification?.item.deleteButtonHoverColor ||
-                      "";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color =
-                      currentTheme.notification?.item.deleteButtonColor || "";
-                  }}
-                >
-                  <X size={14} />
-                </button>
-
                 <div
-                  className={`flex items-start gap-3 ${
+                  className={`flex items-center gap-3 ${
                     notification.n_status === "Read" ? "opacity-70" : ""
                   }`}
                 >
@@ -192,10 +170,10 @@ const NotificationBox = ({
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 self-start">
                     <div className="flex items-center justify-between">
                       <h4
-                        className="font-medium text-base truncate pr-6"
+                        className="font-medium text-base truncate pr-2"
                         style={{
                           color: currentTheme.notification?.item.nameColor,
                         }}
@@ -212,13 +190,40 @@ const NotificationBox = ({
                       </span>
                     </div>
                     <p
-                      className="text-sm mt-1 leading-relaxed pr-6"
+                      className="text-sm mt-1 leading-relaxed pr-2"
                       style={{
                         color: currentTheme.notification?.item.messageColor,
                       }}
                     >
                       {notification.n_message}
                     </p>
+                  </div>
+
+                  {/* Delete Button Column */}
+                  <div className="flex-shrink-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteNotification(notification.n_id);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-full cursor-pointer hover:bg-red-100/10"
+                      style={{
+                        color:
+                          currentTheme.notification?.item.deleteButtonColor,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color =
+                          currentTheme.notification?.item
+                            .deleteButtonHoverColor || "";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color =
+                          currentTheme.notification?.item.deleteButtonColor ||
+                          "";
+                      }}
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
                 </div>
               </div>
