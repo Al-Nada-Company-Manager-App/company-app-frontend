@@ -12,7 +12,7 @@ const Profile = ({ isDark }: ProfileProps) => {
   if (!user) {
     return (
       <div className="p-6">
-        <div 
+        <div
           className="w-full rounded-2xl"
           style={{
             background: theme.container.background,
@@ -44,7 +44,7 @@ const Profile = ({ isDark }: ProfileProps) => {
 
   return (
     <div className="p-6">
-      <div 
+      <div
         className="w-full rounded-2xl p-6"
         style={{
           background: theme.container.background,
@@ -53,7 +53,7 @@ const Profile = ({ isDark }: ProfileProps) => {
       >
         {/* Title */}
         <div className="mb-6">
-          <h2 
+          <h2
             className="text-lg font-bold"
             style={{ color: theme.title.color }}
           >

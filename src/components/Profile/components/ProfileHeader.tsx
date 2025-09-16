@@ -23,7 +23,9 @@ const ProfileHeader = ({ user, theme }: ProfileHeaderProps) => {
         <div
           className="absolute bottom-2 right-2 w-6 h-6 rounded-full border-2"
           style={{
-            backgroundColor: user.e_active ? theme.profile?.status.active : theme.profile?.status.inactive,
+            backgroundColor: user.e_active
+              ? theme.profile?.status.active
+              : theme.profile?.status.inactive,
             borderColor: theme.profile?.status.borderColor,
           }}
         />
@@ -34,8 +36,8 @@ const ProfileHeader = ({ user, theme }: ProfileHeaderProps) => {
       >
         {user.f_name} {user.l_name}
       </h1>
-      <p 
-        className="text-lg font-medium" 
+      <p
+        className="text-lg font-medium"
         style={{ color: theme.profile?.header.roleColor }}
       >
         {user.e_role}

@@ -32,16 +32,13 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
         <Icon size={20} color={theme.profile?.icon.color} />
       </div>
       <div className="flex-1">
-        <p 
+        <p
           className="text-sm font-medium mb-1 uppercase tracking-wider"
           style={{ color: theme.profile?.text.label }}
         >
           {label}
         </p>
-        <p 
-          className="text-base"
-          style={{ color: theme.profile?.text.primary }}
-        >
+        <p className="text-base" style={{ color: theme.profile?.text.primary }}>
           {value}
         </p>
       </div>
@@ -51,7 +48,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Personal Information */}
-      <div 
+      <div
         className="rounded-xl p-6 transition-all duration-200 hover:transform hover:-translate-y-1"
         style={{
           background: theme.profile?.card.background,
@@ -80,7 +77,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
       </div>
 
       {/* Contact Information */}
-      <div 
+      <div
         className="rounded-xl p-6 transition-all duration-200 hover:transform hover:-translate-y-1"
         style={{
           background: theme.profile?.card.background,
@@ -110,7 +107,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
       </div>
 
       {/* Work Information */}
-      <div 
+      <div
         className="rounded-xl p-6 transition-all duration-200 hover:transform hover:-translate-y-1"
         style={{
           background: theme.profile?.card.background,
@@ -137,7 +134,7 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
       </div>
 
       {/* Additional Actions */}
-      <div 
+      <div
         className="rounded-xl p-6 transition-all duration-200 hover:transform hover:-translate-y-1"
         style={{
           background: theme.profile?.card.background,
@@ -159,12 +156,16 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
               border: theme.profile?.actions.editButton.border,
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = theme.profile?.actions.editButton.hoverBackground || "";
-              e.currentTarget.style.color = theme.profile?.actions.editButton.hoverColor || "";
+              e.currentTarget.style.background =
+                theme.profile?.actions.editButton.hoverBackground || "";
+              e.currentTarget.style.color =
+                theme.profile?.actions.editButton.hoverColor || "";
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = theme.profile?.actions.editButton.background || "";
-              e.currentTarget.style.color = theme.profile?.actions.editButton.color || "";
+              e.currentTarget.style.background =
+                theme.profile?.actions.editButton.background || "";
+              e.currentTarget.style.color =
+                theme.profile?.actions.editButton.color || "";
             }}
           >
             Edit Profile
@@ -172,17 +173,23 @@ const ProfileCards = ({ user, theme }: ProfileCardsProps) => {
           <button
             className="w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:transform hover:-translate-y-0.5"
             style={{
-              background: theme.profile?.actions.changePasswordButton.background,
+              background:
+                theme.profile?.actions.changePasswordButton.background,
               color: theme.profile?.actions.changePasswordButton.color,
               border: theme.profile?.actions.changePasswordButton.border,
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = theme.profile?.actions.changePasswordButton.hoverBackground || "";
-              e.currentTarget.style.color = theme.profile?.actions.changePasswordButton.hoverColor || "";
+              e.currentTarget.style.background =
+                theme.profile?.actions.changePasswordButton.hoverBackground ||
+                "";
+              e.currentTarget.style.color =
+                theme.profile?.actions.changePasswordButton.hoverColor || "";
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = theme.profile?.actions.changePasswordButton.background || "";
-              e.currentTarget.style.color = theme.profile?.actions.changePasswordButton.color || "";
+              e.currentTarget.style.background =
+                theme.profile?.actions.changePasswordButton.background || "";
+              e.currentTarget.style.color =
+                theme.profile?.actions.changePasswordButton.color || "";
             }}
           >
             Change Password
