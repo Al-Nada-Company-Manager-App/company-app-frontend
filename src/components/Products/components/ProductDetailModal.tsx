@@ -48,7 +48,16 @@ const ProductDetailModal = ({
             <CustomBtn
               btnTitle="Edit"
               onClick={() => setUpdateOpen(true)}
-              theme={theme}
+              theme={{
+                ...theme,
+                button: {
+                  ...theme.button,
+                  background: "#faad14",
+                  hoverBackground: "#d48806",
+                  color: "#fff",
+                  hoverColor: "#fff",
+                },
+              }}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
             <ConfirmBtn

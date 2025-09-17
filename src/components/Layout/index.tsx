@@ -24,6 +24,7 @@ const Layout = () => {
       products: "/stock/products",
       repairs: "/stock/repairs",
       sales: "/sales",
+      debts: "/debts",
       purchases: "/purchases",
       suppliers: "/suppliers",
     };
@@ -64,6 +65,7 @@ const Layout = () => {
       "/stock": "Stock",
       "/profile": "Profile",
       "/sales": "Sales",
+      "/debts": "Debts",
       "/purchases": "Purchases",
       "/suppliers": "Suppliers",
     };
