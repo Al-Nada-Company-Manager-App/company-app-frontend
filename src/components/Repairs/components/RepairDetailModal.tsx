@@ -91,7 +91,16 @@ const RepairDetailModal = ({
             btnTitle="Edit Remarks & Status"
             className="px-6 py-2 mb-5 mr-5 w-55"
             onClick={() => setUpdateOpen(true)}
-            theme={theme}
+            theme={{
+              ...theme,
+              button: {
+                ...theme.button,
+                background: "#faad14",
+                hoverBackground: "#d48806",
+                color: "#fff",
+                hoverColor: "#fff",
+              },
+            }}
           />
         </Row>
 
