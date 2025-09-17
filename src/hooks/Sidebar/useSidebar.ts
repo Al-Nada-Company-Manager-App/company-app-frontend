@@ -46,6 +46,12 @@ export const getSidebarItems = (currentPath: string): SidebarItem[] => [
     isActive: currentPath === "/sales",
   },
   {
+    id: "debts",
+    label: "Debts",
+    icon: "DollarSign",
+    isActive: currentPath === "/debts",
+  },
+  {
     id: "purchases",
     label: "Purchases",
     icon: "ShoppingCart",

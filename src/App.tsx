@@ -20,6 +20,7 @@ import ProfilePage from "@src/components/pages/ProfilePage";
 import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
+import DebtsPage from "@src/components/pages/DebtsPage";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -43,6 +44,7 @@ function RouteHandler() {
           <Route path="repairs" element={<RepairPage />} />
         </Route>
         <Route path="sales" element={<SalesPage />} />
+        <Route path="debts" element={<DebtsPage />} />
         <Route path="purchases" element={<PurchasesPage />} />
         <Route path="suppliers" element={<SuppliersPage />} />
         <Route path="*" element={<NotFoundPage />} />
