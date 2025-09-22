@@ -1,22 +1,18 @@
 import { Row, Col } from "antd";
 import {
-  RiseOutlined,
-  DollarOutlined,
-  ShoppingCartOutlined,
-  WarningOutlined,
+  ToolOutlined,
+  FileOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
 import StatisticsCard from "@src/components/UI/StatisticsCard"; 
 import ChartStyle from "@src/components/UI/ChartStyle"; 
-import SalesOverviewChart from "./components/SalesOverviewChart";
-import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
-import DebtsOverviewChart from "./components/DebtsOverviewChart";
-import TopProductChart from "./components/TopProductChart";
-import CustomerProductChart from "./components/CustomerProductChart";
-import SupplierProductChart from "./components/SupplierProductChart";
 import { useThemeContext } from "@src/contexts/theme";
+import RepairsOverTimeChart from "./components/RepairsOverTimeChart";
+import SparePartsLowStock from "./components/SparePartsLowStock";
+import RepairStatusChart from "./components/RepairStatusChart";
 
-const Dashboard = () => {
+const TechnicianDashboard = () => {
   const { isDark } = useThemeContext();
   const { theme, data, isLoading, error } = useDashboard(isDark);
 
@@ -49,37 +45,37 @@ const Dashboard = () => {
         <Row gutter={[16, 16]}>
           <Col span={6}>
             <StatisticsCard
-              title="Total Stock"
-              value={data.totalStock}
+              title="Total Repairs"
+              value={data.totalRepairs}
               color="#52c41a"
-              icon={<RiseOutlined />}
+              icon={<ToolOutlined />}
               theme={theme}
             />
           </Col>
           <Col span={6}>
             <StatisticsCard
-              title="Total Sales"
-              value={data.totalSales.toFixed(2)}
-              color="#52c41a"
-              icon={<DollarOutlined />}
+              title="Total Devices"
+              value={data.totalDUM}
+              color="#1677ff"
+              icon={<FileOutlined />}
               theme={theme}
             />
           </Col>
           <Col span={6}>
             <StatisticsCard
-              title="Total Purchase"
-              value={data.totalPurchase.toFixed(2)}
-              color="#52c41a"
-              icon={<ShoppingCartOutlined />}
+              title="Total Spare Parts"
+              value={data.totalSpareParts}
+              color="#cf1322"
+              icon={<ToolOutlined />}
               theme={theme}
             />
           </Col>
           <Col span={6}>
             <StatisticsCard
-              title="Total Debts"
-              value={data.totalDebts.toFixed(2)}
-              color="#52c41a"
-              icon={<WarningOutlined />}
+              title="Total Pending"
+              value={data.totalPending}
+              color="#FA7800"
+              icon={<ClockCircleOutlined />}
               theme={theme}
             />
           </Col>
@@ -88,37 +84,19 @@ const Dashboard = () => {
         {/* Charts */}
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           <Col span={12}>
-            <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
+            <RepairsOverTimeChart data={data.repairsOverTime} isDark={isDark} />
           </Col>
           <Col span={12}>
-            <PurchaseOverviewChart
-              data={data.purchasesOverview}
-              isDark={isDark}
-            />
+            <RepairStatusChart data={data.repairStatus} isDark={isDark} />
           </Col>
         </Row>
 
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           <Col span={12}>
-            <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
+            <SparePartsLowStock data={data.lowStockAlerts} isDark={isDark} />
           </Col>
           <Col span={12}>
-            <TopProductChart data={data.topProducts} isDark={isDark} />
-          </Col>
-        </Row>
-
-        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
-            <CustomerProductChart
-              data={data.customerProducts}
-              isDark={isDark}
-            />
-          </Col>
-          <Col span={12}>
-            <SupplierProductChart
-              data={data.supplierProducts}
-              isDark={isDark}
-            />
+            {/* <TopProductChart data={data.topProducts} isDark={isDark} /> */}
           </Col>
         </Row>
       </div>
@@ -126,4 +104,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TechnicianDashboard;

@@ -9,7 +9,7 @@ import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
 import { AuthProvider } from "@src/contexts/auth";
 import { SearchProvider, useSearchContext } from "@src/contexts/search";
 import Layout from "@src/components/Layout";
-import ManagerDashboards from "@src/components/dashboards/ManagerDashboards";
+// import ManagerDashboards from "@src/components/dashboards/ManagerDashboards";
 import EmployeesPage from "@src/components/pages/EmployeesPage";
 import CustomersPage from "@src/components/pages/CustomersPage";
 import StockPage from "@src/components/pages/StockPage";
@@ -21,6 +21,7 @@ import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
+import TechnicianDashboard from "./components/dashboards/technicianDashboard";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -34,8 +35,8 @@ function RouteHandler() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<ManagerDashboards />} />
+      <Route path="/" element={<Layout />}> 
+        <Route index element={<TechnicianDashboard />} />
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="profile" element={<ProfilePage />} />
