@@ -11,9 +11,9 @@ const formattedData = data.map((item) => ({
 
   const config = {
     data: formattedData,
-    xField: "p_name",
-    yField: "total_sale",
-    seriesField: "p_name",
+    xField: "type",
+    yField: "value",
+    seriesField: "type",
     legend: { position: "top-left" },
     barWidthRatio: 0.4,
     minBarWidth: 10,

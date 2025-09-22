@@ -1,9 +1,9 @@
 import type { Theme } from "@src/types/theme";
 
 export interface CustomerProduct {
-  CustomerID: number;
-  CustomerName: string;
-  ProductCount: number;
+  customerid: number;
+  customername: string;
+  productcount: number;
 }
 
 export interface DebtOverview {
@@ -48,14 +48,14 @@ export interface StockSummary {
 }
 
 export interface SupplierProduct {
-  SupplierID: number;
-  SupplierName: string;
-  ProductCount: number;
+  supplierid: number;
+  suppliername: string | null;
+  productcount: number;
 }
 
 export interface TopProduct {
   p_name: string;
-  total_sale: number;
+  total_sale: number | null;
 }
 
 export interface TopCustomer {

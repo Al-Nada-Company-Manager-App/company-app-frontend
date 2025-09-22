@@ -21,7 +21,8 @@ import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
-import TechnicianDashboard from "./components/dashboards/technicianDashboard";
+// import TechnicianDashboard from "./components/dashboards/technicianDashboard";
+import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -36,7 +37,7 @@ function RouteHandler() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}> 
-        <Route index element={<TechnicianDashboard />} />
+        <Route index element={<SecartaryDashboard />} />
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="profile" element={<ProfilePage />} />

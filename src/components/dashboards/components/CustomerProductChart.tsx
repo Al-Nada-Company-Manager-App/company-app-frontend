@@ -4,8 +4,8 @@ import { Bar } from "@ant-design/plots";
 const CustomerProductChart = ({data, isDark} : {data: CustomerProduct[], isDark:boolean}) => {
 
   const formattedData = data.map((item) => ({
-    type: item.CustomerName,
-    value: item.ProductCount,
+    type: item.customername,
+    value: item.productcount,
   }));
 
   const config = {

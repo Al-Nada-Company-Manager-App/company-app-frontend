@@ -4,15 +4,15 @@ import type { SupplierProduct } from "@src/types/Dashboard/dashboard";
 
 const SupplierProductChart = ({data, isDark} : {data: SupplierProduct[], isDark : boolean}) => {
 const formattedData = data.map((item) => ({
-  type: item.SupplierName,
-  value: item.ProductCount,
+  type: item.suppliername,
+  value: item.productcount,
 }));
 
   const config = {
     data: formattedData,
-    xField: "suppliername",
-    yField: "productcount",
-    seriesField: "suppliername",
+    xField: "type",
+    yField: "value",
+    seriesField: "type",
     legend: { position: "top-left" },
     barWidthRatio: 0.4,
     minBarWidth: 10,
