@@ -1,24 +1,25 @@
 import { Row, Col } from "antd";
 import {
-  RiseOutlined,
+  PoundOutlined,
   DollarOutlined,
-  ShoppingCartOutlined,
-  WarningOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
 import StatisticsCard from "@src/components/UI/StatisticsCard"; 
 import ChartStyle from "@src/components/UI/ChartStyle"; 
 import SalesOverviewChart from "./components/SalesOverviewChart";
-import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
-import DebtsOverviewChart from "./components/DebtsOverviewChart";
-import TopProductChart from "./components/TopProductChart";
-import CustomerProductChart from "./components/CustomerProductChart";
-import SupplierProductChart from "./components/SupplierProductChart";
+import CustomerMarketsChart from "./components/CustomerMarketsChart";
+import CustomerSalesChart from "./components/CustomerSalesChart";
 import { useThemeContext } from "@src/contexts/theme";
+import TopCustomerChart from "./components/TopCustomerChart";
 
-const Dashboard = () => {
+const SalesManDashboard = () => {
   const { isDark } = useThemeContext();
   const { theme, data, isLoading, error } = useDashboard(isDark);
+  const totalMarketingCount = data.customerMarkets.reduce(
+    (sum, m) => sum + (Number(m.marketing_count ?? 0) || 0),
+    0
+  );
 
   if (isLoading) {
     return (
@@ -47,16 +48,7 @@ const Dashboard = () => {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col span={6}>
-            <StatisticsCard
-              title="Total Stock"
-              value={data.totalStock}
-              color="#52c41a"
-              icon={<RiseOutlined />}
-              theme={theme}
-            />
-          </Col>
-          <Col span={6}>
+          <Col span={8}>
             <StatisticsCard
               title="Total Sales"
               value={data.totalSales.toFixed(2)}
@@ -65,21 +57,21 @@ const Dashboard = () => {
               theme={theme}
             />
           </Col>
-          <Col span={6}>
+          <Col span={8}>
             <StatisticsCard
-              title="Total Purchase"
-              value={data.totalPurchase.toFixed(2)}
-              color="#52c41a"
-              icon={<ShoppingCartOutlined />}
+              title="Marketing Count"
+              value={totalMarketingCount}
+              color="#1677ff"
+              icon={<PoundOutlined />}
               theme={theme}
             />
           </Col>
-          <Col span={6}>
+          <Col span={8}>
             <StatisticsCard
-              title="Total Debts"
-              value={data.totalDebts.toFixed(2)}
-              color="#52c41a"
-              icon={<WarningOutlined />}
+              title="Customers Count"
+              value={data.customersCount}
+              color="#FA7800"
+              icon={<UsergroupAddOutlined />}
               theme={theme}
             />
           </Col>
@@ -88,37 +80,18 @@ const Dashboard = () => {
         {/* Charts */}
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           <Col span={12}>
+            <CustomerSalesChart data={data.customerSales} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <CustomerMarketsChart data={data.customerMarkets} isDark={isDark} />
+          </Col>
+        </Row>
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <TopCustomerChart data={data.topCustomers} isDark={isDark} />
+          </Col>
+          <Col span={12}>
             <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
-          </Col>
-          <Col span={12}>
-            <PurchaseOverviewChart
-              data={data.purchasesOverview}
-              isDark={isDark}
-            />
-          </Col>
-        </Row>
-
-        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
-            <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
-          </Col>
-          <Col span={12}>
-            <TopProductChart data={data.topProducts} isDark={isDark} />
-          </Col>
-        </Row>
-
-        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
-            <CustomerProductChart
-              data={data.customerProducts}
-              isDark={isDark}
-            />
-          </Col>
-          <Col span={12}>
-            <SupplierProductChart
-              data={data.supplierProducts}
-              isDark={isDark}
-            />
           </Col>
         </Row>
       </div>
@@ -126,4 +99,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default SalesManDashboard;

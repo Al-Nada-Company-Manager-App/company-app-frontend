@@ -1,11 +1,11 @@
 import { Bar } from "@ant-design/plots";
-import type { TopProduct } from "@src/types/Dashboard/dashboard";
+import type { TopCustomer } from "@src/types/Dashboard/dashboard";
 
-const TopProductChart = ({data, isDark} : {data: TopProduct[], isDark : boolean}) => {
+const TopCustomerChart = ({data, isDark} : {data: TopCustomer[], isDark : boolean}) => {
 
 const formattedData = data.map((item) => ({
-  type: item.p_name,
-  value: item.total_sale,
+  type: item.c_name,
+  value: item.total_paid,
 }));
 
   const config = {
@@ -24,10 +24,10 @@ const formattedData = data.map((item) => ({
 
   return (
     <div className="custom-chart-container">
-      <h3>Top Products</h3>
+      <h3>Top Customers</h3>
       <Bar {...config} />
     </div>
   );
 };
 
-export default TopProductChart;
+export default TopCustomerChart;
