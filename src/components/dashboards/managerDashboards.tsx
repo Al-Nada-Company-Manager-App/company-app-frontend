@@ -1,15 +1,141 @@
+import { Row, Col } from "antd";
+import {
+  RiseOutlined,
+  DollarOutlined,
+  ShoppingCartOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
+import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
+import StatisticsCard from "@src/components/UI/StatisticsCard"; 
+import ChartStyle from "@src/components/UI/ChartStyle"; 
+import SalesOverviewChart from "./components/SalesOverviewChart";
+import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
+import DebtsOverviewChart from "./components/DebtsOverviewChart";
+import TopProductChart from "./components/TopProductChart";
+import CustomerProductChart from "./components/CustomerProductChart";
+import SupplierProductChart from "./components/SupplierProductChart";
+// import StockCategoryChart from "./components/StockCategoryChart";
+// import RepairsOverTimeChart from "./components/RepairsOverTimeChart";
+// import RepairStatusChart from "./components/RepairStatusChart";
+// // import SparePartsUsedChart from "./components/SparePartsUsedChart";
+// import LowStockAlertsChart from "./components/SparePartsLowStock";
+// import TopCustomersChart from "./components/TopCustomersChart";
+// import TopRepairedProductsChart from "./components/TopRepairedProductsChart";
+// import CustomerSalesChart from "./components/CustomerSalesChart";
+// import CustomerMarketsChart from "./components/CustomerMarketsChart";
+
+// Assume useDarkMode hook exists for isDark; adjust as needed
 import { useThemeContext } from "@src/contexts/theme";
 
-const ManagerDashboards = () => {
-  const { theme } = useThemeContext();
+const Dashboard = () => {
+  const { isDark } = useThemeContext();
+  const { theme, data, isLoading, error } = useDashboard(isDark);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        Loading dashboard...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+        Error loading dashboard: {error.message}
+      </div>
+    );
+  }
 
   return (
-    <div className="absolute left-0 top-0 w-[1600px] h-[488.5px] flex items-center justify-center">
-      <div className="text-2xl font-bold" style={{ color: theme.textColor }}>
-        Dashboard - Welcome to Company Manager
+    <>
+      <ChartStyle theme={theme} />
+      <div
+        style={{
+          padding: "20px",
+          minHeight: "100vh",
+          background: theme.container?.background || "transparent",
+        }}
+      >
+        {/* Statistics Cards - Organized in multiple rows for better layout */}
+        <Row gutter={[16, 16]}>
+          <Col span={6}>
+            <StatisticsCard
+              title="Total Stock"
+              value={data.totalStock}
+              color="#52c41a"
+              icon={<RiseOutlined />}
+              theme={theme}
+            />
+          </Col>
+          <Col span={6}>
+            <StatisticsCard
+              title="Total Sales"
+              value={data.totalSales.toFixed(2)}
+              color="#52c41a"
+              icon={<DollarOutlined />}
+              theme={theme}
+            />
+          </Col>
+          <Col span={6}>
+            <StatisticsCard
+              title="Total Purchase"
+              value={data.totalPurchase.toFixed(2)}
+              color="#52c41a"
+              icon={<ShoppingCartOutlined />}
+              theme={theme}
+            />
+          </Col>
+          <Col span={6}>
+            <StatisticsCard
+              title="Total Debts"
+              value={data.totalDebts.toFixed(2)}
+              color="#52c41a"
+              icon={<WarningOutlined />}
+              theme={theme}
+            />
+          </Col>
+        </Row>
+
+        {/* Charts */}
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <PurchaseOverviewChart
+              data={data.purchasesOverview}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <TopProductChart data={data.topProducts} isDark={isDark} />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <CustomerProductChart
+              data={data.customerProducts}
+              isDark={isDark}
+            />
+          </Col>
+          <Col span={12}>
+            <SupplierProductChart
+              data={data.supplierProducts}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
       </div>
-    </div>
+    </>
   );
 };
 
-export default ManagerDashboards;
+export default Dashboard;

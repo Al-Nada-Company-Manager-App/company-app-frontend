@@ -9,7 +9,7 @@ import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
 import { AuthProvider } from "@src/contexts/auth";
 import { SearchProvider, useSearchContext } from "@src/contexts/search";
 import Layout from "@src/components/Layout";
-import ManagerDashboards from "@src/components/dashboards/managerDashboards";
+import ManagerDashboards from "@src/components/dashboards/ManagerDashboards";
 import EmployeesPage from "@src/components/pages/EmployeesPage";
 import CustomersPage from "@src/components/pages/CustomersPage";
 import StockPage from "@src/components/pages/StockPage";
