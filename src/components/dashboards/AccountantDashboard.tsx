@@ -1,0 +1,102 @@
+import { Row, Col } from "antd";
+import {
+  DollarOutlined,
+  ShoppingCartOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
+import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
+import StatisticsCard from "@src/components/UI/StatisticsCard"; 
+import ChartStyle from "@src/components/UI/ChartStyle"; 
+import SalesOverviewChart from "./components/SalesOverviewChart";
+import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
+import DebtsOverviewChart from "./components/DebtsOverviewChart";
+import TopProductChart from "./components/TopProductChart";
+import { useThemeContext } from "@src/contexts/theme";
+
+const AccountantDashboard = () => {
+  const { isDark } = useThemeContext();
+  const { theme, data, isLoading, error } = useDashboard(isDark);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        Loading dashboard...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+        Error loading dashboard: {error.message}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <ChartStyle theme={theme} />
+      <div
+        style={{
+          padding: "20px",
+          minHeight: "100vh",
+          background: theme.container?.background || "transparent",
+        }}
+      >
+        <Row gutter={[16, 16]}>
+          <Col span={8}>
+            <StatisticsCard
+              title="Total Sales"
+              value={data.totalSales.toFixed(2)}
+              color="#52c41a"
+              icon={<DollarOutlined />}
+              theme={theme}
+            />
+          </Col>
+          <Col span={8}>
+            <StatisticsCard
+              title="Total Purchase"
+              value={data.totalPurchase.toFixed(2)}
+              color="#1677ff"
+              icon={<ShoppingCartOutlined />}
+              theme={theme}
+            />
+          </Col>
+          <Col span={8}>
+            <StatisticsCard
+              title="Total Debts"
+              value={data.totalDebts.toFixed(2)}
+              color="#cf1322"
+              icon={<WarningOutlined />}
+              theme={theme}
+            />
+          </Col>
+        </Row>
+
+        {/* Charts */}
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <PurchaseOverviewChart
+              data={data.purchasesOverview}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <TopProductChart data={data.topProducts} isDark={isDark} />
+          </Col>
+        </Row>
+      </div>
+    </>
+  );
+};
+
+export default AccountantDashboard;
