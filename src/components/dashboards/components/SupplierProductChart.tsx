@@ -62,7 +62,6 @@ const SupplierProductChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

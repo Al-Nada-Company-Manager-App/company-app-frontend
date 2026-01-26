@@ -62,7 +62,6 @@ const CustomerMarketsChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

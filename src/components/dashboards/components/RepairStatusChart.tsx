@@ -60,7 +60,6 @@ const RepairStatusChart = ({
         })),
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

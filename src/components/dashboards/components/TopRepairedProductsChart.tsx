@@ -68,7 +68,6 @@ const TopRepairedProductsChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

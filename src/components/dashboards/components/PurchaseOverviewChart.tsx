@@ -78,7 +78,6 @@ const PurchaseOverviewChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

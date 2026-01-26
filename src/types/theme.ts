@@ -1,16 +1,8 @@
-export interface ThemeConfig {
+export interface Theme {
   backgroundImage: string;
   containerBg: string;
-  textColor: string;
-  buttonStyles: {
-    backgroundColor: string;
-    color: string;
-  };
   gradient1: string;
   gradient2: string;
-}
-
-export interface Theme {
   button: {
     background: string;
     color: string;

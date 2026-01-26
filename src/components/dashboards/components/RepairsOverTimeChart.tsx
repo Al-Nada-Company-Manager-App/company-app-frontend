@@ -82,7 +82,6 @@ const RepairsOverTimeChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

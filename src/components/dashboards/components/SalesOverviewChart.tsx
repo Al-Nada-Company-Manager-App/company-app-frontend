@@ -78,7 +78,6 @@ const SalesOverviewChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

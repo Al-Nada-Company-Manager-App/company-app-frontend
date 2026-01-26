@@ -62,7 +62,6 @@ const SparePartsUsedChart = ({
         })),
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

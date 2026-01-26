@@ -62,7 +62,6 @@ const CustomerSalesChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

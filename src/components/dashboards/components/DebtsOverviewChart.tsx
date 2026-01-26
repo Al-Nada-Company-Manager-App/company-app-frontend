@@ -62,7 +62,6 @@ const DebtsOverviewChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

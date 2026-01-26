@@ -62,7 +62,6 @@ const SparePartsLowStock = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

@@ -62,7 +62,6 @@ const CustomerProductChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

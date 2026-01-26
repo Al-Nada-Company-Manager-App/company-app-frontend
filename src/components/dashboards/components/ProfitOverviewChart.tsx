@@ -27,17 +27,28 @@ const ProfitOverviewChart = ({
     ]),
   ).sort();
 
+  // Calculate cumulative profit
+  let runningTotalSales = 0;
+  let runningTotalPurchases = 0;
+
   // Merge data based on all unique dates
   const mergedData = allDates.map((date) => {
     const sale = salesData.find((s) => s.month === date) || { total_sales: 0 };
     const purchase = purchasesData.find((p) => p.month === date) || {
       total_purchases: 0,
     };
+
+    const monthlySales = Number(sale.total_sales);
+    const monthlyPurchases = Number(purchase.total_purchases);
+
+    runningTotalSales += monthlySales;
+    runningTotalPurchases += monthlyPurchases;
+
     return {
       month: date,
-      sales: Number(sale.total_sales),
-      purchases: Number(purchase.total_purchases),
-      profit: Number(sale.total_sales) - Number(purchase.total_purchases),
+      sales: monthlySales,
+      purchases: monthlyPurchases * -1,
+      profit: runningTotalSales - runningTotalPurchases,
     };
   });
 
@@ -109,7 +120,6 @@ const ProfitOverviewChart = ({
         lineStyle: { width: 3 },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

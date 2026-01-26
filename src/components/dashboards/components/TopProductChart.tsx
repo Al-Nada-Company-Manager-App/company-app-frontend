@@ -61,7 +61,6 @@ const TopProductChart = ({
         },
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (

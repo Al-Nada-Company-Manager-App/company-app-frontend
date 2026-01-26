@@ -62,7 +62,6 @@ const StockCategoryChart = ({
         // Use a color palette or let ECharts default
       },
     ],
-    backgroundColor: "transparent",
   };
 
   return (
