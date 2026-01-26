@@ -8,6 +8,7 @@ import UpdateCustomerModal from "./UpdateCustomerModal";
 import { useDeleteCustomer } from "@src/queries/Customers";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -82,11 +83,8 @@ const CustomerDetailModal = ({
           <Col span={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
-                src={
-                  customer?.c_photo
-                    ? `Images/customers/${customer.c_photo}`
-                    : "/Images/customers/placeholder.jpg"
-                }
+                src={getImageUrl("customers", customer?.c_photo)}
+                fallback={getPlaceholderUrl("customers")}
                 alt={customer?.c_name}
                 style={{ borderRadius: "12px", width: "100%" }}
               />

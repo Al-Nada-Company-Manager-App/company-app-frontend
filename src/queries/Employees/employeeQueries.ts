@@ -52,13 +52,13 @@ export const useCreateEmployee = (isDark: boolean = false) => {
         `Employee ${newEmployee?.f_name || ""} ${
           newEmployee?.l_name || ""
         } created successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {
       console.error("Error creating employee:", error);
       showErrorMessage(
-        "Failed to create employee. Please check your input and try again."
+        "Failed to create employee. Please check your input and try again.",
       );
     },
   });
@@ -75,7 +75,7 @@ export const useUpdateEmployee = (isDark: boolean = false) => {
       // Update the specific employee in the cache
       queryClient.setQueryData(
         employeeKeys.detail(updatedEmployee.e_id),
-        updatedEmployee
+        updatedEmployee,
       );
       // Invalidate the employees list to refresh it
       queryClient.invalidateQueries({ queryKey: employeeKeys.lists() });
@@ -84,13 +84,13 @@ export const useUpdateEmployee = (isDark: boolean = false) => {
         `Employee ${updatedEmployee?.f_name || ""} ${
           updatedEmployee?.l_name || ""
         } updated successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {
       console.error("Error updating employee:", error);
       showErrorMessage(
-        "Failed to update employee information. Please try again."
+        "Failed to update employee information. Please try again.",
       );
     },
   });
@@ -110,15 +110,15 @@ export const useUpdatePermissions = (isDark: boolean = false) => {
     onSuccess: (updatedPermissions, variables) => {
       queryClient.setQueryData(
         ["employeePermissions", variables.id],
-        updatedPermissions
+        updatedPermissions,
       );
-      queryClient.invalidateQueries({ queryKey: ["employees"] }); 
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
       showSuccessMessage("Employee permissions updated successfully!", "✅");
     },
     onError: (error) => {
       console.error("Error updating employee permissions:", error);
       showErrorMessage(
-        "Failed to update employee permissions. Please try again."
+        "Failed to update employee permissions. Please try again.",
       );
     },
   });
@@ -157,7 +157,7 @@ export const useActivateEmployee = (isDark: boolean = false) => {
       // Update the specific employee in the cache
       queryClient.setQueryData(
         employeeKeys.detail(updatedEmployee.e_id),
-        updatedEmployee
+        updatedEmployee,
       );
       // Invalidate the employees list to refresh it
       queryClient.invalidateQueries({ queryKey: employeeKeys.lists() });
@@ -166,7 +166,7 @@ export const useActivateEmployee = (isDark: boolean = false) => {
         `Employee ${updatedEmployee?.f_name || ""} ${
           updatedEmployee?.l_name || ""
         } activated successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {
@@ -187,7 +187,7 @@ export const useDeactivateEmployee = (isDark: boolean = false) => {
       // Update the specific employee in the cache
       queryClient.setQueryData(
         employeeKeys.detail(updatedEmployee.e_id),
-        updatedEmployee
+        updatedEmployee,
       );
       // Invalidate the employees list to refresh it
       queryClient.invalidateQueries({ queryKey: employeeKeys.lists() });
@@ -196,12 +196,38 @@ export const useDeactivateEmployee = (isDark: boolean = false) => {
         `Employee ${updatedEmployee?.f_name || ""} ${
           updatedEmployee?.l_name || ""
         } deactivated successfully!`,
-        "⏸️"
+        "⏸️",
       );
     },
     onError: (error) => {
       console.error("Error deactivating employee:", error);
       showErrorMessage("Failed to deactivate employee. Please try again.");
+    },
+  });
+};
+
+// Update employee photo mutation
+export const useUpdateEmployeePhoto = (isDark: boolean = false) => {
+  const queryClient = useQueryClient();
+  const { showSuccessMessage, showErrorMessage } = useThemedMessage(isDark);
+
+  return useMutation({
+    mutationFn: ({ id, file }: { id: number; file: File }) =>
+      employeeApi.uploadEmployeePhoto(id, file),
+    onSuccess: (data, variables) => {
+      // Invalidate the specific employee
+      queryClient.invalidateQueries({
+        queryKey: employeeKeys.detail(variables.id),
+      });
+      // Invalidate the employees list
+      queryClient.invalidateQueries({ queryKey: employeeKeys.lists() });
+
+      showSuccessMessage("Profile photo updated successfully!", "✅");
+      return data;
+    },
+    onError: (error) => {
+      console.error("Error updating profile photo:", error);
+      showErrorMessage("Failed to update profile photo. Please try again.");
     },
   });
 };

@@ -10,6 +10,7 @@ import {
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface UpdateModalProps {
   modalOpen: boolean;
@@ -31,11 +32,11 @@ const UpdateSupplierModal = ({
 
   const [imageFile, setImageFile] = useState<UploadFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    supplier?.s_photo ? `Images/suppliers/${supplier.s_photo}` : undefined
+    supplier?.s_photo ? getImageUrl("suppliers", supplier.s_photo) : undefined,
   );
   useEffect(() => {
     if (supplier?.s_photo) {
-      setPreviewImage(`/Images/suppliers/${supplier.s_photo}`);
+      setPreviewImage(getImageUrl("suppliers", supplier.s_photo));
     }
   }, [supplier?.s_photo]);
 
@@ -116,7 +117,7 @@ const UpdateSupplierModal = ({
                 }}
               >
                 <Image
-                  src={previewImage || "/Images/suppliers/placeholder.jpg"}
+                  src={previewImage || getPlaceholderUrl("suppliers")}
                   alt={supplier?.s_name}
                   style={{
                     width: "100%",

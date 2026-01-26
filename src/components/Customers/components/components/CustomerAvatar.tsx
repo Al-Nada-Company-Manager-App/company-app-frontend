@@ -1,5 +1,7 @@
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+
 interface CustomerAvatarProps {
   customer: Customer;
   theme: Theme;
@@ -15,16 +17,12 @@ const CustomerAvatar = ({ customer, theme }: CustomerAvatarProps) => {
       }}
     >
       <img
-        src={
-          customer.c_photo
-            ? `/Images/customers/${customer.c_photo}`
-            : "/Images/customers/placeholder.jpg"
-        }
+        src={getImageUrl("customers", customer.c_photo)}
         alt={customer.c_name}
         className="w-full h-full object-cover"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          target.src = "/Images/customers/placeholder.jpg";
+          target.src = getPlaceholderUrl("customers");
           target.parentElement!.style.background = theme.avatar.background;
         }}
       />

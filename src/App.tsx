@@ -21,6 +21,8 @@ import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
+import AuthPage from "@src/components/pages/AuthPage";
+import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
 // import TechnicianDashboard from "./components/dashboards/technicianDashboard";
 // import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
 // import AccountantDashboard from "./components/dashboards/AccountantDashboard";
@@ -38,7 +40,25 @@ function RouteHandler() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}> 
+      {/* Auth route - accessible only when NOT logged in */}
+      <Route
+        path="/login"
+        element={
+          <GuestGuard>
+            <AuthPage />
+          </GuestGuard>
+        }
+      />
+
+      {/* Main app routes - require authentication */}
+      <Route
+        path="/"
+        element={
+          <AuthGuard>
+            <Layout />
+          </AuthGuard>
+        }
+      >
         <Route index element={<ManagerDashboard />} />
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="customers" element={<CustomersPage />} />

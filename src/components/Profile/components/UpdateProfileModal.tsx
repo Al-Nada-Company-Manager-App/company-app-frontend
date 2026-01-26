@@ -1,12 +1,25 @@
-import { Modal, Form, Input, Upload, Button, Row, Col, Image, DatePicker } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Upload,
+  Button,
+  Row,
+  Col,
+  Image,
+  DatePicker,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import { useAuthContext } from "@src/contexts/auth";
+import { useThemeContext } from "@src/contexts/theme";
+import { useUpdateEmployeePhoto } from "@src/queries/Employees";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
 import moment from "moment";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface UpdateProfileModalProps {
   modalOpen: boolean;
@@ -22,16 +35,18 @@ const UpdateProfileModal = ({
   theme,
 }: UpdateProfileModalProps) => {
   const { login } = useAuthContext(); // We'll use this to update the dummy data
+  const { isDark } = useThemeContext();
+  const updateEmployeePhoto = useUpdateEmployeePhoto(isDark);
   const [form] = Form.useForm();
 
   const [imageFile, setImageFile] = useState<UploadFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    user?.e_photo ? user.e_photo : undefined
+    user?.e_photo ? getImageUrl("employees", user.e_photo) : undefined,
   );
 
   useEffect(() => {
     if (user?.e_photo) {
-      setPreviewImage(user.e_photo);
+      setPreviewImage(getImageUrl("employees", user.e_photo));
     }
   }, [user?.e_photo]);
 
@@ -46,23 +61,36 @@ const UpdateProfileModal = ({
   const onFinish = async (values: Partial<Employee>) => {
     let photoFilename = user?.e_photo;
 
-    // For now, just simulate updating the photo if a new one is selected
-    if (imageFile) {
-      // In a real app, you would upload the image and get the filename
-      photoFilename = `/public/Images/employees/updated_${user?.e_id}.jpg`;
+    // Upload image if selected
+    if (imageFile && user?.e_id) {
+      try {
+        // We need to call the mutation.
+        // Since we can't call hooks conditionally, we should have called it at top level.
+        // But here we are inside onFinish. The mutation result .mutateAsync is what we need.
+        const response = await updateEmployeePhoto.mutateAsync({
+          id: user.e_id,
+          file: imageFile as RcFile,
+        });
+        photoFilename = response.e_photo;
+      } catch (error) {
+        console.error("Failed to upload image", error);
+        // Handle error if needed, but the hook handles it via showErrorMessage
+      }
     }
 
     // Update the dummy user data
     const updatedUser: Employee = {
       ...user!,
       ...values,
-      birth_date: values.birth_date ? moment(values.birth_date).format('YYYY-MM-DD') : user!.birth_date,
+      birth_date: values.birth_date
+        ? moment(values.birth_date).format("YYYY-MM-DD")
+        : user!.birth_date,
       e_photo: photoFilename || user!.e_photo,
     };
 
     // Update the auth context with the new user data (simulating API update)
     login(updatedUser);
-    
+
     onClose();
   };
 
@@ -106,7 +134,7 @@ const UpdateProfileModal = ({
                 }}
               >
                 <Image
-                  src={previewImage || "/public/Images/employees/placeholder.jpg"}
+                  src={previewImage || getPlaceholderUrl("employees")}
                   alt={`${user?.f_name} ${user?.l_name}`}
                   style={{
                     width: "100%",
@@ -220,7 +248,10 @@ const UpdateProfileModal = ({
                       },
                     ]}
                   >
-                    <DatePicker style={{ width: "100%" }} placeholder="Select birth date" />
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      placeholder="Select birth date"
+                    />
                   </Form.Item>
                 </Col>
               </Row>

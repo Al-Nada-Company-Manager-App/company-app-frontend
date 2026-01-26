@@ -30,7 +30,7 @@ export const employeeApi = {
     const response = await fetch(`${API_BASE_URL}/${id}/employeeAccess`);
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch permissions for employee with ID: ${id}`
+        `Failed to fetch permissions for employee with ID: ${id}`,
       );
     }
     return response.json();
@@ -38,7 +38,7 @@ export const employeeApi = {
 
   // Create new employee
   createEmployee: async (
-    employeeData: Omit<Employee, "e_id">
+    employeeData: Omit<Employee, "e_id">,
   ): Promise<Employee> => {
     const response = await fetch(`${API_BASE_URL}`, {
       method: "POST",
@@ -77,7 +77,7 @@ export const employeeApi = {
   // Update employee permissions
   updatePermissions: async (
     id: number,
-    permissions: EmployeePermissions
+    permissions: EmployeePermissions,
   ): Promise<EmployeePermissions> => {
     const response = await fetch(`${API_BASE_URL}/${id}/updateAccess`, {
       method: "PUT",
@@ -89,7 +89,7 @@ export const employeeApi = {
     if (!response.ok) {
       const errorText = await response.text().catch(() => "Unknown error");
       throw new Error(
-        `Failed to update permissions for employee with ID: ${id}. Status: ${response.status}. ${errorText}`
+        `Failed to update permissions for employee with ID: ${id}. Status: ${response.status}. ${errorText}`,
       );
     }
     return response.json();
@@ -123,6 +123,25 @@ export const employeeApi = {
     });
     if (!response.ok) {
       throw new Error(`Failed to deactivate employee with ID: ${id}`);
+    }
+    return response.json();
+  },
+
+  // Upload employee photo
+  uploadEmployeePhoto: async (
+    id: number,
+    file: File,
+  ): Promise<{ e_photo: string }> => {
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    const response = await fetch(`${API_BASE_URL}/${id}/photo`, {
+      method: "PATCH",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to upload photo for employee with ID: ${id}`);
     }
     return response.json();
   },

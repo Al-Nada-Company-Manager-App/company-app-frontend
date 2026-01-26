@@ -1,5 +1,6 @@
 import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface ProfileHeaderProps {
   user: Employee;
@@ -12,7 +13,11 @@ const ProfileHeader = ({ user, theme }: ProfileHeaderProps) => {
     <div className="text-center mb-8">
       <div className="relative inline-block mb-4">
         <img
-          src={user.e_photo || "/public/Images/employees/placeholder.jpg"}
+          src={getImageUrl("employees", user.e_photo)}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = getPlaceholderUrl("employees");
+          }}
           alt={`${user.f_name} ${user.l_name}`}
           className="w-32 h-32 rounded-full object-cover mx-auto transition-all duration-200"
           style={{
