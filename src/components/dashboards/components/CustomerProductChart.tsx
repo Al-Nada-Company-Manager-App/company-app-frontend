@@ -1,32 +1,82 @@
+import ReactECharts from "echarts-for-react";
+import MotionChartWrapper from "./MotionChartWrapper";
+import { useThemeContext } from "@src/contexts/theme";
 import type { CustomerProduct } from "@src/types/Dashboard/dashboard";
-import { Bar } from "@ant-design/plots";
+import type { Theme } from "@src/types/theme";
 
-const CustomerProductChart = ({data, isDark} : {data: CustomerProduct[], isDark:boolean}) => {
+const CustomerProductChart = ({
+  data,
+}: {
+  data: CustomerProduct[];
+  isDark?: boolean;
+}) => {
+  const { theme, isDark } = useThemeContext();
 
-  const formattedData = data.map((item) => ({
-    type: item.customername,
-    value: item.productcount,
-  }));
-
-  const config = {
-    data: formattedData,
-    xField: "type",
-    yField: "value",
-    seriesField: "type",
-    legend: { position: "top-left" },
-    barWidthRatio: 0.4,
-    minBarWidth: 10,
-    maxBarWidth: 20,
-    xAxis: { nice: true, label: { autoHide: true, autoRotate: false } },
-    yAxis: { label: { style: { fontSize: 12 } } },
-    theme: { type: isDark ? "dark" : "light"},
+  const option = {
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: isDark ? "#333" : "#fff",
+      borderColor: isDark ? "#555" : "#ccc",
+      textStyle: {
+        color: isDark ? "#eee" : "#333",
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "category",
+      data: data.map((item) => item.customername),
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+        rotate: 30,
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDark ? "#555" : "#ccc",
+        },
+      },
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+      },
+      splitLine: {
+        lineStyle: {
+          color: isDark ? "#333" : "#eee",
+        },
+      },
+    },
+    series: [
+      {
+        data: data.map((item) => item.productcount),
+        type: "bar",
+        barWidth: "40%",
+        itemStyle: {
+          color: "#52c41a",
+          borderRadius: [4, 4, 0, 0],
+        },
+      },
+    ],
+    backgroundColor: "transparent",
   };
 
   return (
-    <div className="custom-chart-container">
-      <h3>Customer Products</h3>
-      <Bar {...config} />
-    </div>
+    <MotionChartWrapper
+      title="Customer Products"
+      theme={theme as unknown as Theme}
+      delay={5}
+    >
+      <ReactECharts
+        option={option}
+        style={{ height: "100%", width: "100%" }}
+        theme={isDark ? "dark" : "light"}
+      />
+    </MotionChartWrapper>
   );
 };
 

@@ -5,12 +5,14 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
-import StatisticsCard from "@src/components/UI/StatisticsCard"; 
-import ChartStyle from "@src/components/UI/ChartStyle"; 
+import StatisticsCard from "@src/components/UI/StatisticsCard";
+import ChartStyle from "@src/components/UI/ChartStyle";
 import { useThemeContext } from "@src/contexts/theme";
 import RepairsOverTimeChart from "./components/RepairsOverTimeChart";
 import SparePartsLowStock from "./components/SparePartsLowStock";
 import RepairStatusChart from "./components/RepairStatusChart";
+import TopRepairedProductsChart from "./components/TopRepairedProductsChart";
+import SparePartsUsedChart from "./components/SparePartsUsedChart";
 
 const TechnicianDashboard = () => {
   const { isDark } = useThemeContext();
@@ -96,7 +98,16 @@ const TechnicianDashboard = () => {
             <SparePartsLowStock data={data.lowStockAlerts} isDark={isDark} />
           </Col>
           <Col span={12}>
-            {/* <TopProductChart data={data.topProducts} isDark={isDark} /> */}
+            <TopRepairedProductsChart
+              data={data.topRepairedProducts}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <SparePartsUsedChart data={data.sparePartsUsed} isDark={isDark} />
           </Col>
         </Row>
       </div>

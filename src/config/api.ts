@@ -22,7 +22,9 @@ export const getImageUrl = (
   }
 
   // Return the backend API URL for the image
-  return `${API_BASE_URL}/images/${type}/${filename}`;
+  // If the filename contains a path, strip it to getting just the basename
+  const cleanFilename = filename.split(/[/\\]/).pop();
+  return `${API_BASE_URL}/images/${type}/${cleanFilename}`;
 };
 
 /**

@@ -1,13 +1,13 @@
 import ReactECharts from "echarts-for-react";
 import MotionChartWrapper from "./MotionChartWrapper";
 import { useThemeContext } from "@src/contexts/theme";
-import type { StockSummary } from "@src/types/Dashboard/dashboard";
+import type { SparePartUsed } from "@src/types/Dashboard/dashboard";
 import type { Theme } from "@src/types/theme";
 
-const StockCategoryChart = ({
+const SparePartsUsedChart = ({
   data,
 }: {
-  data: StockSummary[];
+  data: SparePartUsed[];
   isDark?: boolean;
 }) => {
   const { theme, isDark } = useThemeContext();
@@ -15,28 +15,29 @@ const StockCategoryChart = ({
   const option = {
     tooltip: {
       trigger: "item",
-      backgroundColor: isDark ? "#333" : "#fff",
-      borderColor: isDark ? "#555" : "#ccc",
+      backgroundColor: isDark ? "#1f1f1f" : "#fff",
+      borderColor: isDark ? "#333" : "#ccc",
       textStyle: {
         color: isDark ? "#eee" : "#333",
       },
     },
     legend: {
       orient: "vertical",
-      right: 10,
-      top: "center",
+      left: "left",
+      type: "scroll",
       textStyle: {
-        color: isDark ? "#ccc" : "#666",
+        color: isDark ? "#fff" : "#666",
       },
     },
     series: [
       {
-        name: "Stock Category",
+        name: "Spare Parts Used",
         type: "pie",
         radius: ["40%", "70%"],
+        center: ["60%", "50%"],
         avoidLabelOverlap: false,
         itemStyle: {
-          borderRadius: 10,
+          borderRadius: 5,
           borderColor: isDark ? "#1f1f1f" : "#fff",
           borderWidth: 2,
         },
@@ -47,7 +48,7 @@ const StockCategoryChart = ({
         emphasis: {
           label: {
             show: true,
-            fontSize: 20,
+            fontSize: 14,
             fontWeight: "bold",
             color: isDark ? "#fff" : "#333",
           },
@@ -56,10 +57,9 @@ const StockCategoryChart = ({
           show: false,
         },
         data: data.map((item) => ({
-          value: item.total_quantity,
-          name: item.p_category,
+          value: item.total_used,
+          name: item.spare_part_name,
         })),
-        // Use a color palette or let ECharts default
       },
     ],
     backgroundColor: "transparent",
@@ -67,9 +67,9 @@ const StockCategoryChart = ({
 
   return (
     <MotionChartWrapper
-      title="Stock Category Distribution"
+      title="Spare Parts Usage"
       theme={theme as unknown as Theme}
-      delay={7}
+      delay={6}
     >
       <ReactECharts
         option={option}
@@ -80,4 +80,4 @@ const StockCategoryChart = ({
   );
 };
 
-export default StockCategoryChart;
+export default SparePartsUsedChart;

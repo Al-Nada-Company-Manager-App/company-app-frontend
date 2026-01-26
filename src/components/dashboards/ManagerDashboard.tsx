@@ -6,14 +6,16 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
-import StatisticsCard from "@src/components/UI/StatisticsCard"; 
-import ChartStyle from "@src/components/UI/ChartStyle"; 
+import StatisticsCard from "@src/components/UI/StatisticsCard";
+import ChartStyle from "@src/components/UI/ChartStyle";
 import SalesOverviewChart from "./components/SalesOverviewChart";
 import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
 import DebtsOverviewChart from "./components/DebtsOverviewChart";
 import TopProductChart from "./components/TopProductChart";
 import CustomerProductChart from "./components/CustomerProductChart";
 import SupplierProductChart from "./components/SupplierProductChart";
+import ProfitOverviewChart from "./components/ProfitOverviewChart";
+import TopRepairedProductsChart from "./components/TopRepairedProductsChart";
 import { useThemeContext } from "@src/contexts/theme";
 
 const ManagerDashboard = () => {
@@ -85,6 +87,16 @@ const ManagerDashboard = () => {
           </Col>
         </Row>
 
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={24}>
+            <ProfitOverviewChart
+              salesData={data.salesOverview}
+              purchasesData={data.purchasesOverview}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
         {/* Charts */}
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           <Col span={12}>
@@ -103,7 +115,22 @@ const ManagerDashboard = () => {
             <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
           </Col>
           <Col span={12}>
+            <TopRepairedProductsChart
+              data={data.topRepairedProducts}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={12}>
             <TopProductChart data={data.topProducts} isDark={isDark} />
+          </Col>
+          <Col span={12}>
+            <SupplierProductChart
+              data={data.supplierProducts}
+              isDark={isDark}
+            />
           </Col>
         </Row>
 
@@ -111,12 +138,6 @@ const ManagerDashboard = () => {
           <Col span={12}>
             <CustomerProductChart
               data={data.customerProducts}
-              isDark={isDark}
-            />
-          </Col>
-          <Col span={12}>
-            <SupplierProductChart
-              data={data.supplierProducts}
               isDark={isDark}
             />
           </Col>

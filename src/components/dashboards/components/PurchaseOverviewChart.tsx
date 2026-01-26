@@ -1,28 +1,94 @@
-import { Line } from "@ant-design/plots";
+import ReactECharts from "echarts-for-react";
+import MotionChartWrapper from "./MotionChartWrapper";
+import { useThemeContext } from "@src/contexts/theme";
 import type { PurchaseOverview } from "@src/types/Dashboard/dashboard";
 
-const PurchaseOverviewChart = ({data, isDark} : {data: PurchaseOverview[], isDark: boolean}) => {
-  const config = {
-    data,
-    xField: "month",
-    yField: "total_purchases",
-    seriesField: "type",
-    legend: { position: "top-left" },
+const PurchaseOverviewChart = ({
+  data,
+}: {
+  data: PurchaseOverview[];
+  isDark?: boolean;
+}) => {
+  const { theme, isDark } = useThemeContext();
+
+  const option = {
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: isDark ? "#333" : "#fff",
+      borderColor: isDark ? "#555" : "#ccc",
+      textStyle: {
+        color: isDark ? "#eee" : "#333",
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
     xAxis: {
-      nice: true,
-      label: { autoHide: true, autoRotate: false },
+      type: "category",
+      data: data.map((item) => item.month),
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDark ? "#555" : "#ccc",
+        },
+      },
     },
     yAxis: {
-      label: { style: { fontSize: 12 } },
+      type: "value",
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+      },
+      splitLine: {
+        lineStyle: {
+          color: isDark ? "#333" : "#eee",
+        },
+      },
     },
-    theme: { type: isDark ? "dark" : "light" },
+    series: [
+      {
+        data: data.map((item) => item.total_purchases),
+        type: "line",
+        smooth: true,
+        itemStyle: {
+          color: "#FA7800",
+        },
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: "rgba(250, 120, 0, 0.5)",
+              },
+              {
+                offset: 1,
+                color: "rgba(250, 120, 0, 0.01)",
+              },
+            ],
+          },
+        },
+      },
+    ],
+    backgroundColor: "transparent",
   };
 
   return (
-    <div className="custom-chart-container">
-      <h3>Purchase Overview</h3>
-      <Line {...config} />
-    </div>
+    <MotionChartWrapper title="Purchase Overview" theme={theme} delay={2}>
+      <ReactECharts
+        option={option}
+        style={{ height: "100%", width: "100%" }}
+        theme={isDark ? "dark" : "light"}
+      />
+    </MotionChartWrapper>
   );
 };
 

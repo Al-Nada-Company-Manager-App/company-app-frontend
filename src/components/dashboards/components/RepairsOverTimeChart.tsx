@@ -1,34 +1,102 @@
-
-import { Line } from "@ant-design/plots";
+import ReactECharts from "echarts-for-react";
+import MotionChartWrapper from "./MotionChartWrapper";
+import { useThemeContext } from "@src/contexts/theme";
 import type { RepairOverTime } from "@src/types/Dashboard/dashboard";
+import type { Theme } from "@src/types/theme";
 
-const RepairsOverTimeChart = ({data, isDark} : {data: RepairOverTime[], isDark: boolean}) => {
+const RepairsOverTimeChart = ({
+  data,
+}: {
+  data: RepairOverTime[];
+  isDark?: boolean;
+}) => {
+  const { theme, isDark } = useThemeContext();
 
-
-  // const config = {
-  //   data: repairsOverTime,
-  //   xField: "rep_date",
-  //   yField: "repairs_count",
-  //   point: { size: 5, shape: "circle" },
-  //   color: isDark ? "#fa8c16" : "#1890ff", // Adjust color based on theme
-  //   theme: isDark ? "dark" : "light",
-  // };
-
-  const config = {
-    data,
-    xField: 'rep_date',
-    yField: 'repairs_count',
-    legend: { position: 'top-left' },
-    xAxis: { nice: true, label: { autoHide: true, autoRotate: false } },
-    yAxis: { label: { style: { fontSize: 12 } } },
-    theme: {type: isDark? "dark" : "ligth"}
+  const option = {
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: isDark ? "#333" : "#fff",
+      borderColor: isDark ? "#555" : "#ccc",
+      textStyle: {
+        color: isDark ? "#eee" : "#333",
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "category",
+      data: data.map((item) => item.rep_date),
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDark ? "#555" : "#ccc",
+        },
+      },
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+      },
+      splitLine: {
+        lineStyle: {
+          color: isDark ? "#333" : "#eee",
+        },
+      },
+    },
+    series: [
+      {
+        data: data.map((item) => item.repairs_count),
+        type: "line",
+        smooth: true,
+        itemStyle: {
+          color: "#fa8c16",
+        },
+        lineStyle: {
+          width: 3,
+        },
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: "rgba(250, 140, 22, 0.5)",
+              },
+              {
+                offset: 1,
+                color: "rgba(250, 140, 22, 0.01)",
+              },
+            ],
+          },
+        },
+      },
+    ],
+    backgroundColor: "transparent",
   };
 
   return (
-    <div className="custom-chart-container">
-      <h3>Repairs Over Time</h3>
-      <Line {...config} />
-    </div>
+    <MotionChartWrapper
+      title="Repairs Over Time"
+      theme={theme as unknown as Theme}
+      delay={8}
+    >
+      <ReactECharts
+        option={option}
+        style={{ height: "100%", width: "100%" }}
+        theme={isDark ? "dark" : "light"}
+      />
+    </MotionChartWrapper>
   );
 };
 

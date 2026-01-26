@@ -1,12 +1,13 @@
 import ReactECharts from "echarts-for-react";
 import MotionChartWrapper from "./MotionChartWrapper";
 import { useThemeContext } from "@src/contexts/theme";
-import type { DebtOverview } from "@src/types/Dashboard/dashboard";
+import type { TopRepairedProduct } from "@src/types/Dashboard/dashboard";
+import type { Theme } from "@src/types/theme";
 
-const DebtsOverviewChart = ({
+const TopRepairedProductsChart = ({
   data,
 }: {
-  data: DebtOverview[];
+  data: TopRepairedProduct[];
   isDark?: boolean;
 }) => {
   const { theme, isDark } = useThemeContext();
@@ -14,8 +15,8 @@ const DebtsOverviewChart = ({
   const option = {
     tooltip: {
       trigger: "axis",
-      backgroundColor: isDark ? "#333" : "#fff",
-      borderColor: isDark ? "#555" : "#ccc",
+      backgroundColor: isDark ? "#1f1f1f" : "#fff",
+      borderColor: isDark ? "#333" : "#ccc",
       textStyle: {
         color: isDark ? "#eee" : "#333",
       },
@@ -27,20 +28,6 @@ const DebtsOverviewChart = ({
       containLabel: true,
     },
     xAxis: {
-      type: "category",
-      data: data.map((item) => item.d_type),
-      axisLabel: {
-        color: isDark ? "#ccc" : "#666",
-        interval: 0,
-        rotate: 30, // Rotate labels if long
-      },
-      axisLine: {
-        lineStyle: {
-          color: isDark ? "#555" : "#ccc",
-        },
-      },
-    },
-    yAxis: {
       type: "value",
       axisLabel: {
         color: isDark ? "#ccc" : "#666",
@@ -51,14 +38,33 @@ const DebtsOverviewChart = ({
         },
       },
     },
+    yAxis: {
+      type: "category",
+      data: data.map((item) => item.p_name),
+      axisLabel: {
+        color: isDark ? "#ccc" : "#666",
+        width: 100,
+        overflow: "truncate",
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDark ? "#555" : "#ccc",
+        },
+      },
+    },
     series: [
       {
-        data: data.map((item) => item.total_debt),
+        name: "Repairs",
         type: "bar",
-        barWidth: "40%",
+        data: data.map((item) => item.repair_count),
         itemStyle: {
           color: "#cf1322",
-          borderRadius: [4, 4, 0, 0],
+          borderRadius: [0, 4, 4, 0],
+        },
+        label: {
+          show: true,
+          position: "right",
+          color: isDark ? "#ccc" : "#666",
         },
       },
     ],
@@ -66,7 +72,11 @@ const DebtsOverviewChart = ({
   };
 
   return (
-    <MotionChartWrapper title="Debts Overview" theme={theme} delay={3}>
+    <MotionChartWrapper
+      title="Top Repaired Products"
+      theme={theme as unknown as Theme}
+      delay={5}
+    >
       <ReactECharts
         option={option}
         style={{ height: "100%", width: "100%" }}
@@ -76,4 +86,4 @@ const DebtsOverviewChart = ({
   );
 };
 
-export default DebtsOverviewChart;
+export default TopRepairedProductsChart;

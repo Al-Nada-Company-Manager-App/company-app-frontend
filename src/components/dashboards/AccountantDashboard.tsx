@@ -5,12 +5,13 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { useDashboard } from "@src/hooks/Dashboards/useDashboard";
-import StatisticsCard from "@src/components/UI/StatisticsCard"; 
-import ChartStyle from "@src/components/UI/ChartStyle"; 
+import StatisticsCard from "@src/components/UI/StatisticsCard";
+import ChartStyle from "@src/components/UI/ChartStyle";
 import SalesOverviewChart from "./components/SalesOverviewChart";
 import PurchaseOverviewChart from "./components/PurchaseOverviewChart";
 import DebtsOverviewChart from "./components/DebtsOverviewChart";
 import TopProductChart from "./components/TopProductChart";
+import ProfitOverviewChart from "./components/ProfitOverviewChart";
 import { useThemeContext } from "@src/contexts/theme";
 
 const AccountantDashboard = () => {
@@ -74,6 +75,16 @@ const AccountantDashboard = () => {
         </Row>
 
         {/* Charts */}
+        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Col span={24}>
+            <ProfitOverviewChart
+              salesData={data.salesOverview}
+              purchasesData={data.purchasesOverview}
+              isDark={isDark}
+            />
+          </Col>
+        </Row>
+
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
