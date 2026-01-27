@@ -25,7 +25,13 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
   }
 
   // Redirect to login if not authenticated
-  if (!session?.success || !session?.user) {
+  // Check both session and localStorage for Electron race condition safety
+  const isLocalStorageAuth = localStorage.getItem("isAuthenticated") === "true";
+
+  // If we have a session OR local storage says we are auth, allow access
+  const isAuth = (session?.success && session?.user) || isLocalStorageAuth;
+
+  if (!isAuth) {
     // Save the attempted URL for redirecting after login
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

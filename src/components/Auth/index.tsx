@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@src/hooks/Auth/useAuth";
 import { useAuthContext } from "@src/contexts/auth";
@@ -24,7 +24,15 @@ const Auth = ({ isDark }: AuthProps) => {
     register,
     refetchSession,
   } = useAuth();
-  const { login: authLogin } = useAuthContext();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const { login: authLogin, isAuthenticated } = useAuthContext();
+
+  // Redirect when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (username: string, password: string) => {
     const result = await login({ username, password });
@@ -32,6 +40,13 @@ const Auth = ({ isDark }: AuthProps) => {
       // Refetch session to get full user data
       const sessionResult = await refetchSession();
       if (sessionResult.data?.success && sessionResult.data?.user) {
+        // Persist to localStorage for Electron race condition safety
+        localStorage.setItem(
+          "auth_user",
+          JSON.stringify(sessionResult.data.user),
+        );
+        localStorage.setItem("isAuthenticated", "true");
+
         authLogin({
           e_id: sessionResult.data.user.e_id,
           f_name: sessionResult.data.user.f_name,
@@ -51,7 +66,7 @@ const Auth = ({ isDark }: AuthProps) => {
           e_active: sessionResult.data.user.e_active,
         });
       }
-      navigate("/");
+      // Navigation is handled by useEffect
     }
   };
 
@@ -84,8 +99,8 @@ const Auth = ({ isDark }: AuthProps) => {
 
   // Use light logo for dark mode, dark logo for light mode
   const logoSrc = isDark
-    ? "/Images/logo/alnadadr.png"
-    : "/Images/logo/alnada.png";
+    ? "./Images/logo/alnadadr.png"
+    : "./Images/logo/alnada.png";
 
   return (
     <div
