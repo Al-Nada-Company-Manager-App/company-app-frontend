@@ -1,5 +1,6 @@
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface SupplierAvatarProps {
   supplier: Partial<Supplier>;
@@ -16,16 +17,12 @@ const SupplierAvatar = ({ supplier, theme }: SupplierAvatarProps) => {
       }}
     >
       <img
-        src={
-          supplier.s_photo
-            ? `/Images/suppliers/${supplier.s_photo}`
-            : "/Images/suppliers/placeholder.jpg"
-        }
+        src={getImageUrl("suppliers", supplier.s_photo)}
         alt={supplier.s_name}
         className="w-full h-full object-cover"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          target.src = "/Images/suppliers/placeholder.jpg";
+          target.src = getPlaceholderUrl("suppliers");
           target.parentElement!.style.background = theme.avatar.background;
         }}
       />

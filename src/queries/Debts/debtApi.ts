@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Debt } from "@src/types/Debts/debt";
 
 const API_BASE_URL = "http://localhost:4000/debts";
@@ -5,7 +6,7 @@ const API_BASE_URL = "http://localhost:4000/debts";
 export const debtApi = {
   //Get all debts
   getAllDebts: async (): Promise<Debt[]> => {
-    const response = await fetch(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${API_BASE_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch debts");
     }
@@ -13,7 +14,7 @@ export const debtApi = {
   },
   //Update debt
   updateDebt: async (id: number, debtData: Partial<Debt>): Promise<Debt> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -27,11 +28,11 @@ export const debtApi = {
   },
   //delete debt
   deleteDebt: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
       throw new Error(`Failed to delete debt with ID: ${id}`);
     }
   },
-}
+};

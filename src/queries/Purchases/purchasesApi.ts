@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Purchases, Products } from "@src/types/Purchases/purchases";
 
 const API_BASE_URL = "http://localhost:4000/purchases";
@@ -5,7 +6,7 @@ const API_BASE_URL = "http://localhost:4000/purchases";
 export const purchasesApi = {
   // Get all purchases
   getAllPurchases: async (): Promise<Purchases[]> => {
-    const response = await fetch(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${API_BASE_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch Purchases");
     }
@@ -14,7 +15,7 @@ export const purchasesApi = {
 
   // Get Products in Purchases by ID
   getPurchasesProducts: async (id: number): Promise<Products[]> => {
-    const response = await fetch(`${API_BASE_URL}/${id}/products`);
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/products`);
     if (!response.ok) {
       throw new Error(`Failed to fetch products for Purchases ID: ${id}`);
     }
@@ -24,7 +25,7 @@ export const purchasesApi = {
   // Add new Purchases
   addPurchase: async (purchaseData: Partial<Purchases>): Promise<Purchases> => {
     console.log(purchaseData);
-    const response = await fetch(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,9 +41,9 @@ export const purchasesApi = {
   // Update purchase
   updatePurchase: async (
     id: number,
-    purchaseData: Partial<Purchases>
+    purchaseData: Partial<Purchases>,
   ): Promise<Purchases> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export const purchasesApi = {
 
   // Delete purchase
   deletePurchase: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Customer, CustomerSales } from "@src/types/Customers/customer";
 
 const API_BASE_URL = "http://localhost:4000/customers";
@@ -5,7 +6,7 @@ const API_BASE_URL = "http://localhost:4000/customers";
 export const customerApi = {
   // Get all customers
   getAllCustomers: async (): Promise<Customer[]> => {
-    const response = await fetch(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${API_BASE_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch customers");
     }
@@ -14,7 +15,7 @@ export const customerApi = {
 
   // Get Customer Sales by ID
   getCustomerSales: async (id: number): Promise<CustomerSales[]> => {
-    const response = await fetch(`${API_BASE_URL}/${id}/sales`);
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/sales`);
     if (!response.ok) {
       throw new Error(`Failed to fetch sales for customer with ID: ${id}`);
     }
@@ -23,9 +24,9 @@ export const customerApi = {
 
   // Add new customer
   addCustomer: async (
-    customerData: Omit<Customer, "c_id">
+    customerData: Omit<Customer, "c_id">,
   ): Promise<Customer> => {
-    const response = await fetch(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,9 +42,9 @@ export const customerApi = {
   // Update customer
   updateCustomer: async (
     id: number,
-    customerData: Partial<Customer>
+    customerData: Partial<Customer>,
   ): Promise<Customer> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -60,13 +61,10 @@ export const customerApi = {
   updateCustomerPhoto: async (c_id: number, photo: File): Promise<string> => {
     const formData = new FormData();
     formData.append("photo", photo);
-    const response = await fetch(
-      `${API_BASE_URL}/${c_id}/photo`,
-      {
-        method: "PATCH",
-        body: formData,
-      }
-    );
+    const response = await fetchWithAuth(`${API_BASE_URL}/${c_id}/photo`, {
+      method: "PATCH",
+      body: formData,
+    });
     if (!response.ok) {
       throw new Error(`Failed to update customer photo for ID: ${c_id}`);
     }
@@ -77,7 +75,7 @@ export const customerApi = {
 
   // Delete customer
   deleteCustomer: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

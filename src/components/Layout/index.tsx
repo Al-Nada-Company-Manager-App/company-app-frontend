@@ -7,10 +7,12 @@ import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
 import { useMemo } from "react";
 import ModalStyle from "../UI/ModalStyle";
 import TableStyle from "../UI/TableStyle";
+import { useLogout } from "@src/queries/Auth";
 
 const Layout = () => {
   const { isDark, theme, toggleTheme } = useThemeContext();
-  const { logout } = useAuthContext();
+  const { logout: authLogout } = useAuthContext();
+  const logoutMutation = useLogout(isDark);
   const itheme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ const Layout = () => {
     navigate(newRoute);
   };
 
-  const handleBreadcrumbItemClick = (itemId: string) => {
+  const handleBreadcrumbItemClick = async (itemId: string) => {
     console.log("Breadcrumb item clicked:", itemId);
 
     // Handle profile navigation
@@ -52,8 +54,13 @@ const Layout = () => {
     }
     // Handle logout
     if (itemId === "logout") {
-      logout();
-      navigate("/"); // Redirect to dashboard after logout
+      try {
+        await logoutMutation.mutateAsync();
+        authLogout(); // Clear local auth context
+        navigate("/login");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
     }
   };
 

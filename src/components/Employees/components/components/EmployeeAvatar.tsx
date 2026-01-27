@@ -1,5 +1,7 @@
 import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+
 interface EmployeeAvatarProps {
   employee: Employee;
   theme: Theme;
@@ -16,13 +18,12 @@ const EmployeeAvatar = ({ employee, theme }: EmployeeAvatarProps) => {
     >
       {employee.e_photo ? (
         <img
-          src={employee.e_photo ? `/Images/employees/${employee.e_photo}` : "/Images/employees/placeholder.jpg"}
+          src={getImageUrl("employees", employee.e_photo)}
           alt={`${employee.f_name} ${employee.l_name}`}
           className="w-full h-full object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.style.display = "none";
-            target.parentElement!.style.background = theme.avatar.background;
+            target.src = getPlaceholderUrl("employees");
           }}
         />
       ) : null}

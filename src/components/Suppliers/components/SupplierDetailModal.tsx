@@ -8,6 +8,7 @@ import UpdateSupplierModal from "./UpdateSupplierModal";
 import { useDeleteSupplier } from "@src/queries/Suppliers";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -82,11 +83,8 @@ const SupplierDetailModal = ({
           <Col span={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
-                src={
-                  supplier?.s_photo
-                    ? `Images/suppliers/${supplier.s_photo}`
-                    : "/Images/suppliers/placeholder.jpg"
-                }
+                src={getImageUrl("suppliers", supplier?.s_photo)}
+                fallback={getPlaceholderUrl("suppliers")}
                 alt={supplier?.s_name}
                 style={{ borderRadius: "12px", width: "100%" }}
               />

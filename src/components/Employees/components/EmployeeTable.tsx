@@ -10,9 +10,12 @@ interface EmployeeTableProps {
   theme: Theme;
 }
 
+import { useAuthContext } from "@src/contexts/auth";
+
 const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Employee>();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { user } = useAuthContext();
 
   const columns = getEmployeeColumns(theme);
 
@@ -28,6 +31,7 @@ const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
           showSorterTooltip={{ target: "sorter-icon" }}
           onRow={(record) => ({
             onClick: () => {
+              if (user?.e_id === record.e_id) return;
               setSelectedRow(record);
               setIsModalVisible(true);
             },

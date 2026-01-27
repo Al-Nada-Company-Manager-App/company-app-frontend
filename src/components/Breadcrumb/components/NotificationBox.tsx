@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { lightTheme, darkTheme } from "@src/hooks/dark&lightthemes";
 import type { Notification } from "@src/types/Notifications/notifications";
+import { getImageUrl } from "@src/config/api";
 // import { useDeleteNotification } from "@src/queries/Notifications/notificationQueries";
 
 interface NotificationBoxProps {
@@ -28,7 +29,7 @@ const NotificationBox = ({
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60),
     );
     const diffInDays = Math.floor(diffInHours / 24);
 
@@ -54,17 +55,19 @@ const NotificationBox = ({
     return "System";
   };
 
+  // ... existing code ...
+
   const getNotificationImage = (notification: Notification) => {
     if (notification.employee?.e_photo) {
-      return notification.employee.e_photo;
+      return getImageUrl("employees", notification.employee.e_photo);
     }
     if (notification.sales?.customer?.c_photo) {
-      return notification.sales.customer.c_photo;
+      return getImageUrl("customers", notification.sales.customer.c_photo);
     }
     if (notification.purchase?.supplier?.s_photo) {
-      return notification.purchase.supplier.s_photo;
+      return getImageUrl("suppliers", notification.purchase.supplier.s_photo);
     }
-    return "/Images/employees/placeholder.jpg";
+    return getImageUrl("employees", null); // Default placeholder
   };
 
   const getLeftBorderColor = (notification: Notification) => {
@@ -227,7 +230,7 @@ const NotificationBox = ({
                   </div>
                 </div>
               </div>
-            )
+            ),
           )
         )}
       </div>

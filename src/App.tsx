@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   useLocation,
@@ -9,7 +9,7 @@ import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
 import { AuthProvider } from "@src/contexts/auth";
 import { SearchProvider, useSearchContext } from "@src/contexts/search";
 import Layout from "@src/components/Layout";
-import ManagerDashboards from "@src/components/dashboards/managerDashboards";
+import ManagerDashboard from "@src/components/dashboards/ManagerDashboard";
 import EmployeesPage from "@src/components/pages/EmployeesPage";
 import CustomersPage from "@src/components/pages/CustomersPage";
 import StockPage from "@src/components/pages/StockPage";
@@ -21,6 +21,12 @@ import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
+import AuthPage from "@src/components/pages/AuthPage";
+import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
+// import TechnicianDashboard from "./components/dashboards/technicianDashboard";
+// import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
+// import AccountantDashboard from "./components/dashboards/AccountantDashboard";
+// import SalesManDashboard from "./components/dashboards/SalesManDashboard";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -34,8 +40,26 @@ function RouteHandler() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<ManagerDashboards />} />
+      {/* Auth route - accessible only when NOT logged in */}
+      <Route
+        path="/login"
+        element={
+          <GuestGuard>
+            <AuthPage />
+          </GuestGuard>
+        }
+      />
+
+      {/* Main app routes - require authentication */}
+      <Route
+        path="/"
+        element={
+          <AuthGuard>
+            <Layout />
+          </AuthGuard>
+        }
+      >
+        <Route index element={<ManagerDashboard />} />
         <Route path="employees" element={<EmployeesPage />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="profile" element={<ProfilePage />} />
@@ -58,7 +82,9 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <SearchProvider>
-          <Router>
+          <Router
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+          >
             <RouteHandler />
           </Router>
         </SearchProvider>

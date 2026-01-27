@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@src/utils/apiClient";
 import type {
   Product,
   CreateProductInput,
@@ -6,11 +7,10 @@ import type {
 
 const API_BASE_URL = "http://localhost:4000/products";
 
-
 export const productsApi = {
   // Get all products
   getAllProducts: async (): Promise<Product[]> => {
-    const response = await fetch(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${API_BASE_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }
@@ -19,7 +19,7 @@ export const productsApi = {
 
   // Get product by ID
   getProductById: async (id: number): Promise<Product> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`);
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch product with ID: ${id}`);
     }
@@ -28,7 +28,7 @@ export const productsApi = {
 
   // Create new product
   createProduct: async (productData: CreateProductInput): Promise<Product> => {
-    const response = await fetch(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(productData),
@@ -41,14 +41,11 @@ export const productsApi = {
 
   // Update product
   updateProduct: async (updateData: UpdateProductInput): Promise<Product> => {
-    const response = await fetch(
-      `${API_BASE_URL}/${updateData.p_id}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData),
-      }
-    );
+    const response = await fetchWithAuth(`${API_BASE_URL}/${updateData.p_id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updateData),
+    });
     if (!response.ok) {
       throw new Error(`Failed to update product with ID: ${updateData.p_id}`);
     }
@@ -57,7 +54,7 @@ export const productsApi = {
 
   // Delete product
   deleteProduct: async (id: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -70,8 +67,8 @@ export const productsApi = {
     const formData = new FormData();
     formData.append("photo", file);
 
-    const response = await fetch(`${API_BASE_URL}/${id}/photo`, {
-      method: "PATCH", 
+    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/photo`, {
+      method: "PATCH",
       body: formData,
     });
     if (!response.ok) {

@@ -18,6 +18,7 @@ import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
 import type { UpdateProductInput } from "@src/types/Products/product";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface UpdateProductModalProps {
   modalOpen: boolean;
@@ -39,12 +40,12 @@ const UpdateProduct = ({
 
   const [imageFile, setImageFile] = useState<UploadFile | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    product?.p_photo ? `/Images/products/${product.p_photo}` : undefined
+    product?.p_photo ? getImageUrl("products", product.p_photo) : undefined,
   );
 
   useEffect(() => {
     if (product?.p_photo) {
-      setPreviewImage(`/Images/products/${product.p_photo}`);
+      setPreviewImage(getImageUrl("products", product.p_photo));
     }
   }, [product?.p_photo]);
 
@@ -58,7 +59,7 @@ const UpdateProduct = ({
 
   const handleUploadImage = async (
     file: RcFile,
-    id: number
+    id: number,
   ): Promise<string> => {
     const response = await updateProductPhoto.mutateAsync({
       id,
@@ -73,7 +74,7 @@ const UpdateProduct = ({
     if (imageFile) {
       photoFilename = await handleUploadImage(
         imageFile as RcFile,
-        product?.p_id || -1
+        product?.p_id || -1,
       );
     }
 
@@ -134,7 +135,7 @@ const UpdateProduct = ({
                 }}
               >
                 <Image
-                  src={previewImage || "/Images/products/placeholder.jpg"}
+                  src={previewImage || getPlaceholderUrl("products")}
                   alt={product?.p_name}
                   style={{
                     width: "100%",

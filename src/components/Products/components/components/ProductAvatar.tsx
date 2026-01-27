@@ -1,5 +1,6 @@
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface ProductAvatarProps {
   product: Product;
@@ -7,7 +8,6 @@ interface ProductAvatarProps {
 }
 
 const ProductAvatar = ({ product, theme }: ProductAvatarProps) => {
-  console.log("Product", product);
   return (
     <div
       className="w-10 h-10 rounded-xl flex-shrink-0 overflow-hidden"
@@ -17,16 +17,12 @@ const ProductAvatar = ({ product, theme }: ProductAvatarProps) => {
       }}
     >
       <img
-        src={
-          product.p_photo
-            ? `/Images/products/${product.p_photo}`
-            : "/Images/products/placeholder.jpg"
-        }
+        src={getImageUrl("products", product.p_photo)}
         alt={`${product.p_name}`}
         className="w-full h-full object-cover"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          target.style.display = "none";
+          target.src = getPlaceholderUrl("products");
           target.parentElement!.style.background = theme.avatar.background;
         }}
       />

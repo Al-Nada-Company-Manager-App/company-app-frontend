@@ -13,6 +13,8 @@ import {
 import { useThemeContext } from "@src/contexts/theme";
 import UpdatePermissionsModal from "./UpdatePermissions";
 
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+
 interface DetailModal {
   modalOpen: boolean;
   onClose: () => void;
@@ -100,11 +102,8 @@ const EmployeeDetailModal = ({
           <Col span={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
-                src={
-                  employee?.e_photo
-                    ? `Images/employees/${employee.e_photo}`
-                    : "/Images/employees/placeholder.jpg"
-                }
+                src={getImageUrl("employees", employee?.e_photo)}
+                fallback={getPlaceholderUrl("employees")}
                 alt={employee?.f_name}
                 style={{ borderRadius: "12px", width: "100%" }}
               />

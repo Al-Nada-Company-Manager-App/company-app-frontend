@@ -1,6 +1,12 @@
 import type { Theme } from "@src/types/theme";
 
 export const lightTheme: Theme = {
+  backgroundImage: "/Images/homePage/lightModeBackground.jpg",
+  containerBg: "#f5f7fa",
+  gradient1:
+    "linear-gradient(159.02deg,rgba(255,255,255,0.7) 14.25%,rgba(245,245,245,0.55) 56.45%,rgba(230,230,230,0.4) 86.14%)",
+  gradient2:
+    "linear-gradient(180deg,rgba(250,250,250,0.6) 23.5%,rgba(255,255,255,0) 100%)",
   button: {
     background: "#6C79F7",
     color: "#fff",
@@ -153,6 +159,12 @@ export const lightTheme: Theme = {
 };
 
 export const darkTheme: Theme = {
+  backgroundImage: "/Images/homePage/darkModeBackground.jpg",
+  containerBg: "#020515",
+  gradient1:
+    "linear-gradient(159.02deg,rgba(15,18,59,0.7) 14.25%,rgba(9,13,46,0.55) 56.45%,rgba(2,5,21,0.4) 86.14%)",
+  gradient2:
+    "linear-gradient(180deg,rgba(6,11,38,0.6) 23.5%,rgba(15,18,59,0) 100%)",
   button: {
     background: "#6C79F7",
     color: "#fff",
@@ -168,7 +180,7 @@ export const darkTheme: Theme = {
   },
   container: {
     background:
-      "linear-gradient(126.97deg, rgba(6, 11, 40, 0.74) 28.26%, rgba(10, 14, 35, 0.71) 91.2%)",
+      "linear-gradient(126.97deg, rgba(6, 11, 40, 0.95) 28.26%, rgba(10, 14, 35, 0.95) 91.2%)",
     borderRadius: "20px",
     backdropFilter: "blur(60px)",
   },

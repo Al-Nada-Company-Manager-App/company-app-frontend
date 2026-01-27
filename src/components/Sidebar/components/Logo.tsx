@@ -1,14 +1,12 @@
-
 interface LogoProps {
   isDark: boolean;
 }
 
 const Logo = ({ isDark }: LogoProps) => {
-
   return (
     <div className="flex justify-center pt-11">
       <img
-        src={isDark ? "/Images/logo/alnadadr.png" : "/Images/logo/alnada.png"}
+        src={isDark ? "./Images/logo/alnadadr.png" : "./Images/logo/alnada.png"}
         alt="Company Manager"
         className="object-contain"
         style={{

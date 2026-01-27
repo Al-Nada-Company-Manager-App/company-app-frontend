@@ -8,6 +8,7 @@ import { useDeleteProduct } from "@src/queries/Products/productQueries";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
+import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -82,11 +83,8 @@ const ProductDetailModal = ({
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <Image
-              src={
-                product?.p_photo
-                  ? `/Images/products/${product.p_photo}`
-                  : "/Images/products/placeholder.jpg"
-              }
+              src={getImageUrl("products", product?.p_photo)}
+              fallback={getPlaceholderUrl("products")}
               alt={product?.p_name}
               style={{ borderRadius: "12px", width: "100%" }}
             />

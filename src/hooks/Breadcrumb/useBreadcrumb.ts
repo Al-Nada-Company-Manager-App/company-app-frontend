@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useAuthContext } from "@src/contexts/auth";
+import { getImageUrl } from "@src/config/api";
 
 import type { BreadcrumbTheme } from "@src/types/Breadcrumb/breadcrumb";
 
@@ -150,12 +151,12 @@ export const useBreadcrumb = (isDark: boolean) => {
 
   const theme = useMemo(
     () => (isDark ? darkBreadcrumbTheme : lightBreadcrumbTheme),
-    [isDark]
+    [isDark],
   );
 
   const scrolledTheme = useMemo(
     () => (isDark ? darkBreadcrumbScrolledTheme : lightBreadcrumbScrolledTheme),
-    [isDark]
+    [isDark],
   );
 
   const userMenuItems: UserMenuItem[] = useMemo(
@@ -164,16 +165,14 @@ export const useBreadcrumb = (isDark: boolean) => {
         id: "profile",
         label: user ? `${user.f_name} ${user.l_name}` : "John Doe",
         icon: "User",
-        image:
-          user?.e_photo ||
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&auto=format",
+        image: getImageUrl("employees", user?.e_photo),
         isProfile: true,
       },
       { id: "settings", label: "Settings", icon: "Settings" },
       { id: "notifications", label: "Notifications", icon: "Bell" },
       { id: "theme", label: "Toggle Theme", icon: "Moon" },
     ],
-    [user]
+    [user],
   );
 
   return {
