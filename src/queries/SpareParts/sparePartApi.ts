@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@src/utils/apiClient";
 import type {
   SparePart,
   CreateSparePartInput,
@@ -7,15 +8,15 @@ import type {
 const BASE_URL = "http://localhost:4000/spare-parts";
 
 export const getSpareParts = async (): Promise<SparePart[]> => {
-  const res = await fetch(BASE_URL);
+  const res = await fetchWithAuth(BASE_URL);
   if (!res.ok) throw new Error("Failed to fetch spare parts");
   return res.json();
 };
 
 export const addSparePart = async (
-  sp: CreateSparePartInput
+  sp: CreateSparePartInput,
 ): Promise<SparePart> => {
-  const res = await fetch(BASE_URL, {
+  const res = await fetchWithAuth(BASE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(sp),
@@ -26,9 +27,9 @@ export const addSparePart = async (
 
 export const updateSparePart = async (
   id: number,
-  data: UpdateSparePartInput
+  data: UpdateSparePartInput,
 ): Promise<SparePart> => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetchWithAuth(`${BASE_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -38,6 +39,6 @@ export const updateSparePart = async (
 };
 
 export const deleteSparePart = async (id: number): Promise<void> => {
-  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+  const res = await fetchWithAuth(`${BASE_URL}/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error("Failed to delete spare part");
 };

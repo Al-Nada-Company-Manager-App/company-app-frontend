@@ -7,6 +7,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   success: boolean;
   message: string;
+  token?: string; // JWT Token
   user?: {
     id: number;
     username: string;
@@ -88,26 +89,40 @@ export const authApi = {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
+      // credentials: "include", // Removed for JWT
       body: JSON.stringify(data),
     });
-    return response.json();
+    const result = await response.json();
+
+    // Store token if login successful
+    if (result.success && result.token) {
+      localStorage.setItem("authToken", result.token);
+    }
+
+    return result;
   },
 
   // Logout user
   logout: async (): Promise<LogoutResponse> => {
+    localStorage.removeItem("authToken"); // Clear token locally
     const response = await fetch(`${API_BASE_URL}/auth/logout`, {
       method: "GET",
-      credentials: "include",
     });
     return response.json();
   },
 
   // Get current session
   getSession: async (): Promise<SessionResponse> => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      return { success: false, message: "No token found" };
+    }
+
     const response = await fetch(`${API_BASE_URL}/auth/session`, {
       method: "GET",
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.json();
   },
@@ -116,12 +131,13 @@ export const authApi = {
   changePassword: async (
     data: ChangePasswordRequest,
   ): Promise<ChangePasswordResponse> => {
+    const token = localStorage.getItem("authToken");
     const response = await fetch(`${API_BASE_URL}/auth/changepassword`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
       body: JSON.stringify(data),
     });
     return response.json();
@@ -129,12 +145,13 @@ export const authApi = {
 
   // Register new employee
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
+    const token = localStorage.getItem("authToken");
     const response = await fetch(`${API_BASE_URL}/employees`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
       body: JSON.stringify({
         ...data,
         username: data.e_username, // Backend expects 'username' for duplicate check

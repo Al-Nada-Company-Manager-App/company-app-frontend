@@ -29,17 +29,27 @@ const Auth = ({ isDark }: AuthProps) => {
 
   // Redirect when authenticated
   useEffect(() => {
+    console.log("Auth Effect: isAuthenticated =", isAuthenticated);
     if (isAuthenticated) {
+      console.log("Auth Effect: Navigating to /");
       navigate("/", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
   const handleLogin = async (username: string, password: string) => {
+    console.log("handleLogin started");
     const result = await login({ username, password });
+    console.log("login result:", result);
+
     if (result.success) {
+      console.log("Login success. Refetching session...");
       // Refetch session to get full user data
       const sessionResult = await refetchSession();
+      console.log("Session refetch result:", sessionResult);
+
       if (sessionResult.data?.success && sessionResult.data?.user) {
+        console.log("Session valid. Persisting to localStorage...");
+
         // Persist to localStorage for Electron race condition safety
         localStorage.setItem(
           "auth_user",
@@ -47,6 +57,7 @@ const Auth = ({ isDark }: AuthProps) => {
         );
         localStorage.setItem("isAuthenticated", "true");
 
+        console.log("Calling authLogin (context)...");
         authLogin({
           e_id: sessionResult.data.user.e_id,
           f_name: sessionResult.data.user.f_name,
@@ -65,8 +76,12 @@ const Auth = ({ isDark }: AuthProps) => {
           e_gender: sessionResult.data.user.e_gender,
           e_active: sessionResult.data.user.e_active,
         });
+      } else {
+        console.error("Session refetch failed or no user data");
       }
       // Navigation is handled by useEffect
+    } else {
+      console.error("Login failed:", result.message);
     }
   };
 
