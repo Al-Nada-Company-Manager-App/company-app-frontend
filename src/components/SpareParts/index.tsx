@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { useProducts } from "@src/hooks/Products/useProducts";
-import ProductTable from "./components/ProductTable";
+import ProductTable from "../Products/components/ProductTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddProductModal from "./components/AddProductModal";
+import AddProductModal from "../Products/components/AddProductModal";
 import type { Product } from "@src/types/Products/product";
 import { useSearchContext } from "@src/contexts/search";
 
-interface ProductsProps {
+interface SparePartsProps {
   isDark: boolean;
 }
 
-const ProductsPage = ({ isDark }: ProductsProps) => {
-  const { theme, isLoading, error, measuring, lab, chemicals, others } =
-    useProducts(isDark);
+const SparePartsPage = ({ isDark }: SparePartsProps) => {
+  const { theme, isLoading, error, spares } = useProducts(isDark);
   const [showAddModal, setShowAddModal] = useState(false);
   const { searchQuery } = useSearchContext();
 
@@ -42,21 +41,12 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   };
 
   // Apply search filter first, then stock filter
-  const searchFilteredMeasuring = filterBySearch(measuring);
-  const searchFilteredLab = filterBySearch(lab);
-  const searchFilteredChemicals = filterBySearch(chemicals);
-  const searchFilteredOthers = filterBySearch(others);
+  const searchFilteredSpares = filterBySearch(spares);
 
-  const inStockMeasuring = filterInStock(searchFilteredMeasuring);
-  const inStockLab = filterInStock(searchFilteredLab);
-  const inStockChemicals = filterInStock(searchFilteredChemicals);
-  const inStockOthers = filterInStock(searchFilteredOthers);
+  const inStockSpares = filterInStock(searchFilteredSpares);
 
   const outOfStockProducts = [
-    ...filterOutOfStock(searchFilteredMeasuring),
-    ...filterOutOfStock(searchFilteredLab),
-    ...filterOutOfStock(searchFilteredChemicals),
-    ...filterOutOfStock(searchFilteredOthers),
+    ...filterOutOfStock(searchFilteredSpares),
   ];
 
   if (isLoading) {
@@ -133,30 +123,12 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           showCategory={true}
         />
       )}
-      {inStockMeasuring.length > 0 && (
+      {inStockSpares.length > 0 && (
         <ProductTable
-          title="Measuring & Controllers"
-          products={inStockMeasuring}
+          title="Spares"
+          products={inStockSpares}
           theme={theme}
         />
-      )}
-      {inStockLab.length > 0 && (
-        <ProductTable
-          title="Lab Equipments"
-          products={inStockLab}
-          theme={theme}
-        />
-      )}
-      {inStockChemicals.length > 0 && (
-        <ProductTable
-          title="Chemicals"
-          products={inStockChemicals}
-          theme={theme}
-          showExpireDate={true}
-        />
-      )}
-      {inStockOthers.length > 0 && (
-        <ProductTable title="Others" products={inStockOthers} theme={theme} />
       )}
       {showAddModal && (
         <AddProductModal
@@ -169,4 +141,4 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   );
 };
 
-export default ProductsPage;
+export default SparePartsPage;

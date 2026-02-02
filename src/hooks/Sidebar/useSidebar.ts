@@ -32,12 +32,18 @@ export const getSidebarItems = (currentPath: string): SidebarItem[] => [
         isActive: currentPath === "/stock/products",
       },
       {
-        id: "repairs",
-        label: "Repairs",
-        icon: "Wrench",
-        isActive: currentPath === "/stock/repairs",
+        id: "spare-parts",
+        label: "Spare Parts",
+        icon: "Box",
+        isActive: currentPath === "/stock/spare-parts",
       },
     ],
+  },
+  {
+    id: "repairs",
+    label: "Repairs",
+    icon: "Wrench",
+    isActive: currentPath === "/repairs",
   },
   {
     id: "sales",
@@ -56,6 +62,12 @@ export const getSidebarItems = (currentPath: string): SidebarItem[] => [
     label: "Purchases",
     icon: "ShoppingCart",
     isActive: currentPath === "/purchases",
+  },
+  {
+    id: "quotations",
+    label: "Quotations",
+    icon: "FileText",
+    isActive: currentPath === "/quotations",
   },
   {
     id: "suppliers",

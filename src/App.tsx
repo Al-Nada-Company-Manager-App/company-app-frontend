@@ -21,7 +21,9 @@ import NotFoundPage from "@src/components/NotFoundPage";
 import ProductPage from "@src/components/pages/ProductPage";
 import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
+import SparePartsPage from "@src/components/pages/SparePartsPage";
 import AuthPage from "@src/components/pages/AuthPage";
+import QuotationsPage from "@src/components/pages/QuotationsPage";
 import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
 // import TechnicianDashboard from "./components/dashboards/technicianDashboard";
 // import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
@@ -65,12 +67,14 @@ function RouteHandler() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="stock" element={<StockPage />}>
           <Route path="products" element={<ProductPage />} />
-          <Route path="repairs" element={<RepairPage />} />
+          <Route path="spare-parts" element={<SparePartsPage />} />
         </Route>
+        <Route path="repairs" element={<RepairPage />} />
         <Route path="sales" element={<SalesPage />} />
         <Route path="debts" element={<DebtsPage />} />
         <Route path="purchases" element={<PurchasesPage />} />
         <Route path="suppliers" element={<SuppliersPage />} />
+        <Route path="quotations" element={<QuotationsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
