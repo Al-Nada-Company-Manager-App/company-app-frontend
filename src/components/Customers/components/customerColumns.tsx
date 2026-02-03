@@ -14,12 +14,40 @@ export const getCustomerColumns = (theme: Theme): ColumnsType<Customer> => [
       return (
         record.c_name.toLowerCase().includes(searchTerm) ||
         record.c_email.toLowerCase().includes(searchTerm) ||
-        record.c_phone.includes(searchTerm)
+        record.c_phone.includes(searchTerm) ||
+        record.company?.c_name.toLowerCase().includes(searchTerm) ||
+        false
       );
     },
     sorter: (a, b) => a.c_name.localeCompare(b.c_name),
     render: (_, record: Customer) => (
       <CustomerInfo customer={record} theme={theme} />
+    ),
+  },
+  {
+    title: "Type",
+    dataIndex: "c_type",
+    key: "type",
+    filters: [
+      { text: "Company", value: "COMPANY" },
+      { text: "Person", value: "PERSON" },
+    ],
+    onFilter: (value, record) => record.c_type === value,
+    render: (type: string) => (
+      <span style={{ color: theme.employee.nameColor }}>
+        {type === "PERSON" ? "Person" : "Company"}
+      </span>
+    ),
+  },
+  {
+    title: "Company",
+    key: "company",
+    render: (_, record: Customer) => (
+      <span style={{ color: theme.employee.nameColor }}>
+        {record.c_type === "PERSON" && record.company
+          ? record.company.c_name
+          : "-"}
+      </span>
     ),
   },
   {
@@ -30,7 +58,9 @@ export const getCustomerColumns = (theme: Theme): ColumnsType<Customer> => [
     onFilter: (value, record) =>
       record.c_address.toLowerCase().includes(String(value).toLowerCase()),
     render: (address: string) => (
-      <span style={{ color: theme.employee.nameColor }}>{address || "N/A"}</span>
+      <span style={{ color: theme.employee.nameColor }}>
+        {address || "N/A"}
+      </span>
     ),
   },
   {
@@ -66,7 +96,9 @@ export const getCustomerColumns = (theme: Theme): ColumnsType<Customer> => [
     filterSearch: true,
     onFilter: (value, record) => record.c_country === value,
     render: (country: string) => (
-      <span style={{ color: theme.employee.nameColor }}>{country || "N/A"}</span>
+      <span style={{ color: theme.employee.nameColor }}>
+        {country || "N/A"}
+      </span>
     ),
   },
   {
@@ -76,7 +108,9 @@ export const getCustomerColumns = (theme: Theme): ColumnsType<Customer> => [
     filterSearch: true,
     onFilter: (value, record) => record.c_zipcode.includes(String(value)),
     render: (zipcode: string) => (
-      <span style={{ color: theme.employee.nameColor }}>{zipcode || "N/A"}</span>
+      <span style={{ color: theme.employee.nameColor }}>
+        {zipcode || "N/A"}
+      </span>
     ),
   },
   {

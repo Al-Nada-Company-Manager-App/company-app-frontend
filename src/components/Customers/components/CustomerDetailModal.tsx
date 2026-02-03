@@ -92,6 +92,14 @@ const CustomerDetailModal = ({
           </Col>
           <Col span={16}>
             <Descriptions bordered column={1}>
+              <Descriptions.Item label="Type">
+                {customer?.c_type === "PERSON" ? "Person" : "Company"}
+              </Descriptions.Item>
+              {customer?.c_type === "PERSON" && customer?.company && (
+                <Descriptions.Item label="Company">
+                  {customer.company.c_name}
+                </Descriptions.Item>
+              )}
               <Descriptions.Item label="Name">
                 {`${customer?.c_name}`}
               </Descriptions.Item>
@@ -116,6 +124,19 @@ const CustomerDetailModal = ({
               <Descriptions.Item label="Zip Code">
                 {customer?.c_zipcode}
               </Descriptions.Item>
+              {customer?.c_type === "COMPANY" &&
+                customer?.employees &&
+                customer.employees.length > 0 && (
+                  <Descriptions.Item label="Employees">
+                    <ul style={{ paddingLeft: 20 }}>
+                      {customer.employees.map((emp) => (
+                        <li key={emp.c_id}>
+                          {emp.c_name} - {emp.c_phone || "No Phone"}
+                        </li>
+                      ))}
+                    </ul>
+                  </Descriptions.Item>
+                )}
             </Descriptions>
           </Col>
         </Row>

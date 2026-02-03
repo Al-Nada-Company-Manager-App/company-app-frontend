@@ -9,6 +9,10 @@ export interface Customer {
   c_phone: string;
   c_email: string;
   c_photo: string;
+  c_type?: "COMPANY" | "PERSON";
+  c_company_id?: number | null;
+  company?: { c_id: number; c_name: string } | null;
+  employees?: Customer[] | null;
 }
 
 export interface CustomerSales {

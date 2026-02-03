@@ -13,6 +13,14 @@ export const customerApi = {
     return response.json();
   },
 
+  getAllCompanies: async (): Promise<{ c_id: number; c_name: string }[]> => {
+    const response = await fetchWithAuth(`${API_BASE_URL}/companies`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch companies");
+    }
+    return response.json();
+  },
+
   // Get Customer Sales by ID
   getCustomerSales: async (id: number): Promise<CustomerSales[]> => {
     const response = await fetchWithAuth(`${API_BASE_URL}/${id}/sales`);

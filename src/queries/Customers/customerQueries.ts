@@ -20,6 +20,13 @@ export const useGetAllCustomers = () => {
   });
 };
 
+export const useGetAllCompanies = () => {
+  return useQuery({
+    queryKey: [...customerKeys.all, "companies"],
+    queryFn: customerApi.getAllCompanies,
+  });
+};
+
 //Get customer Sales by ID
 export const useGetCustomerSales = (id: number) => {
   return useQuery({
@@ -42,7 +49,7 @@ export const useCreateCustomer = (isDark: boolean = false) => {
 
       showSuccessMessage(
         `Customer ${newCustomer.c_name || ""} created successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {
@@ -71,7 +78,7 @@ export const useUpdateCustomer = (isDark: boolean = false) => {
 
       showSuccessMessage(
         `Customer ${updatedCustomer.c_name || ""} updated successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {

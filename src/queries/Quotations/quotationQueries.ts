@@ -12,7 +12,6 @@ export const useGetAllQuotations = () => {
   return useQuery({
     queryKey: quotationKeys.lists(),
     queryFn: quotationApi.getAllQuotations,
-    initialData: [],
   });
 };
 

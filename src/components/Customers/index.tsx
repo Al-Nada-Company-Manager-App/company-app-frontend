@@ -72,24 +72,50 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
     );
   }
 
-  // Filter customers by name, email, fax, or phone
-  const filteredCustomers = customers?.filter((customer) => {
-    const name = customer.c_name?.toLowerCase() || "";
-    const email = customer.c_email?.toLowerCase() || "";
-    const fax = customer.c_fax?.toLowerCase() || "";
-    const phone = customer.c_phone?.toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
+  // Filter customers with relational logic
+  const filteredCustomers = (() => {
+    if (!customers) return [];
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return customers;
 
-    return (
-      name.includes(query) ||
-      email.includes(query) ||
-      fax.includes(query) ||
-      phone.includes(query)
-    );
-  });
+    const directMatches = customers.filter((customer) => {
+      const name = customer.c_name?.toLowerCase() || "";
+      const email = customer.c_email?.toLowerCase() || "";
+      const fax = customer.c_fax?.toLowerCase() || "";
+      const phone = customer.c_phone?.toLowerCase() || "";
 
-  const customersToShow =
-    searchQuery.trim() === "" ? customers : filteredCustomers;
+      return (
+        name.includes(query) ||
+        email.includes(query) ||
+        fax.includes(query) ||
+        phone.includes(query)
+      );
+    });
+
+    const relatedIds = new Set<number>();
+
+    directMatches.forEach((match) => {
+      relatedIds.add(match.c_id);
+
+      // If match is a Person, add their Company
+      if (match.c_type === "PERSON" && match.c_company_id) {
+        relatedIds.add(match.c_company_id);
+      }
+
+      // If match is a Company, add all their Employees
+      if (match.c_type === "COMPANY") {
+        // Find all employees for this company
+        const employees = customers.filter(
+          (c) => c.c_company_id === match.c_id,
+        );
+        employees.forEach((emp) => relatedIds.add(emp.c_id));
+      }
+    });
+
+    return customers.filter((c) => relatedIds.has(c.c_id));
+  })();
+
+  const customersToShow = filteredCustomers;
 
   return (
     <>
@@ -117,7 +143,46 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <CustomerTable customers={customersToShow ?? []} theme={theme} />
+
+          {/* Companies Section */}
+          <div className="mb-8">
+            <h3
+              className="text-md font-semibold mb-4"
+              style={{ color: theme.title.color }}
+            >
+              Companies
+            </h3>
+            <CustomerTable
+              customers={
+                customersToShow?.filter((c) => c.c_type !== "PERSON") ?? []
+              }
+              theme={theme}
+            />
+          </div>
+        </div>
+        <div
+          className="w-full rounded-2xl p-6 mb-6"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+            minHeight: "auto",
+          }}
+        >
+          {/* Persons Section */}
+          <div>
+            <h3
+              className="text-md font-semibold mb-4"
+              style={{ color: theme.title.color }}
+            >
+              Persons
+            </h3>
+            <CustomerTable
+              customers={
+                customersToShow?.filter((c) => c.c_type === "PERSON") ?? []
+              }
+              theme={theme}
+            />
+          </div>
         </div>
       </div>
       <AddCustomerModal

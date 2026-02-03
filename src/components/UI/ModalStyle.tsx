@@ -547,6 +547,19 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
         font-size: 14px !important;
       }
         
+      /* Checkbox Styles */
+      .custom-modal .ant-checkbox-wrapper {
+        color: ${theme?.modal?.color || "#222"} !important;
+      }
+      .custom-modal .ant-checkbox-inner {
+        background-color: ${theme?.modal?.background || "#fff"} !important;
+        border-color: ${theme?.row?.borderColor || "#d9d9d9"} !important;
+      }
+      .custom-modal .ant-checkbox-checked .ant-checkbox-inner {
+        background-color: ${theme?.button?.background || "#1890ff"} !important;
+        border-color: ${theme?.button?.background || "#1890ff"} !important;
+      }
+        
     `}</style>
   );
 };

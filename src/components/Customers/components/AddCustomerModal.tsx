@@ -1,4 +1,15 @@
-import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Upload,
+  Button,
+  Row,
+  Col,
+  Image,
+  Radio,
+  Select,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
@@ -6,6 +17,7 @@ import { useThemeContext } from "@src/contexts/theme";
 import {
   useCreateCustomer,
   useUpdateCustomerPhoto,
+  useGetAllCompanies,
 } from "@src/queries/Customers";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
@@ -22,10 +34,12 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
   const [form] = Form.useForm();
   const createCustomer = useCreateCustomer(isDark);
   const updateCustomerPhoto = useUpdateCustomerPhoto(isDark);
+  const { data: companies } = useGetAllCompanies();
 
   const [imageFile, setImageFile] = useState<RcFile | null>(null);
+  const [customerType, setCustomerType] = useState<string>("COMPANY");
   const [previewImage, setPreviewImage] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Reset form and image preview when modal opens
@@ -47,7 +61,7 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
 
   const handleUploadImage = async (
     file: RcFile,
-    id: number
+    id: number,
   ): Promise<string> => {
     const response = await updateCustomerPhoto.mutateAsync({
       c_id: id,
@@ -127,6 +141,37 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               </div>
             </Col>
             <Col span={16}>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Form.Item name="c_type" label="Type" initialValue="COMPANY">
+                    <Radio.Group
+                      onChange={(e) => setCustomerType(e.target.value)}
+                    >
+                      <Radio value="COMPANY">Company</Radio>
+                      <Radio value="PERSON">Person</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </Col>
+                {customerType === "PERSON" && (
+                  <Col span={12}>
+                    <Form.Item name="c_company_id" label="Company">
+                      <Select
+                        placeholder="Select Company"
+                        showSearch
+                        filterOption={(input, option) =>
+                          (option?.label ?? "")
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        options={companies?.map((c) => ({
+                          value: c.c_id,
+                          label: c.c_name,
+                        }))}
+                      />
+                    </Form.Item>
+                  </Col>
+                )}
+              </Row>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
                   <Form.Item
