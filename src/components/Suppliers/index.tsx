@@ -72,24 +72,50 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
     );
   }
 
-  // Filter suppliers by name, email, fax, or phone
-  const filteredSuppliers = suppliers?.filter((supplier) => {
-    const name = supplier.s_name?.toLowerCase() || "";
-    const email = supplier.s_email?.toLowerCase() || "";
-    const fax = supplier.s_fax?.toLowerCase() || "";
-    const phone = supplier.s_phone?.toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
+  // Filter suppliers with relational logic
+  const filteredSuppliers = (() => {
+    if (!suppliers) return [];
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return suppliers;
 
-    return (
-      name.includes(query) ||
-      email.includes(query) ||
-      fax.includes(query) ||
-      phone.includes(query)
-    );
-  });
+    const directMatches = suppliers.filter((supplier) => {
+      const name = supplier.s_name?.toLowerCase() || "";
+      const email = supplier.s_email?.toLowerCase() || "";
+      const fax = supplier.s_fax?.toLowerCase() || "";
+      const phone = supplier.s_phone?.toLowerCase() || "";
 
-  const suppliersToShow =
-    searchQuery.trim() === "" ? suppliers : filteredSuppliers;
+      return (
+        name.includes(query) ||
+        email.includes(query) ||
+        fax.includes(query) ||
+        phone.includes(query)
+      );
+    });
+
+    const relatedIds = new Set<number>();
+
+    directMatches.forEach((match) => {
+      relatedIds.add(match.s_id);
+
+      // If match is a Person, add their Company
+      if (match.s_type === "PERSON" && match.s_company_id) {
+        relatedIds.add(match.s_company_id);
+      }
+
+      // If match is a Company, add all their Employees
+      if (match.s_type === "COMPANY") {
+        // Find all employees for this company
+        const employees = suppliers.filter(
+          (s) => s.s_company_id === match.s_id,
+        );
+        employees.forEach((emp) => relatedIds.add(emp.s_id));
+      }
+    });
+
+    return suppliers.filter((s) => relatedIds.has(s.s_id));
+  })();
+
+  const suppliersToShow = filteredSuppliers;
 
   return (
     <>
@@ -117,7 +143,38 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <SupplierTable suppliers={suppliersToShow ?? []} theme={theme} />
+
+          {/* Companies Section */}
+          <div className="mb-8">
+            <h3
+              className="text-md font-semibold mb-4"
+              style={{ color: theme.title.color }}
+            >
+              Companies
+            </h3>
+            <SupplierTable
+              suppliers={
+                suppliersToShow?.filter((s) => s.s_type !== "PERSON") ?? []
+              }
+              theme={theme}
+            />
+          </div>
+
+          {/* Persons Section */}
+          <div>
+            <h3
+              className="text-md font-semibold mb-4"
+              style={{ color: theme.title.color }}
+            >
+              Persons
+            </h3>
+            <SupplierTable
+              suppliers={
+                suppliersToShow?.filter((s) => s.s_type === "PERSON") ?? []
+              }
+              theme={theme}
+            />
+          </div>
         </div>
       </div>
       <AddSupplierModal

@@ -92,6 +92,14 @@ const SupplierDetailModal = ({
           </Col>
           <Col span={16}>
             <Descriptions bordered column={1}>
+              <Descriptions.Item label="Type">
+                {supplier?.s_type === "PERSON" ? "Person" : "Company"}
+              </Descriptions.Item>
+              {supplier?.s_type === "PERSON" && supplier?.company && (
+                <Descriptions.Item label="Company">
+                  {supplier.company.s_name}
+                </Descriptions.Item>
+              )}
               <Descriptions.Item label="Name">
                 {`${supplier?.s_name}`}
               </Descriptions.Item>
@@ -116,6 +124,19 @@ const SupplierDetailModal = ({
               <Descriptions.Item label="Zip Code">
                 {supplier?.s_zipcode}
               </Descriptions.Item>
+              {supplier?.s_type === "COMPANY" &&
+                supplier?.employees &&
+                supplier.employees.length > 0 && (
+                  <Descriptions.Item label="Employees">
+                    <ul style={{ paddingLeft: 20 }}>
+                      {supplier.employees.map((emp) => (
+                        <li key={emp.s_id}>
+                          {emp.s_name} - {emp.s_phone || "No Phone"}
+                        </li>
+                      ))}
+                    </ul>
+                  </Descriptions.Item>
+                )}
             </Descriptions>
           </Col>
         </Row>

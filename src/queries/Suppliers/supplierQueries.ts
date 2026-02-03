@@ -20,6 +20,13 @@ export const useGetAllSuppliers = () => {
   });
 };
 
+export const useGetAllCompanies = () => {
+  return useQuery({
+    queryKey: [...supplierKeys.all, "companies"],
+    queryFn: supplierApi.getAllCompanies,
+  });
+};
+
 //Get supplier Sales by ID
 export const useGetSupplierPurchases = (id: number) => {
   return useQuery({
@@ -42,7 +49,7 @@ export const useCreateSupplier = (isDark: boolean = false) => {
 
       showSuccessMessage(
         `supplier ${newSupplier.s_name || ""} created successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {
@@ -71,7 +78,7 @@ export const useUpdateSupplier = (isDark: boolean = false) => {
 
       showSuccessMessage(
         `Supplier ${updatedSupplier.s_name || ""} updated successfully!`,
-        "✅"
+        "✅",
       );
     },
     onError: (error) => {

@@ -14,12 +14,40 @@ export const getSupplierColumns = (theme: Theme): ColumnsType<Supplier> => [
       return (
         record.s_name.toLowerCase().includes(searchTerm) ||
         record.s_email.toLowerCase().includes(searchTerm) ||
-        record.s_phone.includes(searchTerm)
+        record.s_phone.includes(searchTerm) ||
+        record.company?.s_name.toLowerCase().includes(searchTerm) ||
+        false
       );
     },
     sorter: (a, b) => a.s_name.localeCompare(b.s_name),
     render: (_, record: Supplier) => (
       <SupplierInfo supplier={record} theme={theme} />
+    ),
+  },
+  {
+    title: "Type",
+    dataIndex: "s_type",
+    key: "type",
+    filters: [
+      { text: "Company", value: "COMPANY" },
+      { text: "Person", value: "PERSON" },
+    ],
+    onFilter: (value, record) => record.s_type === value,
+    render: (type: string) => (
+      <span style={{ color: theme.employee.nameColor }}>
+        {type === "PERSON" ? "Person" : "Company"}
+      </span>
+    ),
+  },
+  {
+    title: "Company",
+    key: "company",
+    render: (_, record: Supplier) => (
+      <span style={{ color: theme.employee.nameColor }}>
+        {record.s_type === "PERSON" && record.company
+          ? record.company.s_name
+          : "-"}
+      </span>
     ),
   },
   {

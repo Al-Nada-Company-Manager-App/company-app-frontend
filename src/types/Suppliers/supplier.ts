@@ -9,6 +9,10 @@ export interface Supplier {
   s_phone: string;
   s_email: string;
   s_photo: string;
+  s_type?: "COMPANY" | "PERSON";
+  s_company_id?: number | null;
+  company?: { s_id: number; s_name: string } | null;
+  employees?: Supplier[] | null;
 }
 
 export interface SupplierPurchases {
