@@ -1,7 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Notification } from "@src/types/Notifications/notifications";
 
-const API_BASE_URL = "http://localhost:4000/notifications";
+const API_BASE_URL = "http://192.168.1.44:4000/notifications";
 
 // Notification API functions
 export const notificationApi = {

@@ -40,6 +40,21 @@ export const getCustomerColumns = (theme: Theme): ColumnsType<Customer> => [
     ),
   },
   {
+    title: "Business Type",
+    dataIndex: "c_business_type",
+    key: "business_type",
+    filterSearch: true,
+    onFilter: (value, record) =>
+      record.c_business_type
+        ?.toLowerCase()
+        .includes(String(value).toLowerCase()) || false,
+    render: (businessType: string) => (
+      <span style={{ color: theme.employee.nameColor }}>
+        {businessType || "N/A"}
+      </span>
+    ),
+  },
+  {
     title: "Company",
     key: "company",
     render: (_, record: Customer) => (

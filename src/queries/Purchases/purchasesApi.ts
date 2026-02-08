@@ -1,7 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Purchases, Products } from "@src/types/Purchases/purchases";
 
-const API_BASE_URL = "http://localhost:4000/purchases";
+const API_BASE_URL = "http://192.168.1.44:4000/purchases";
 
 export const purchasesApi = {
   // Get all purchases

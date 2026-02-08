@@ -5,7 +5,7 @@ import type {
   UpdateProductInput,
 } from "@src/types/Products/product";
 
-const API_BASE_URL = "http://localhost:4000/products";
+const API_BASE_URL = "http://192.168.1.44:4000/products";
 
 export const productsApi = {
   // Get all products

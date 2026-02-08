@@ -17,7 +17,7 @@ import type {
   CustomerMarket,
 } from "@src/types/Dashboard/dashboard";
 
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL = "http://192.168.1.44:4000/api";
 
 // helper to handle responses that may be a number or an object containing a number
 async function parseNumberResponse(

@@ -5,7 +5,7 @@ import type {
   UpdateRepairInput,
 } from "@src/types/Repairs/repair";
 
-const API_BASE_URL = "http://localhost:4000/repairs";
+const API_BASE_URL = "http://192.168.1.44:4000/repairs";
 
 export const repairApi = {
   getAllRepairs: async (): Promise<Repair[]> => {

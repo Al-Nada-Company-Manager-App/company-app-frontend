@@ -4,7 +4,7 @@ import type {
   SupplierPurchases,
 } from "@src/types/Suppliers/supplier";
 
-const API_BASE_URL = "http://localhost:4000/suppliers";
+const API_BASE_URL = "http://192.168.1.44:4000/suppliers";
 
 export const supplierApi = {
   // Get all suppliers

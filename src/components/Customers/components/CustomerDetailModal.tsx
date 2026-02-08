@@ -95,6 +95,9 @@ const CustomerDetailModal = ({
               <Descriptions.Item label="Type">
                 {customer?.c_type === "PERSON" ? "Person" : "Company"}
               </Descriptions.Item>
+              <Descriptions.Item label="Type of Business">
+                {customer?.c_business_type || "N/A"}
+              </Descriptions.Item>
               {customer?.c_type === "PERSON" && customer?.company && (
                 <Descriptions.Item label="Company">
                   {customer.company.c_name}

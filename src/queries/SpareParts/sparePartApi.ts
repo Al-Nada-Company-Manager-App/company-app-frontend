@@ -5,7 +5,7 @@ import type {
   UpdateSparePartInput,
 } from "@src/types/SpareParts/sparePart";
 
-const BASE_URL = "http://localhost:4000/spare-parts";
+const BASE_URL = "http://192.168.1.44:4000/spare-parts";
 
 export const getSpareParts = async (): Promise<SparePart[]> => {
   const res = await fetchWithAuth(BASE_URL);

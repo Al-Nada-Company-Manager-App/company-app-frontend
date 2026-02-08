@@ -103,6 +103,7 @@ const UpdateCustomerModal = ({
             c_country: customer?.c_country,
             c_zipcode: customer?.c_zipcode,
             c_fax: customer?.c_fax,
+            c_business_type: customer?.c_business_type,
           }}
           style={{ maxWidth: "100%" }}
         >
@@ -156,13 +157,20 @@ const UpdateCustomerModal = ({
                     <Input placeholder="Enter customer name" />
                   </Form.Item>
                 </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="c_business_type"
+                    label="Type of Business"
+                  >
+                    <Input placeholder="Enter type of business" />
+                  </Form.Item>
+                </Col>
               </Row>
               <Form.Item
                 name="c_email"
                 label="Email"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer email",
                   },
                 ]}
@@ -176,7 +184,6 @@ const UpdateCustomerModal = ({
                     label="Phone"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer phone number",
                       },
                     ]}
@@ -190,7 +197,6 @@ const UpdateCustomerModal = ({
                     label="Fax"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer fax",
                       },
                     ]}
@@ -204,12 +210,11 @@ const UpdateCustomerModal = ({
                 label="Address"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer address",
                   },
                 ]}
               >
-                <Input placeholder="Enter address" />
+                <Input.TextArea placeholder="Enter address" rows={3} />
               </Form.Item>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
@@ -218,7 +223,6 @@ const UpdateCustomerModal = ({
                     label="City"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer city",
                       },
                     ]}
@@ -232,7 +236,6 @@ const UpdateCustomerModal = ({
                     label="Country"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer country",
                       },
                     ]}
@@ -246,7 +249,6 @@ const UpdateCustomerModal = ({
                 label="Zip Code"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer zipcode",
                   },
                 ]}

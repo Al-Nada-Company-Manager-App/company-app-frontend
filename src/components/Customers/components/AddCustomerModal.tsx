@@ -187,13 +187,17 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                     <Input placeholder="Enter customer name" />
                   </Form.Item>
                 </Col>
+                <Col span={12}>
+                  <Form.Item name="c_business_type" label="Type of Business">
+                    <Input placeholder="Enter type of business" />
+                  </Form.Item>
+                </Col>
               </Row>
               <Form.Item
                 name="c_email"
                 label="Email"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer email",
                   },
                 ]}
@@ -207,7 +211,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                     label="Phone"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer phone number",
                       },
                     ]}
@@ -221,7 +224,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                     label="Fax"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer fax",
                       },
                     ]}
@@ -235,12 +237,11 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 label="Address"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer address",
                   },
                 ]}
               >
-                <Input placeholder="Enter address" />
+                <Input.TextArea placeholder="Enter address" rows={3} />
               </Form.Item>
               <Row gutter={[16, 16]}>
                 <Col span={12}>
@@ -249,7 +250,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                     label="City"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer city",
                       },
                     ]}
@@ -263,7 +263,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                     label="Country"
                     rules={[
                       {
-                        required: true,
                         message: "Please enter the customer country",
                       },
                     ]}
@@ -277,7 +276,6 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
                 label="Zip Code"
                 rules={[
                   {
-                    required: true,
                     message: "Please enter the customer zipcode",
                   },
                 ]}

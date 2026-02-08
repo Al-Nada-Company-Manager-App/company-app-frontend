@@ -176,7 +176,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
 
     createQuotation.mutate(payload, {
       onSuccess: (data) => {
-        window.open(`http://localhost:4000${data.pdfUrl}`, "_blank");
+        window.open(`http://192.168.1.44:4000${data.pdfUrl}`, "_blank");
         onSuccess();
         onClose();
         form.resetFields();

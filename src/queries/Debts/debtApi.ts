@@ -1,7 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Debt } from "@src/types/Debts/debt";
 
-const API_BASE_URL = "http://localhost:4000/debts";
+const API_BASE_URL = "http://192.168.1.44:4000/debts";
 
 export const debtApi = {
   //Get all debts

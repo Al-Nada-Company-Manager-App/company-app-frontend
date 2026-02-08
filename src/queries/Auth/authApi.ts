@@ -78,7 +78,7 @@ export interface LogoutResponse {
   message: string;
 }
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "http://192.168.1.44:4000";
 
 // Auth API functions
 export const authApi = {

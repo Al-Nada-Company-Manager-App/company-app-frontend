@@ -10,6 +10,7 @@ export interface Customer {
   c_email: string;
   c_photo: string;
   c_type?: "COMPANY" | "PERSON";
+  c_business_type?: string;
   c_company_id?: number | null;
   company?: { c_id: number; c_name: string } | null;
   employees?: Customer[] | null;

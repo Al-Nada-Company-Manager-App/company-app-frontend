@@ -1,7 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import type { Device, CreateDeviceInput } from "@src/types/Devices/device";
 
-const BASE_URL = "http://localhost:4000/devices";
+const BASE_URL = "http://192.168.1.44:4000/devices";
 
 export const getDevices = async (): Promise<Device[]> => {
   const res = await fetchWithAuth(BASE_URL);

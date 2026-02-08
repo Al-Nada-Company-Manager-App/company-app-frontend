@@ -4,7 +4,7 @@ import type {
 } from "@src/types/Employees/employee";
 import { fetchWithAuth } from "@src/utils/apiClient";
 
-const API_BASE_URL = "http://localhost:4000/employees";
+const API_BASE_URL = "http://192.168.1.44:4000/employees";
 
 // Employee API functions
 export const employeeApi = {

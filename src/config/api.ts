@@ -1,6 +1,8 @@
 // API and image URL configuration
 
-export const API_BASE_URL = "http://localhost:4000";
+// Get API URL from environment variable (set in .env file)
+// For Vite, environment variables must be prefixed with VITE_
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 /**
  * Get the URL for an uploaded image from the backend
