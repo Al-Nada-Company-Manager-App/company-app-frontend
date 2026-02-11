@@ -1,13 +1,14 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type { Notification } from "@src/types/Notifications/notifications";
 
-const API_BASE_URL = "http://192.168.1.44:4000/notifications";
+const NOTIFICATIONS_URL = `${API_BASE_URL}/notifications`;
 
 // Notification API functions
 export const notificationApi = {
   // Get all notifications
   getAllNotifications: async (): Promise<Notification[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${NOTIFICATIONS_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch notifications");
     }
@@ -21,7 +22,7 @@ export const notificationApi = {
       "n_id" | "stock" | "employee" | "sales" | "purchase" | "debts"
     >,
   ): Promise<Notification> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${NOTIFICATIONS_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export const notificationApi = {
 
   //delete notification
   deleteNotification: async (id: number): Promise<void> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${NOTIFICATIONS_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

@@ -1,12 +1,13 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type { Sales, Products } from "@src/types/Sales/sales";
 
-const API_BASE_URL = "http://192.168.1.44:4000/sales";
+const SALES_URL = `${API_BASE_URL}/sales`;
 
 export const salesApi = {
   // Get all sales
   getAllSales: async (): Promise<Sales[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${SALES_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch Sales");
     }
@@ -19,7 +20,7 @@ export const salesApi = {
     saleType: string,
   ): Promise<Products[]> => {
     const response = await fetchWithAuth(
-      `${API_BASE_URL}/${id}/products/${saleType}`,
+      `${SALES_URL}/${id}/products/${saleType}`,
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch products for Sale ID: ${id}`);
@@ -29,7 +30,7 @@ export const salesApi = {
 
   // Add new Sales
   addSale: async (salesData: Partial<Sales>): Promise<Sales> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${SALES_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export const salesApi = {
 
   // Update sale
   updateSale: async (id: number, salesData: Partial<Sales>): Promise<Sales> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${SALES_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +60,7 @@ export const salesApi = {
 
   // Delete sale
   deleteSale: async (id: number): Promise<void> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${SALES_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

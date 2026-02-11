@@ -3,14 +3,15 @@ import type {
   EmployeePermissions,
 } from "@src/types/Employees/employee";
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 
-const API_BASE_URL = "http://192.168.1.44:4000/employees";
+const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 
 // Employee API functions
 export const employeeApi = {
   // Get all employees
   getAllEmployees: async (): Promise<Employee[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch employees");
     }
@@ -19,7 +20,7 @@ export const employeeApi = {
 
   // Get employee by ID
   getEmployeeById: async (id: number): Promise<Employee> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`);
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch employee with ID: ${id}`);
     }
@@ -29,7 +30,7 @@ export const employeeApi = {
   // Get employee permissions by ID
   getEmployeePermissions: async (id: number): Promise<EmployeePermissions> => {
     const response = await fetchWithAuth(
-      `${API_BASE_URL}/${id}/employeeAccess`,
+      `${EMPLOYEES_URL}/${id}/employeeAccess`,
     );
     if (!response.ok) {
       throw new Error(
@@ -43,7 +44,7 @@ export const employeeApi = {
   createEmployee: async (
     employeeData: Omit<Employee, "e_id">,
   ): Promise<Employee> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}`, {
       method: "POST",
       body: JSON.stringify(employeeData),
     });
@@ -61,7 +62,7 @@ export const employeeApi = {
     id: number;
     data: Partial<Employee>;
   }): Promise<Employee> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
     });
@@ -76,10 +77,13 @@ export const employeeApi = {
     id: number,
     permissions: EmployeePermissions,
   ): Promise<EmployeePermissions> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/updateAccess`, {
-      method: "PUT",
-      body: JSON.stringify(permissions),
-    });
+    const response = await fetchWithAuth(
+      `${EMPLOYEES_URL}/${id}/updateAccess`,
+      {
+        method: "PUT",
+        body: JSON.stringify(permissions),
+      },
+    );
     if (!response.ok) {
       const errorText = await response.text().catch(() => "Unknown error");
       throw new Error(
@@ -91,7 +95,7 @@ export const employeeApi = {
 
   // Delete employee
   deleteEmployee: async (id: number): Promise<void> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -101,7 +105,7 @@ export const employeeApi = {
 
   // Activate employee
   activateEmployee: async (id: number): Promise<Employee> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/activate`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}/activate`, {
       method: "PATCH",
     });
     if (!response.ok) {
@@ -112,7 +116,7 @@ export const employeeApi = {
 
   // Deactivate employee
   deactivateEmployee: async (id: number): Promise<Employee> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/deactivate`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}/deactivate`, {
       method: "PATCH",
     });
     if (!response.ok) {
@@ -129,7 +133,7 @@ export const employeeApi = {
     const formData = new FormData();
     formData.append("photo", file);
 
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/photo`, {
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}/${id}/photo`, {
       method: "PATCH",
       body: formData,
     });

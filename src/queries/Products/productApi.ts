@@ -1,16 +1,17 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type {
   Product,
   CreateProductInput,
   UpdateProductInput,
 } from "@src/types/Products/product";
 
-const API_BASE_URL = "http://192.168.1.44:4000/products";
+const PRODUCTS_URL = `${API_BASE_URL}/products`;
 
 export const productsApi = {
   // Get all products
   getAllProducts: async (): Promise<Product[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${PRODUCTS_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }
@@ -19,7 +20,7 @@ export const productsApi = {
 
   // Get product by ID
   getProductById: async (id: number): Promise<Product> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`);
+    const response = await fetchWithAuth(`${PRODUCTS_URL}/${id}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch product with ID: ${id}`);
     }
@@ -28,7 +29,7 @@ export const productsApi = {
 
   // Create new product
   createProduct: async (productData: CreateProductInput): Promise<Product> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${PRODUCTS_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(productData),
@@ -41,7 +42,7 @@ export const productsApi = {
 
   // Update product
   updateProduct: async (updateData: UpdateProductInput): Promise<Product> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${updateData.p_id}`, {
+    const response = await fetchWithAuth(`${PRODUCTS_URL}/${updateData.p_id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updateData),
@@ -54,7 +55,7 @@ export const productsApi = {
 
   // Delete product
   deleteProduct: async (id: number): Promise<void> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${PRODUCTS_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -67,7 +68,7 @@ export const productsApi = {
     const formData = new FormData();
     formData.append("photo", file);
 
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/photo`, {
+    const response = await fetchWithAuth(`${PRODUCTS_URL}/${id}/photo`, {
       method: "PATCH",
       body: formData,
     });

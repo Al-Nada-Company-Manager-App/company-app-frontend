@@ -78,13 +78,16 @@ export interface LogoutResponse {
   message: string;
 }
 
-const API_BASE_URL = "http://192.168.1.44:4000";
+import { API_BASE_URL } from "@src/config/api";
+
+const AUTH_URL = `${API_BASE_URL}/auth`;
+const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 
 // Auth API functions
 export const authApi = {
   // Login user
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${AUTH_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +108,7 @@ export const authApi = {
   // Logout user
   logout: async (): Promise<LogoutResponse> => {
     localStorage.removeItem("authToken"); // Clear token locally
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    const response = await fetch(`${AUTH_URL}/logout`, {
       method: "GET",
     });
     return response.json();
@@ -118,7 +121,7 @@ export const authApi = {
       return { success: false, message: "No token found" };
     }
 
-    const response = await fetch(`${API_BASE_URL}/auth/session`, {
+    const response = await fetch(`${AUTH_URL}/session`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -132,7 +135,7 @@ export const authApi = {
     data: ChangePasswordRequest,
   ): Promise<ChangePasswordResponse> => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`${API_BASE_URL}/auth/changepassword`, {
+    const response = await fetch(`${AUTH_URL}/changepassword`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -146,7 +149,7 @@ export const authApi = {
   // Register new employee
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`${API_BASE_URL}/employees`, {
+    const response = await fetch(`${EMPLOYEES_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

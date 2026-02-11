@@ -10,14 +10,13 @@ import {
   Divider,
   Select,
   Checkbox,
-  Space,
-  Avatar,
 } from "antd";
 import { Plus, Trash, FileText, Image as ImageIcon } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
+import { API_BASE_URL } from "@src/config/api";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useCreateQuotation } from "@src/queries/Quotations";
 import { useGetAllCustomers } from "@src/queries/Customers";
@@ -176,7 +175,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
 
     createQuotation.mutate(payload, {
       onSuccess: (data) => {
-        window.open(`http://192.168.1.44:4000${data.pdfUrl}`, "_blank");
+        window.open(`${API_BASE_URL}${data.pdfUrl}`, "_blank");
         onSuccess();
         onClose();
         form.resetFields();

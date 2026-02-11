@@ -2,7 +2,7 @@ import type { ColumnsType } from "antd/es/table";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import dayjs from "dayjs";
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText } from "lucide-react";
 import { API_BASE_URL } from "@src/config/api";
 
 export const getQuotationColumns = (theme: Theme): ColumnsType<Quotation> => [
@@ -35,7 +35,7 @@ export const getQuotationColumns = (theme: Theme): ColumnsType<Quotation> => [
       <span
         style={{
           color: dayjs(date).isBefore(dayjs())
-            ? theme.status?.cancel?.color
+            ? theme.status?.offline?.color
             : "inherit",
         }}
       >

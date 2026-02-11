@@ -1,15 +1,16 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type {
   Supplier,
   SupplierPurchases,
 } from "@src/types/Suppliers/supplier";
 
-const API_BASE_URL = "http://192.168.1.44:4000/suppliers";
+const SUPPLIERS_URL = `${API_BASE_URL}/suppliers`;
 
 export const supplierApi = {
   // Get all suppliers
   getAllSuppliers: async (): Promise<Supplier[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`);
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}`);
     if (!response.ok) {
       throw new Error("Failed to fetch suppliers");
     }
@@ -17,7 +18,7 @@ export const supplierApi = {
   },
 
   getAllCompanies: async (): Promise<{ s_id: number; s_name: string }[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/companies`);
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}/companies`);
     if (!response.ok) {
       throw new Error("Failed to fetch companies");
     }
@@ -26,7 +27,7 @@ export const supplierApi = {
 
   // Get Supplier Sales by ID
   getSupplierPurchases: async (id: number): Promise<SupplierPurchases[]> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}/purchases`);
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}/${id}/purchases`);
     if (!response.ok) {
       throw new Error(`Failed to fetch sales for supplier with ID: ${id}`);
     }
@@ -37,7 +38,7 @@ export const supplierApi = {
   addSupplier: async (
     supplierData: Omit<Supplier, "s_id">,
   ): Promise<Supplier> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}`, {
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export const supplierApi = {
     id: number,
     supplierData: Partial<Supplier>,
   ): Promise<Supplier> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +74,7 @@ export const supplierApi = {
     console.log("Updating supplier photo for ID:", s_id);
     const formData = new FormData();
     formData.append("photo", photo);
-    const response = await fetchWithAuth(`${API_BASE_URL}/${s_id}/photo`, {
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}/${s_id}/photo`, {
       method: "PATCH",
       body: formData,
     });
@@ -87,7 +88,7 @@ export const supplierApi = {
 
   // Delete supplier
   deleteSupplier: async (id: number): Promise<void> => {
-    const response = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const response = await fetchWithAuth(`${SUPPLIERS_URL}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

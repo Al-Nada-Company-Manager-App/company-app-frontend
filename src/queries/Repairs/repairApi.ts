@@ -1,21 +1,22 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type {
   Repair,
   CreateRepairInput,
   UpdateRepairInput,
 } from "@src/types/Repairs/repair";
 
-const API_BASE_URL = "http://192.168.1.44:4000/repairs";
+const REPAIRS_URL = `${API_BASE_URL}/repairs`;
 
 export const repairApi = {
   getAllRepairs: async (): Promise<Repair[]> => {
-    const res = await fetchWithAuth(`${API_BASE_URL}`);
+    const res = await fetchWithAuth(`${REPAIRS_URL}`);
     if (!res.ok) throw new Error("Failed to fetch repairs");
     return res.json();
   },
 
   getRepairById: async (id: number): Promise<Repair> => {
-    const res = await fetchWithAuth(`${API_BASE_URL}/${id}`);
+    const res = await fetchWithAuth(`${REPAIRS_URL}/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch repair ${id}`);
     return res.json();
   },
@@ -23,7 +24,7 @@ export const repairApi = {
   createRepair: async (
     data: CreateRepairInput,
   ): Promise<{ success: boolean }> => {
-    const res = await fetchWithAuth(`${API_BASE_URL}`, {
+    const res = await fetchWithAuth(`${REPAIRS_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -36,7 +37,7 @@ export const repairApi = {
     id: number,
     data: UpdateRepairInput,
   ): Promise<Repair> => {
-    const res = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const res = await fetchWithAuth(`${REPAIRS_URL}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -46,7 +47,7 @@ export const repairApi = {
   },
 
   deleteRepair: async (id: number): Promise<void> => {
-    const res = await fetchWithAuth(`${API_BASE_URL}/${id}`, {
+    const res = await fetchWithAuth(`${REPAIRS_URL}/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error(`Failed to delete repair ${id}`);

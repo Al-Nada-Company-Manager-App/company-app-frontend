@@ -1,14 +1,15 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
+import { API_BASE_URL } from "@src/config/api";
 import type {
   SparePart,
   CreateSparePartInput,
   UpdateSparePartInput,
 } from "@src/types/SpareParts/sparePart";
 
-const BASE_URL = "http://192.168.1.44:4000/spare-parts";
+const SPARE_PARTS_URL = `${API_BASE_URL}/spare-parts`;
 
 export const getSpareParts = async (): Promise<SparePart[]> => {
-  const res = await fetchWithAuth(BASE_URL);
+  const res = await fetchWithAuth(SPARE_PARTS_URL);
   if (!res.ok) throw new Error("Failed to fetch spare parts");
   return res.json();
 };
@@ -16,7 +17,7 @@ export const getSpareParts = async (): Promise<SparePart[]> => {
 export const addSparePart = async (
   sp: CreateSparePartInput,
 ): Promise<SparePart> => {
-  const res = await fetchWithAuth(BASE_URL, {
+  const res = await fetchWithAuth(SPARE_PARTS_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(sp),
@@ -29,7 +30,7 @@ export const updateSparePart = async (
   id: number,
   data: UpdateSparePartInput,
 ): Promise<SparePart> => {
-  const res = await fetchWithAuth(`${BASE_URL}/${id}`, {
+  const res = await fetchWithAuth(`${SPARE_PARTS_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -39,6 +40,8 @@ export const updateSparePart = async (
 };
 
 export const deleteSparePart = async (id: number): Promise<void> => {
-  const res = await fetchWithAuth(`${BASE_URL}/${id}`, { method: "DELETE" });
+  const res = await fetchWithAuth(`${SPARE_PARTS_URL}/${id}`, {
+    method: "DELETE",
+  });
   if (!res.ok) throw new Error("Failed to delete spare part");
 };
