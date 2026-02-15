@@ -109,6 +109,17 @@ const categories = [
       { name: "supplier_view", label: "View" },
     ],
   },
+  {
+    title: "Tasks",
+    fields: [
+      { name: "tasks_page", label: "Page Access" },
+      { name: "tasks_add", label: "Add" },
+      { name: "tasks_edit", label: "Edit" },
+      { name: "tasks_delete", label: "Delete" },
+      { name: "tasks_view", label: "View" },
+      { name: "tasks_view_all", label: "View All" },
+    ],
+  },
 ];
 
 const UpdatePermissionsModal = ({

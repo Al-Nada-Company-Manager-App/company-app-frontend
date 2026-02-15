@@ -54,13 +54,13 @@ export interface ChangePasswordResponse {
 }
 
 export interface RegisterRequest {
-  f_name: string;
-  l_name: string;
-  e_email?: string;
-  e_phone?: string;
-  e_username: string;
-  e_password: string;
-  e_role?: string;
+  fName: string;
+  lName: string;
+  email?: string;
+  phone?: string;
+  username: string;
+  password: string;
+  role?: string;
 }
 
 export interface RegisterResponse {
@@ -81,7 +81,6 @@ export interface LogoutResponse {
 import { API_BASE_URL } from "@src/config/api";
 
 const AUTH_URL = `${API_BASE_URL}/auth`;
-const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 
 // Auth API functions
 export const authApi = {
@@ -148,17 +147,13 @@ export const authApi = {
 
   // Register new employee
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch(`${EMPLOYEES_URL}`, {
+    // Public endpoint, no token required
+    const response = await fetch(`${AUTH_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        ...data,
-        username: data.e_username, // Backend expects 'username' for duplicate check
-      }),
+      body: JSON.stringify(data),
     });
     return response.json();
   },

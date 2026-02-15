@@ -12,6 +12,7 @@ import {
 } from "@src/queries/Employees";
 import { useThemeContext } from "@src/contexts/theme";
 import UpdatePermissionsModal from "./UpdatePermissions";
+import { PermissionGuard } from "@src/components/Auth/PermissionGuard";
 
 import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
 
@@ -52,66 +53,76 @@ const EmployeeDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <Button
-              type="primary"
-              danger
-              className="mr-2 px-6 py-2 mb-5"
-              style={{
-                color: theme.button?.color || "#fff",
-                boxShadow: theme.button?.boxShadow,
-                borderRadius: theme.button?.borderRadius,
-                fontWeight: theme.button?.fontWeight,
-                fontSize: theme.button?.fontSize,
-                padding: theme.button?.padding,
-                transition: theme.button?.transition,
-                border: theme.button?.border,
-              }}
-              onClick={() => {
-                handleDeactivate(employee?.e_id || -1);
-                onClose();
-              }}
-            >
-              Deactivate
-            </Button>
-            <CustomBtn
-              btnTitle="Edit Permissions"
-              onClick={() => setUpdateOpen(true)}
-              theme={theme}
-              className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
-            />
-            <ConfirmBtn
-              type="primary"
-              isdanger={true}
-              btnTitle="Delete"
-              onOk={() => {
-                handleDelete(employee?.e_id || -1);
-                onClose();
-              }}
-              onCancel={() => {
-                console.log("Delete cancelled");
-              }}
-              className="px-6 py-2 mb-5 mr-5"
-              theme={theme}
-            />
+            <PermissionGuard requiredPermission="users_delete">
+              <Button
+                type="primary"
+                danger
+                className="mr-2 px-6 py-2 mb-5"
+                style={{
+                  color: theme.button?.color || "#fff",
+                  boxShadow: theme.button?.boxShadow,
+                  borderRadius: theme.button?.borderRadius,
+                  fontWeight: theme.button?.fontWeight,
+                  fontSize: theme.button?.fontSize,
+                  padding: theme.button?.padding,
+                  transition: theme.button?.transition,
+                  border: theme.button?.border,
+                }}
+                onClick={() => {
+                  handleDeactivate(employee?.e_id || -1);
+                  onClose();
+                }}
+              >
+                Deactivate
+              </Button>
+            </PermissionGuard>
+            <PermissionGuard requiredPermission="users_edit">
+              <CustomBtn
+                btnTitle="Edit Permissions"
+                onClick={() => setUpdateOpen(true)}
+                theme={theme}
+                className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
+              />
+            </PermissionGuard>
+            <PermissionGuard requiredPermission="users_delete">
+              <ConfirmBtn
+                type="primary"
+                isdanger={true}
+                btnTitle="Delete"
+                onOk={() => {
+                  handleDelete(employee?.e_id || -1);
+                  onClose();
+                }}
+                onCancel={() => {
+                  console.log("Delete cancelled");
+                }}
+                className="px-6 py-2 mb-5 mr-5"
+                theme={theme}
+              />
+            </PermissionGuard>
           </div>
         }
         centered
         width={700}
       >
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
                 src={getImageUrl("employees", employee?.e_photo)}
                 fallback={getPlaceholderUrl("employees")}
                 alt={employee?.f_name}
-                style={{ borderRadius: "12px", width: "100%" }}
+                style={{
+                  borderRadius: "12px",
+                  width: "100%",
+                  maxWidth: "200px",
+                }}
               />
             </div>
           </Col>
 
-          <Col span={16}>
-            <Descriptions bordered column={1}>
+          <Col xs={24} sm={16}>
+            <Descriptions bordered column={{ xs: 1, sm: 1, md: 1 }}>
               <Descriptions.Item label="Name">
                 {`${employee?.f_name} ${employee?.l_name}`}
               </Descriptions.Item>

@@ -50,7 +50,7 @@ const Breadcrumb = ({
 
   return (
     <div
-      className="fixed left-[322px] top-6 right-6 flex items-center justify-between z-30 transition-all duration-300"
+      className="fixed left-14 md:left-[322px] top-6 right-6 flex items-center justify-between z-30 transition-all duration-300"
       style={{
         background: currentTheme.container.background,
         backdropFilter: isScrolled ? "blur(20px)" : "none",

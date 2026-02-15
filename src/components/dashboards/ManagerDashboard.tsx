@@ -49,7 +49,7 @@ const ManagerDashboard = () => {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <StatisticsCard
               title="Total Stock"
               value={data.totalStock}
@@ -58,7 +58,7 @@ const ManagerDashboard = () => {
               theme={theme}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <StatisticsCard
               title="Total Sales"
               value={data.totalSales.toFixed(2)}
@@ -67,7 +67,7 @@ const ManagerDashboard = () => {
               theme={theme}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <StatisticsCard
               title="Total Purchase"
               value={data.totalPurchase.toFixed(2)}
@@ -76,7 +76,7 @@ const ManagerDashboard = () => {
               theme={theme}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <StatisticsCard
               title="Total Debts"
               value={data.totalDebts.toFixed(2)}
@@ -99,10 +99,10 @@ const ManagerDashboard = () => {
 
         {/* Charts */}
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <SalesOverviewChart data={data.salesOverview} isDark={isDark} />
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <PurchaseOverviewChart
               data={data.purchasesOverview}
               isDark={isDark}
@@ -111,10 +111,10 @@ const ManagerDashboard = () => {
         </Row>
 
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <DebtsOverviewChart data={data.debtsOverview} isDark={isDark} />
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <TopRepairedProductsChart
               data={data.topRepairedProducts}
               isDark={isDark}
@@ -123,10 +123,10 @@ const ManagerDashboard = () => {
         </Row>
 
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <TopProductChart data={data.topProducts} isDark={isDark} />
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <SupplierProductChart
               data={data.supplierProducts}
               isDark={isDark}
@@ -135,7 +135,7 @@ const ManagerDashboard = () => {
         </Row>
 
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <CustomerProductChart
               data={data.customerProducts}
               isDark={isDark}

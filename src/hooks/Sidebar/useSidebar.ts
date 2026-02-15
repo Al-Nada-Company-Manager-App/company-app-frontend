@@ -1,41 +1,55 @@
 import { useMemo } from "react";
 import type { SidebarItem, SidebarTheme } from "@src/types/Sidebar/sidebar";
+import { usePermission } from "@src/hooks/usePermission";
+import type { EmployeePermissions } from "@src/types/Employees/employee";
 
-export const getSidebarItems = (currentPath: string): SidebarItem[] => [
+// Extended interface for internal use
+interface SidebarItemWithPermission extends SidebarItem {
+  permission?: keyof EmployeePermissions;
+  children?: SidebarItemWithPermission[];
+}
+
+const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
   {
     id: "dashboard",
     label: "Dashboard",
     icon: "Home",
     isActive: currentPath === "/",
+    // No permission needed for dashboard
   },
   {
     id: "employees",
     label: "Employees",
     icon: "Users",
     isActive: currentPath === "/employees",
+    permission: "users_page",
   },
   {
     id: "customers",
     label: "Customers",
     icon: "UserCheck",
     isActive: currentPath === "/customers",
+    permission: "customer_page",
   },
   {
     id: "stock",
     label: "Stock",
     icon: "Package",
+    permission: "products_page", // Parent permission
     children: [
       {
         id: "products",
         label: "Products",
         icon: "Box",
         isActive: currentPath === "/stock/products",
+        permission: "products_page",
       },
       {
         id: "spare-parts",
         label: "Spare Parts",
         icon: "Box",
         isActive: currentPath === "/stock/spare-parts",
+        permission: "products_page",
       },
     ],
   },
@@ -44,36 +58,49 @@ export const getSidebarItems = (currentPath: string): SidebarItem[] => [
     label: "Repairs",
     icon: "Wrench",
     isActive: currentPath === "/repairs",
+    permission: "repaire_page",
   },
   {
     id: "sales",
     label: "Sales",
     icon: "TrendingUp",
     isActive: currentPath === "/sales",
+    permission: "sales_page",
   },
   {
     id: "debts",
     label: "Debts",
     icon: "DollarSign",
     isActive: currentPath === "/debts",
+    permission: "debts_page",
   },
   {
     id: "purchases",
     label: "Purchases",
     icon: "ShoppingCart",
     isActive: currentPath === "/purchases",
+    permission: "purchase_page",
   },
   {
     id: "quotations",
     label: "Quotations",
     icon: "FileText",
     isActive: currentPath === "/quotations",
+    permission: "price_page",
   },
   {
     id: "suppliers",
     label: "Suppliers",
     icon: "Truck",
     isActive: currentPath === "/suppliers",
+    permission: "supplier_page",
+  },
+  {
+    id: "tasks",
+    label: "Tasks",
+    icon: "ClipboardList",
+    isActive: currentPath === "/tasks",
+    permission: "tasks_page",
   },
 ];
 
@@ -151,7 +178,29 @@ const darkTheme: SidebarTheme = {
 
 export const useSidebar = (isDark: boolean, currentPath: string = "/") => {
   const theme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
-  const items = useMemo(() => getSidebarItems(currentPath), [currentPath]);
+  const { hasPermission } = usePermission();
+
+  const items = useMemo(() => {
+    const allItems = getSidebarItems(currentPath);
+    return allItems
+      .filter((item) => {
+        if (!item.permission) return true;
+        return hasPermission(item.permission);
+      })
+      .map((item) => {
+        // Handle children filtering if needed
+        if (item.children) {
+          return {
+            ...item,
+            children: item.children.filter((child) => {
+              if (!child.permission) return true;
+              return hasPermission(child.permission);
+            }),
+          };
+        }
+        return item;
+      });
+  }, [currentPath, hasPermission]);
 
   return {
     items,

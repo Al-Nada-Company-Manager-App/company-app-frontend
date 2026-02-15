@@ -5,9 +5,18 @@ import HelpSection from "./components/HelpSection";
 import NavigationMenu from "./components/NavigationMenu";
 import Logo from "./components/Logo";
 
-const Sidebar = ({ isDark, currentPath = "/", onItemClick }: SidebarProps) => {
-  console.log("Sidebar");
-  const {theme } = useSidebar(isDark, currentPath);
+interface SidebarComponentProps extends SidebarProps {
+  mobile?: boolean;
+}
+
+const Sidebar = ({
+  isDark,
+  currentPath = "/",
+  onItemClick,
+  mobile,
+}: SidebarComponentProps) => {
+  console.log("Sidebar", { mobile });
+  const { theme } = useSidebar(isDark, currentPath);
 
   const handleItemClick = (itemId: string) => {
     if (onItemClick) {
@@ -15,18 +24,28 @@ const Sidebar = ({ isDark, currentPath = "/", onItemClick }: SidebarProps) => {
     }
   };
 
-  return (
-    <div
-      className="fixed left-2.5 top-2.5 w-66 h-[calc(100vh-20px)] z-40"
-      style={{
+  const containerStyle = mobile
+    ? {
+        background: theme.container.background,
+        backdropFilter: theme.container.backdropFilter,
+        height: "100%",
+        width: "100%",
+      }
+    : {
         background: theme.container.background,
         backdropFilter: theme.container.backdropFilter,
         borderRadius: theme.container.borderRadius,
-      }}
-    >
+      };
+
+  const containerClass = mobile
+    ? "w-full h-full flex flex-col"
+    : "fixed left-2.5 top-2.5 w-66 h-[calc(100vh-20px)] z-40 flex flex-col";
+
+  return (
+    <div className={containerClass} style={containerStyle}>
       {/* Logo Section */}
       <div className="flex items-center justify-center mt-4 mb-8">
-        <Logo isDark={isDark}  />
+        <Logo isDark={isDark} />
       </div>
 
       {/* Navigation Menu */}

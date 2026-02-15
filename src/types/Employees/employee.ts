@@ -15,10 +15,8 @@ export interface Employee {
   e_username: string;
   e_gender: string;
   e_active: boolean;
+  access_actions?: EmployeePermissions;
 }
-
-
-
 
 export interface EmployeePermissions {
   users_page: boolean;
@@ -67,5 +65,10 @@ export interface EmployeePermissions {
   supplier_edit: boolean;
   supplier_delete: boolean;
   supplier_view: boolean;
+  tasks_page: boolean;
+  tasks_add: boolean;
+  tasks_edit: boolean;
+  tasks_delete: boolean;
+  tasks_view: boolean;
+  tasks_view_all: boolean;
 }
-

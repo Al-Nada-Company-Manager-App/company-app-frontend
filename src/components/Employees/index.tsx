@@ -80,22 +80,33 @@ const Employees = ({ isDark }: EmployeesProps) => {
     const email = employee.e_email?.toLowerCase() || "";
     const phone = employee.e_phone?.toLowerCase() || "";
     const query = searchQuery.toLowerCase();
-    
-    return fullName.includes(query) || email.includes(query) || phone.includes(query);
+
+    return (
+      fullName.includes(query) || email.includes(query) || phone.includes(query)
+    );
   });
 
-  const filteredDeactivatedEmployees = deactivatedEmployees.filter((employee) => {
-    const fullName = `${employee.f_name} ${employee.l_name}`.toLowerCase();
-    const email = employee.e_email?.toLowerCase() || "";
-    const phone = employee.e_phone?.toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
-    
-    return fullName.includes(query) || email.includes(query) || phone.includes(query);
-  });
-  
-  const activeEmployeesToShow = searchQuery ? filteredActiveEmployees : activeEmployees;
-  const deactivatedEmployeesToShow = searchQuery ? filteredDeactivatedEmployees : deactivatedEmployees;
+  const filteredDeactivatedEmployees = deactivatedEmployees.filter(
+    (employee) => {
+      const fullName = `${employee.f_name} ${employee.l_name}`.toLowerCase();
+      const email = employee.e_email?.toLowerCase() || "";
+      const phone = employee.e_phone?.toLowerCase() || "";
+      const query = searchQuery.toLowerCase();
 
+      return (
+        fullName.includes(query) ||
+        email.includes(query) ||
+        phone.includes(query)
+      );
+    },
+  );
+
+  const activeEmployeesToShow = searchQuery
+    ? filteredActiveEmployees
+    : activeEmployees;
+  const deactivatedEmployeesToShow = searchQuery
+    ? filteredDeactivatedEmployees
+    : deactivatedEmployees;
 
   const handleActivate = async (employeeId: number) => {
     await activateEmployee.mutateAsync(employeeId);

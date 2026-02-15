@@ -77,10 +77,10 @@ export const getEmployeeColumns = (theme: Theme): ColumnsType<Employee> => [
     title: "Salary",
     dataIndex: "salary",
     key: "salary",
-    sorter: (a, b) => a.salary - b.salary,
-    render: (salary: number) => (
+    sorter: (a, b) => (a.salary || 0) - (b.salary || 0),
+    render: (salary: number | null) => (
       <span style={{ color: theme.employee.nameColor }}>
-        ${salary.toLocaleString()}
+        {salary != null ? `$${salary.toLocaleString()}` : "N/A"}
       </span>
     ),
   },

@@ -24,6 +24,7 @@ import DebtsPage from "@src/components/pages/DebtsPage";
 import SparePartsPage from "@src/components/pages/SparePartsPage";
 import AuthPage from "@src/components/pages/AuthPage";
 import QuotationsPage from "@src/components/pages/QuotationsPage";
+import TasksPage from "@src/components/pages/TasksPage";
 import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
 // import TechnicianDashboard from "./components/dashboards/technicianDashboard";
 // import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
@@ -75,6 +76,7 @@ function RouteHandler() {
         <Route path="purchases" element={<PurchasesPage />} />
         <Route path="suppliers" element={<SuppliersPage />} />
         <Route path="quotations" element={<QuotationsPage />} />
+        <Route path="tasks" element={<TasksPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

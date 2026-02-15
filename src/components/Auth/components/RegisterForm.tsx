@@ -8,13 +8,13 @@ interface RegisterFormProps {
   isLoading: boolean;
   error: string | null;
   onRegister: (data: {
-    f_name: string;
-    l_name: string;
-    e_email?: string;
-    e_phone?: string;
-    e_username: string;
-    e_password: string;
-    e_role?: string;
+    fName: string;
+    lName: string;
+    email?: string;
+    phone?: string;
+    username: string;
+    password: string;
+    role?: string;
   }) => Promise<boolean>;
 }
 
@@ -26,12 +26,12 @@ export const RegisterForm = ({
   onRegister,
 }: RegisterFormProps) => {
   const [formData, setFormData] = useState({
-    f_name: "",
-    l_name: "",
-    e_email: "",
-    e_phone: "",
-    e_username: "",
-    e_password: "",
+    fName: "",
+    lName: "",
+    email: "",
+    phone: "",
+    username: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -47,7 +47,7 @@ export const RegisterForm = ({
     e.preventDefault();
     const success = await onRegister({
       ...formData,
-      e_role: "Employee",
+      role: "Employee",
     });
     if (success) {
       setSubmitted(true);
@@ -96,12 +96,12 @@ export const RegisterForm = ({
           onClick={() => {
             setSubmitted(false);
             setFormData({
-              f_name: "",
-              l_name: "",
-              e_email: "",
-              e_phone: "",
-              e_username: "",
-              e_password: "",
+              fName: "",
+              lName: "",
+              email: "",
+              phone: "",
+              username: "",
+              password: "",
             });
           }}
           className="text-sm font-medium transition-colors hover:underline"
@@ -160,8 +160,8 @@ export const RegisterForm = ({
           </label>
           <input
             type="text"
-            name="f_name"
-            value={formData.f_name}
+            name="fName"
+            value={formData.fName}
             onChange={handleChange}
             placeholder="John"
             disabled={isLoading}
@@ -183,8 +183,8 @@ export const RegisterForm = ({
           </label>
           <input
             type="text"
-            name="l_name"
-            value={formData.l_name}
+            name="lName"
+            value={formData.lName}
             onChange={handleChange}
             placeholder="Doe"
             disabled={isLoading}
@@ -209,8 +209,8 @@ export const RegisterForm = ({
         </label>
         <input
           type="email"
-          name="e_email"
-          value={formData.e_email}
+          name="email"
+          value={formData.email}
           onChange={handleChange}
           placeholder="john.doe@company.com"
           disabled={isLoading}
@@ -233,8 +233,8 @@ export const RegisterForm = ({
         </label>
         <input
           type="tel"
-          name="e_phone"
-          value={formData.e_phone}
+          name="phone"
+          value={formData.phone}
           onChange={handleChange}
           placeholder="+20 123 456 7890"
           disabled={isLoading}
@@ -257,8 +257,8 @@ export const RegisterForm = ({
         </label>
         <input
           type="text"
-          name="e_username"
-          value={formData.e_username}
+          name="username"
+          value={formData.username}
           onChange={handleChange}
           placeholder="johndoe"
           disabled={isLoading}
@@ -283,8 +283,8 @@ export const RegisterForm = ({
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            name="e_password"
-            value={formData.e_password}
+            name="password"
+            value={formData.password}
             onChange={handleChange}
             placeholder="Create a password"
             disabled={isLoading}
@@ -312,10 +312,10 @@ export const RegisterForm = ({
         type="submit"
         disabled={
           isLoading ||
-          !formData.f_name.trim() ||
-          !formData.l_name.trim() ||
-          !formData.e_username.trim() ||
-          !formData.e_password.trim()
+          !formData.fName.trim() ||
+          !formData.lName.trim() ||
+          !formData.username.trim() ||
+          !formData.password.trim()
         }
         className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{

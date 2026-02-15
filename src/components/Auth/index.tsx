@@ -94,13 +94,13 @@ const Auth = ({ isDark }: AuthProps) => {
   };
 
   const handleRegister = async (data: {
-    f_name: string;
-    l_name: string;
-    e_email?: string;
-    e_phone?: string;
-    e_username: string;
-    e_password: string;
-    e_role?: string;
+    fName: string;
+    lName: string;
+    email?: string;
+    phone?: string;
+    username: string;
+    password: string;
+    role?: string;
   }): Promise<boolean> => {
     const result = await register(data);
     return result.success;
