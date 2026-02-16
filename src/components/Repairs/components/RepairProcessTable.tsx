@@ -1,4 +1,5 @@
-import { Table } from "antd";
+import { Table, Grid } from "antd";
+import RepairCard from "./RepairCard";
 import type { Repair } from "@src/types/Repairs/repair";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
@@ -15,55 +16,84 @@ interface RepairProcessTableProps {
 const { Column } = Table;
 
 const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
+  const { useBreakpoint } = Grid;
+  const screens = useBreakpoint();
   const [selectedRow, setSelectedRow] = useState<Repair>();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { data: freshSelectedRepair } = useGetRepairById(
     selectedRow?.rep_id,
-    isModalVisible
+    isModalVisible,
   );
 
   return (
     <>
       <div className="custom-table">
-        <Table<Repair>
-          dataSource={repairs}
-          pagination={{ pageSize: 10 }}
-          rowKey="rep_id"
-          onRow={(record) => ({
-            onClick: () => {
-              setSelectedRow(record);
-              setIsModalVisible(true);
-            },
-          })}
-        >
-          <Column title="Repair ID" dataIndex="rep_id" key="rep_id" />
+        {!screens.md ? (
+          <div className="flex flex-col gap-4">
+            {repairs.map((repair) => (
+              <RepairCard
+                key={repair.rep_id}
+                repair={repair}
+                theme={theme}
+                onClick={() => {
+                  setSelectedRow(repair);
+                  setIsModalVisible(true);
+                }}
+              />
+            ))}
+            {repairs.length === 0 && (
+              <div
+                style={{
+                  padding: "20px",
+                  color: theme.employee.nameColor,
+                  textAlign: "center",
+                }}
+              >
+                No repairs found
+              </div>
+            )}
+          </div>
+        ) : (
+          <Table<Repair>
+            dataSource={repairs}
+            pagination={{ pageSize: 10 }}
+            rowKey="rep_id"
+            onRow={(record) => ({
+              onClick: () => {
+                setSelectedRow(record);
+                setIsModalVisible(true);
+              },
+            })}
+          >
+            <Column title="Repair ID" dataIndex="rep_id" key="rep_id" />
 
-          <Column
-            title="Repair Date"
-            dataIndex="rep_date"
-            key="rep_date"
-            render={(date: string) => convertTimestampToDate(date)}
-          />
+            <Column
+              title="Repair Date"
+              dataIndex="rep_date"
+              key="rep_date"
+              render={(date: string) => convertTimestampToDate(date)}
+            />
 
-          <Column
-            title="Serial Number"
-            dataIndex={["stock", "serial_number"]}
-            key="serial_number"
-          />
+            <Column
+              title="Serial Number"
+              dataIndex={["stock", "serial_number"]}
+              key="serial_number"
+            />
 
-          <Column
-            title="Product Name"
-            dataIndex={["stock", "p_name"]}
-            key="p_name"
-          />
+            <Column
+              title="Product Name"
+              dataIndex={["stock", "p_name"]}
+              key="p_name"
+            />
 
-          <Column
-            title="Status"
-            dataIndex={["stock", "p_status"]}
-            key="p_status"
-            render={(status: string) => <StatusBadge status={status} />}
-          />
-        </Table>
+            <Column
+              title="Status"
+              dataIndex={["stock", "p_status"]}
+              key="p_status"
+              render={(status: string) => <StatusBadge status={status} />}
+            />
+          </Table>
+        )}
       </div>
 
       <RepairDetailModal
