@@ -50,17 +50,17 @@ const Breadcrumb = ({
 
   return (
     <div
-      className="fixed left-14 md:left-[322px] top-6 right-6 flex items-center justify-between z-30 transition-all duration-300"
+      className="fixed left-14 md:left-[322px] top-4 sm:top-6 right-2 sm:right-6 flex items-center justify-end sm:justify-between z-30 transition-all duration-300"
       style={{
         background: currentTheme.container.background,
         backdropFilter: isScrolled ? "blur(20px)" : "none",
         boxShadow: isScrolled ? "0 4px 20px rgba(0, 0, 0, 0.1)" : "none",
-        padding: isScrolled ? "12px 16px" : "0",
+        padding: isScrolled ? "8px 12px" : "0",
         borderRadius: isScrolled ? "12px" : "0",
       }}
     >
       {/* Left side - Breadcrumb */}
-      <div className="flex flex-col">
+      <div className="hidden sm:flex flex-col">
         <div className="mb-1">
           <span
             className="text-xs font-normal"
@@ -80,7 +80,7 @@ const Breadcrumb = ({
       </div>
 
       {/* Right side - Search and Menu */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 sm:gap-6">
         <SearchInput theme={currentTheme} />
         <UserMenu
           theme={currentTheme}

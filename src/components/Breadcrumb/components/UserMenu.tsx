@@ -24,11 +24,11 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
   const menuItems = items.filter((item) => !item.isProfile);
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2 sm:gap-4">
       {/* User Profile */}
       {profileItem && (
         <div
-          className="flex items-center gap-2 hover:opacity-70 transition-opacity px-2 py-1 rounded-lg"
+          className="flex items-center gap-1 sm:gap-2 hover:opacity-70 transition-opacity px-1 sm:px-2 py-1 rounded-lg"
           style={{
             backgroundColor: theme.userProfile.containerBackground,
             border: `1px solid ${theme.userProfile.containerBorder}`,
@@ -37,11 +37,11 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
           <img
             src={profileItem.image}
             alt={profileItem.label}
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
             style={{ border: `2px solid ${theme.userProfile.imageBorder}` }}
           />
           <span
-            className="text-sm font-medium"
+            className="hidden sm:inline text-sm font-medium"
             style={{ color: theme.userProfile.nameColor }}
           >
             {profileItem.label}
