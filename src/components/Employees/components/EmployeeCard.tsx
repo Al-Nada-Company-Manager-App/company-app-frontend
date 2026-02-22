@@ -1,4 +1,4 @@
-import { Card, Avatar, Tag, Button } from "antd";
+import { Card, Avatar, Tag } from "antd";
 import { UserOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";

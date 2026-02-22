@@ -1,5 +1,4 @@
-import { Table, Grid } from "antd";
-import ProductCard from "./ProductCard";
+import { Table } from "antd";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";

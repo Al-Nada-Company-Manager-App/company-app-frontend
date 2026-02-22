@@ -6,7 +6,6 @@ import type { Task } from "@src/types/Tasks/task";
 import { TaskPriority, TaskStatus } from "@src/types/Tasks/task";
 import type { Theme } from "@src/types/theme";
 import moment from "moment";
-import { useAuthContext } from "@src/contexts/auth";
 
 interface TaskModalProps {
   isOpen: boolean;

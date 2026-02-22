@@ -3,7 +3,6 @@ import {
   UserOutlined,
   CalendarOutlined,
   FileTextOutlined,
-  DollarOutlined,
 } from "@ant-design/icons";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";

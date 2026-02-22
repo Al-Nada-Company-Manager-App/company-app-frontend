@@ -3,7 +3,6 @@ import {
   UserOutlined,
   FileTextOutlined,
   CalendarOutlined,
-  DollarOutlined,
   NumberOutlined,
 } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";

@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { taskApi } from "./taskApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Task } from "@src/types/Tasks/task";
 
 export const taskKeys = {
   all: ["tasks"] as const,
@@ -21,7 +20,7 @@ export const useCreateTask = (isDark: boolean = false) => {
 
   return useMutation({
     mutationFn: taskApi.createTask,
-    onSuccess: (newTask) => {
+    onSuccess: (_newTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       showSuccessMessage("Task created successfully!", "✅");
     },
@@ -38,7 +37,7 @@ export const useUpdateTask = (isDark: boolean = false) => {
 
   return useMutation({
     mutationFn: taskApi.updateTask,
-    onSuccess: (updatedTask) => {
+    onSuccess: (_updatedTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       showSuccessMessage("Task updated successfully!", "✅");
     },
@@ -51,11 +50,11 @@ export const useUpdateTask = (isDark: boolean = false) => {
 
 export const useUpdateTaskStatus = (isDark: boolean = false) => {
   const queryClient = useQueryClient();
-  const { showSuccessMessage, showErrorMessage } = useThemedMessage(isDark);
+  const { showErrorMessage } = useThemedMessage(isDark);
 
   return useMutation({
     mutationFn: taskApi.updateTaskStatus,
-    onSuccess: (updatedTask) => {
+    onSuccess: (_updatedTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       // Optional: show less intrusive message for status updates
       // showSuccessMessage("Task status updated!", "✅");

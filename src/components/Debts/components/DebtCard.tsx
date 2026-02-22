@@ -1,6 +1,5 @@
 import { Card, Tag } from "antd";
 import {
-  DollarOutlined,
   CalendarOutlined,
   FileTextOutlined,
   UserOutlined,

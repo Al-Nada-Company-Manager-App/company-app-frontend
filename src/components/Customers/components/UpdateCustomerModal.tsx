@@ -89,6 +89,7 @@ const UpdateCustomerModal = ({
         footer={null}
         centered
         width={800}
+        zIndex={10200}
       >
         <Form
           form={form}
