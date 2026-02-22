@@ -81,6 +81,7 @@ const CustomerDetailModal = ({
           </div>
         }
         centered
+        zIndex={10100}
         style={{ minWidth: 1400, width: "auto", maxWidth: "95vw" }}
       >
         {isLoading ? (
