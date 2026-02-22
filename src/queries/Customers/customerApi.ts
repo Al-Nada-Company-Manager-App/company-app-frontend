@@ -1,15 +1,42 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import { API_BASE_URL } from "@src/config/api";
-import type { Customer, CustomerSales } from "@src/types/Customers/customer";
+import type {
+  Customer,
+  CustomerSales,
+  PaginatedCustomerResponse,
+  CustomerQueryParams,
+} from "@src/types/Customers/customer";
 
 const CUSTOMERS_URL = `${API_BASE_URL}/customers`;
 
 export const customerApi = {
-  // Get all customers
-  getAllCustomers: async (): Promise<Customer[]> => {
-    const response = await fetchWithAuth(`${CUSTOMERS_URL}`);
+  // Get all customers (paginated, with search and type filter)
+  getAllCustomers: async (
+    params: CustomerQueryParams = {},
+  ): Promise<PaginatedCustomerResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+    if (params.type) searchParams.set("type", params.type);
+
+    const queryString = searchParams.toString();
+    const url = queryString
+      ? `${CUSTOMERS_URL}?${queryString}`
+      : `${CUSTOMERS_URL}`;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch customers");
+    }
+    return response.json();
+  },
+
+  // Get a single customer by ID
+  getCustomerById: async (id: number): Promise<Customer> => {
+    const response = await fetchWithAuth(`${CUSTOMERS_URL}/${id}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch customer with ID: ${id}`);
     }
     return response.json();
   },

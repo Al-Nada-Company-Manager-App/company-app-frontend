@@ -21,7 +21,6 @@ interface AddSaleModalProps {
   theme: Theme;
 }
 
-
 interface SelectedProduct {
   p_id: number;
   p_name: string;
@@ -40,14 +39,16 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
   const { isDark } = useThemeContext();
   const [form] = Form.useForm();
   const createSale = useCreateSale(isDark);
-  const { data: customers, isLoading: loadingCustomers } = useGetAllCustomers();
+  const { data: customersResponse, isLoading: loadingCustomers } =
+    useGetAllCustomers({ limit: 1000 });
+  const customers = customersResponse?.data;
   const { data: products, isLoading: loadingProducts } = useGetAllProducts();
 
   // State management
   const [saleType, setSaleType] = useState<string>("");
   const [calculatedTotal, setCalculatedTotal] = useState<number>(0);
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
-    []
+    [],
   );
   const [selectedRepairItems, setSelectedRepairItems] = useState<number[]>([]);
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
@@ -77,7 +78,7 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
     if (saleType === "SELLITEMS") {
       subtotal = selectedProducts.reduce(
         (sum, product) => sum + product.si_total,
-        0
+        0,
       );
     } else {
       subtotal = form.getFieldValue("sl_cost") || 0;
@@ -136,14 +137,14 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
               si_quantity: quantity,
               si_total: product.p_costprice * quantity,
             }
-          : product
-      )
+          : product,
+      ),
     );
   };
 
   const handleProductRemove = (productId: number) => {
     setSelectedProducts((prevProducts) =>
-      prevProducts.filter((product) => product.p_id !== productId)
+      prevProducts.filter((product) => product.p_id !== productId),
     );
   };
 
@@ -155,7 +156,7 @@ const AddSaleModal = ({ modalOpen, onClose, theme }: AddSaleModalProps) => {
 
   const handleRepairItemRemove = (productId: number) => {
     setSelectedRepairItems((prevItems) =>
-      prevItems.filter((id) => id !== productId)
+      prevItems.filter((id) => id !== productId),
     );
   };
 

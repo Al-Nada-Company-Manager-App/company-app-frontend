@@ -5,14 +5,49 @@ import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddCustomerModal from "./components/AddCustomerModal";
 import { useSearchContext } from "@src/contexts/search";
+
 interface CustomersProps {
   isDark: boolean;
 }
+
 const CustomersPage = ({ isDark }: CustomersProps) => {
-  const { customers, theme, isLoading, error } = useCustomers(isDark);
   const { searchQuery } = useSearchContext();
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [companyPage, setCompanyPage] = useState(1);
+  const [personPage, setPersonPage] = useState(1);
+  const pageSize = 10;
+
+  // Fetch companies
+  const {
+    customers: companies,
+    total: companyTotal,
+    theme,
+    isLoading: companiesLoading,
+    error: companiesError,
+  } = useCustomers(isDark, {
+    page: companyPage,
+    limit: pageSize,
+    search: searchQuery,
+    type: "COMPANY",
+  });
+
+  // Fetch persons
+  const {
+    customers: persons,
+    total: personTotal,
+    isLoading: personsLoading,
+    error: personsError,
+  } = useCustomers(isDark, {
+    page: personPage,
+    limit: pageSize,
+    search: searchQuery,
+    type: "PERSON",
+  });
+
+  const isLoading = companiesLoading && personsLoading;
+  const error = companiesError || personsError;
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -72,51 +107,6 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
     );
   }
 
-  // Filter customers with relational logic
-  const filteredCustomers = (() => {
-    if (!customers) return [];
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return customers;
-
-    const directMatches = customers.filter((customer) => {
-      const name = customer.c_name?.toLowerCase() || "";
-      const email = customer.c_email?.toLowerCase() || "";
-      const fax = customer.c_fax?.toLowerCase() || "";
-      const phone = customer.c_phone?.toLowerCase() || "";
-
-      return (
-        name.includes(query) ||
-        email.includes(query) ||
-        fax.includes(query) ||
-        phone.includes(query)
-      );
-    });
-
-    const relatedIds = new Set<number>();
-
-    directMatches.forEach((match) => {
-      relatedIds.add(match.c_id);
-
-      // If match is a Person, add their Company
-      if (match.c_type === "PERSON" && match.c_company_id) {
-        relatedIds.add(match.c_company_id);
-      }
-
-      // If match is a Company, add all their Employees
-      if (match.c_type === "COMPANY") {
-        // Find all employees for this company
-        const employees = customers.filter(
-          (c) => c.c_company_id === match.c_id,
-        );
-        employees.forEach((emp) => relatedIds.add(emp.c_id));
-      }
-    });
-
-    return customers.filter((c) => relatedIds.has(c.c_id));
-  })();
-
-  const customersToShow = filteredCustomers;
-
   return (
     <>
       <div className="p-6">
@@ -153,10 +143,13 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               Companies
             </h3>
             <CustomerTable
-              customers={
-                customersToShow?.filter((c) => c.c_type !== "PERSON") ?? []
-              }
+              customers={companies}
               theme={theme}
+              total={companyTotal}
+              currentPage={companyPage}
+              pageSize={pageSize}
+              onPageChange={(page) => setCompanyPage(page)}
+              loading={companiesLoading}
             />
           </div>
         </div>
@@ -177,10 +170,13 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               Persons
             </h3>
             <CustomerTable
-              customers={
-                customersToShow?.filter((c) => c.c_type === "PERSON") ?? []
-              }
+              customers={persons}
               theme={theme}
+              total={personTotal}
+              currentPage={personPage}
+              pageSize={pageSize}
+              onPageChange={(page) => setPersonPage(page)}
+              loading={personsLoading}
             />
           </div>
         </div>

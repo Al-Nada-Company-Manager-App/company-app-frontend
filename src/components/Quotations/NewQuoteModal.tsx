@@ -34,7 +34,9 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
   const createQuotation = useCreateQuotation(isDark);
 
   // Fetch Data
-  const { data: customers, isLoading: loadingCustomers } = useGetAllCustomers();
+  const { data: customersResponse, isLoading: loadingCustomers } =
+    useGetAllCustomers({ limit: 10 });
+  const customers = customersResponse?.data;
   const { data: products, isLoading: loadingProducts } = useGetAllProducts();
 
   const [items, setItems] = useState<any[]>([

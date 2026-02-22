@@ -30,3 +30,17 @@ export interface CustomerSales {
   sl_payed: number;
   sl_currency: string;
 }
+
+export interface PaginatedCustomerResponse {
+  data: Customer[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface CustomerQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: string;
+}

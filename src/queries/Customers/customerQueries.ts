@@ -2,21 +2,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { customerApi } from "./customerApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Customer } from "@src/types/Customers/customer";
+import type {
+  Customer,
+  CustomerQueryParams,
+} from "@src/types/Customers/customer";
 
 export const customerKeys = {
   all: ["customers"] as const,
   lists: () => [...customerKeys.all, "list"] as const,
-  list: (filters: string) => [...customerKeys.lists(), { filters }] as const,
+  list: (params: CustomerQueryParams) =>
+    [...customerKeys.lists(), params] as const,
   details: () => [...customerKeys.all, "detail"] as const,
   detail: (id: number) => [...customerKeys.details(), id] as const,
 };
 
-// Get all customers
-export const useGetAllCustomers = () => {
+// Get all customers (paginated, with search and type filter)
+export const useGetAllCustomers = (params: CustomerQueryParams = {}) => {
   return useQuery({
-    queryKey: customerKeys.lists(),
-    queryFn: customerApi.getAllCustomers,
+    queryKey: customerKeys.list(params),
+    queryFn: () => customerApi.getAllCustomers(params),
+  });
+};
+
+// Get a single customer by ID
+export const useGetCustomerById = (id: number | null) => {
+  return useQuery({
+    queryKey: customerKeys.detail(id!),
+    queryFn: () => customerApi.getCustomerById(id!),
+    enabled: !!id,
   });
 };
 

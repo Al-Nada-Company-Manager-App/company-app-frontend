@@ -103,7 +103,8 @@ const EmployeeDetailModal = ({
           </div>
         }
         centered
-        width={700}
+        width="95vw"
+        style={{ maxWidth: 1400 }}
       >
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={8}>
@@ -112,17 +113,12 @@ const EmployeeDetailModal = ({
                 src={getImageUrl("employees", employee?.e_photo)}
                 fallback={getPlaceholderUrl("employees")}
                 alt={employee?.f_name}
-                style={{
-                  borderRadius: "12px",
-                  width: "100%",
-                  maxWidth: "200px",
-                }}
+                style={{ borderRadius: "12px", width: "100%" }}
               />
             </div>
           </Col>
-
           <Col xs={24} sm={16}>
-            <Descriptions bordered column={{ xs: 1, sm: 1, md: 1 }}>
+            <Descriptions bordered column={{ xs: 1, sm: 1 }}>
               <Descriptions.Item label="Name">
                 {`${employee?.f_name} ${employee?.l_name}`}
               </Descriptions.Item>
