@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Tabs } from "antd";
 import { useCustomers } from "@src/hooks/Customers/useCustomers";
 import CustomerTable from "./components/CustomerTable";
+import CustomerMap from "./components/CustomerMap";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import AddCustomerModal from "./components/AddCustomerModal";
@@ -107,6 +109,86 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
     );
   }
 
+  const tabItems = [
+    {
+      key: "customers",
+      label: "📋 Customers",
+      children: (
+        <>
+          <div
+            className="w-full rounded-2xl p-6 mb-6"
+            style={{
+              background: theme.container.background,
+              backdropFilter: theme.container.backdropFilter,
+              minHeight: "auto",
+            }}
+          >
+            {/* Companies Section */}
+            <div className="mb-8">
+              <h3
+                className="text-md font-semibold mb-4"
+                style={{ color: theme.title.color }}
+              >
+                Companies
+              </h3>
+              <CustomerTable
+                customers={companies}
+                theme={theme}
+                total={companyTotal}
+                currentPage={companyPage}
+                pageSize={pageSize}
+                onPageChange={(page) => setCompanyPage(page)}
+                loading={companiesLoading}
+              />
+            </div>
+          </div>
+          <div
+            className="w-full rounded-2xl p-6 mb-6"
+            style={{
+              background: theme.container.background,
+              backdropFilter: theme.container.backdropFilter,
+              minHeight: "auto",
+            }}
+          >
+            {/* Persons Section */}
+            <div>
+              <h3
+                className="text-md font-semibold mb-4"
+                style={{ color: theme.title.color }}
+              >
+                Persons
+              </h3>
+              <CustomerTable
+                customers={persons}
+                theme={theme}
+                total={personTotal}
+                currentPage={personPage}
+                pageSize={pageSize}
+                onPageChange={(page) => setPersonPage(page)}
+                loading={personsLoading}
+              />
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: "map",
+      label: "🗺️ Map",
+      children: (
+        <div
+          className="w-full rounded-2xl p-6"
+          style={{
+            background: theme.container.background,
+            backdropFilter: theme.container.backdropFilter,
+          }}
+        >
+          <CustomerMap theme={theme} />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="p-6">
@@ -119,7 +201,7 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
           }}
         >
           {/* Title and Add Button Row */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between">
             <h2
               className="text-lg font-bold"
               style={{ color: theme.title.color }}
@@ -133,53 +215,9 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
+        </div>
 
-          {/* Companies Section */}
-          <div className="mb-8">
-            <h3
-              className="text-md font-semibold mb-4"
-              style={{ color: theme.title.color }}
-            >
-              Companies
-            </h3>
-            <CustomerTable
-              customers={companies}
-              theme={theme}
-              total={companyTotal}
-              currentPage={companyPage}
-              pageSize={pageSize}
-              onPageChange={(page) => setCompanyPage(page)}
-              loading={companiesLoading}
-            />
-          </div>
-        </div>
-        <div
-          className="w-full rounded-2xl p-6 mb-6"
-          style={{
-            background: theme.container.background,
-            backdropFilter: theme.container.backdropFilter,
-            minHeight: "auto",
-          }}
-        >
-          {/* Persons Section */}
-          <div>
-            <h3
-              className="text-md font-semibold mb-4"
-              style={{ color: theme.title.color }}
-            >
-              Persons
-            </h3>
-            <CustomerTable
-              customers={persons}
-              theme={theme}
-              total={personTotal}
-              currentPage={personPage}
-              pageSize={pageSize}
-              onPageChange={(page) => setPersonPage(page)}
-              loading={personsLoading}
-            />
-          </div>
-        </div>
+        <Tabs defaultActiveKey="customers" items={tabItems} size="large" />
       </div>
       <AddCustomerModal
         modalOpen={showAddModal}

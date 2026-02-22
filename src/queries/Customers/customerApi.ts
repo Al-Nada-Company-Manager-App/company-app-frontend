@@ -3,6 +3,7 @@ import { API_BASE_URL } from "@src/config/api";
 import type {
   Customer,
   CustomerSales,
+  CustomerLocation,
   PaginatedCustomerResponse,
   CustomerQueryParams,
 } from "@src/types/Customers/customer";
@@ -10,6 +11,15 @@ import type {
 const CUSTOMERS_URL = `${API_BASE_URL}/customers`;
 
 export const customerApi = {
+  // Get customer locations for map
+  getCustomerLocations: async (): Promise<CustomerLocation[]> => {
+    const response = await fetchWithAuth(`${CUSTOMERS_URL}/locations`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch customer locations");
+    }
+    return response.json();
+  },
+
   // Get all customers (paginated, with search and type filter)
   getAllCustomers: async (
     params: CustomerQueryParams = {},

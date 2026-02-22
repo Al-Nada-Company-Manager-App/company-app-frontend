@@ -282,6 +282,26 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
               >
                 <Input placeholder="Enter zip code" />
               </Form.Item>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Form.Item name="c_latitude" label="Latitude">
+                    <Input
+                      type="number"
+                      placeholder="e.g. 30.0444"
+                      step="0.0001"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="c_longitude" label="Longitude">
+                    <Input
+                      type="number"
+                      placeholder="e.g. 31.2357"
+                      step="0.0001"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Form.Item>

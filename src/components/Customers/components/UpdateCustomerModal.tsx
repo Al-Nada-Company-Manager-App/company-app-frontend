@@ -104,6 +104,8 @@ const UpdateCustomerModal = ({
             c_zipcode: customer?.c_zipcode,
             c_fax: customer?.c_fax,
             c_business_type: customer?.c_business_type,
+            c_latitude: customer?.c_latitude,
+            c_longitude: customer?.c_longitude,
           }}
           style={{ maxWidth: "100%" }}
         >
@@ -158,10 +160,7 @@ const UpdateCustomerModal = ({
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item
-                    name="c_business_type"
-                    label="Type of Business"
-                  >
+                  <Form.Item name="c_business_type" label="Type of Business">
                     <Input placeholder="Enter type of business" />
                   </Form.Item>
                 </Col>
@@ -255,6 +254,26 @@ const UpdateCustomerModal = ({
               >
                 <Input placeholder="Enter zip code" />
               </Form.Item>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Form.Item name="c_latitude" label="Latitude">
+                    <Input
+                      type="number"
+                      placeholder="e.g. 30.0444"
+                      step="0.0001"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="c_longitude" label="Longitude">
+                    <Input
+                      type="number"
+                      placeholder="e.g. 31.2357"
+                      step="0.0001"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Form.Item>

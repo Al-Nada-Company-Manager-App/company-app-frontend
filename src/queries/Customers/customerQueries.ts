@@ -24,6 +24,14 @@ export const useGetAllCustomers = (params: CustomerQueryParams = {}) => {
   });
 };
 
+// Get customer locations for map markers
+export const useGetCustomerLocations = () => {
+  return useQuery({
+    queryKey: [...customerKeys.all, "locations"],
+    queryFn: customerApi.getCustomerLocations,
+  });
+};
+
 // Get a single customer by ID
 export const useGetCustomerById = (id: number | null) => {
   return useQuery({

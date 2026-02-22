@@ -12,8 +12,18 @@ export interface Customer {
   c_type?: "COMPANY" | "PERSON";
   c_business_type?: string;
   c_company_id?: number | null;
+  c_latitude?: number | null;
+  c_longitude?: number | null;
   company?: { c_id: number; c_name: string } | null;
   employees?: Customer[] | null;
+}
+
+export interface CustomerLocation {
+  c_id: number;
+  c_name: string;
+  c_type: string;
+  c_latitude: number;
+  c_longitude: number;
 }
 
 export interface CustomerSales {
