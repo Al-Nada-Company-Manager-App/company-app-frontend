@@ -11,17 +11,20 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: sessionData, isLoading, refetch } = useGetSession();
-  const [user, setUser] = useState<Employee | null>(() => {
-    // Initialize from localStorage for Electron persistence
-    const stored = localStorage.getItem("auth_user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  // Do NOT seed user from localStorage — wait for the server session check.
+  // This prevents expired tokens from letting users bypass authentication.
+  const [user, setUser] = useState<Employee | null>(null);
 
   useEffect(() => {
     if (sessionData?.success && sessionData.user) {
       setUser(sessionData.user as unknown as Employee);
+    } else if (sessionData !== undefined && !sessionData.success) {
+      // Token expired or rejected by the server — wipe every auth artifact
+      localStorage.removeItem("auth_user");
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("authToken");
+      setUser(null);
     }
-    // If session check fails but we have valid local storage, trust local storage
   }, [sessionData]);
 
   const login = (userData: Employee) => {
@@ -30,6 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
+    localStorage.removeItem("authToken");
     localStorage.removeItem("auth_user");
     localStorage.removeItem("isAuthenticated");
     setUser(null);

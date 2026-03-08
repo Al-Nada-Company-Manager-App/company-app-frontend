@@ -126,6 +126,19 @@ export const authApi = {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    // Token is invalid or expired — remove it immediately so subsequent
+    // requests don't keep retrying with a dead token.
+    if (response.status === 401 || response.status === 400) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("auth_user");
+      localStorage.removeItem("isAuthenticated");
+      return {
+        success: false,
+        message: "Session expired. Please log in again.",
+      };
+    }
+
     return response.json();
   },
 
