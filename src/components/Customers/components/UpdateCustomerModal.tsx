@@ -1,5 +1,5 @@
-import { Modal, Form, Input, Upload, Button, Row, Col, Image } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Modal, Form, Input, Upload, Button, Row, Col } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import { useThemeContext } from "@src/contexts/theme";
@@ -10,7 +10,7 @@ import {
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
-import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+import { getImageUrl } from "@src/config/api";
 
 interface UpdateModalProps {
   modalOpen: boolean;
@@ -39,6 +39,33 @@ const UpdateCustomerModal = ({
       setPreviewImage(getImageUrl("customers", customer.c_photo));
     }
   }, [customer?.c_photo]);
+
+  // Clipboard paste support
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            const rcFile = Object.assign(file, {
+              uid: `paste-${Date.now()}`,
+            }) as RcFile;
+            setImageFile(rcFile);
+            setPreviewImage(URL.createObjectURL(file));
+          }
+          break;
+        }
+      }
+    };
+    if (modalOpen) {
+      document.addEventListener("paste", handlePaste);
+    }
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [modalOpen]);
 
   const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     const fileObj = info.file as RcFile;
@@ -112,37 +139,43 @@ const UpdateCustomerModal = ({
         >
           <Row gutter={[24, 24]}>
             <Col span={8}>
-              <div
+              <Upload.Dragger
+                name="e_photo"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={handleImageChange}
+                accept="image/*"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "16px",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
+                  padding: previewImage ? 0 : undefined,
+                  background: "transparent",
                 }}
               >
-                <Image
-                  src={previewImage || getPlaceholderUrl("customers")}
-                  alt={customer?.c_name}
-                  style={{
-                    width: "100%",
-                    maxHeight: "200px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
-                  }}
-                />
-                <Upload
-                  name="e_photo"
-                  showUploadList={false}
-                  beforeUpload={() => false} // Prevent auto-upload
-                  onChange={handleImageChange}
-                  accept="image/*"
-                >
-                  <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
-                    Change Photo
-                  </Button>
-                </Upload>
-              </div>
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt={customer?.c_name}
+                    style={{
+                      width: "100%",
+                      maxHeight: "220px",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <div style={{ padding: "16px" }}>
+                    <p className="ant-upload-drag-icon">
+                      <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">Click or drag image here</p>
+                    <p className="ant-upload-hint">
+                      Paste from clipboard (Ctrl+V)
+                    </p>
+                  </div>
+                )}
+              </Upload.Dragger>
             </Col>
             <Col span={16}>
               <Row gutter={[16, 16]}>

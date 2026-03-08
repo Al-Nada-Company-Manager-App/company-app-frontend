@@ -6,11 +6,10 @@ import {
   Button,
   Row,
   Col,
-  Image,
   Radio,
   Select,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import { useThemeContext } from "@src/contexts/theme";
@@ -50,6 +49,33 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
       setPreviewImage(undefined);
     }
   }, [modalOpen, form]);
+
+  // Clipboard paste support
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            const rcFile = Object.assign(file, {
+              uid: `paste-${Date.now()}`,
+            }) as RcFile;
+            setImageFile(rcFile);
+            setPreviewImage(URL.createObjectURL(file));
+          }
+          break;
+        }
+      }
+    };
+    if (modalOpen) {
+      document.addEventListener("paste", handlePaste);
+    }
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [modalOpen]);
 
   const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     const fileObj = info.file as RcFile;
@@ -108,37 +134,43 @@ const AddCustomerModal = ({ modalOpen, onClose, theme }: AddModalProps) => {
         >
           <Row gutter={[24, 24]}>
             <Col span={8}>
-              <div
+              <Upload.Dragger
+                name="c_photo"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={handleImageChange}
+                accept="image/*"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "16px",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
+                  padding: previewImage ? 0 : undefined,
+                  background: "transparent",
                 }}
               >
-                <Image
-                  src={previewImage || "/Images/customers/placeholder.jpg"}
-                  alt={"Customer"}
-                  style={{
-                    width: "100%",
-                    maxHeight: "200px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
-                  }}
-                />
-                <Upload
-                  name="c_photo"
-                  showUploadList={false}
-                  beforeUpload={() => false} // Prevent auto-upload
-                  onChange={handleImageChange}
-                  accept="image/*"
-                >
-                  <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
-                    Upload Photo
-                  </Button>
-                </Upload>
-              </div>
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Customer"
+                    style={{
+                      width: "100%",
+                      maxHeight: "220px",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <div style={{ padding: "16px" }}>
+                    <p className="ant-upload-drag-icon">
+                      <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">Click or drag image here</p>
+                    <p className="ant-upload-hint">
+                      Paste from clipboard (Ctrl+V)
+                    </p>
+                  </div>
+                )}
+              </Upload.Dragger>
             </Col>
             <Col span={16}>
               <Row gutter={[16, 16]}>
