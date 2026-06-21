@@ -22,8 +22,7 @@ import { useCreateQuotation } from "@src/queries/Quotations";
 import { useGetAllCustomers } from "@src/queries/Customers";
 import { useGetAllProducts } from "@src/queries/Products";
 import { getImageUrl } from "@src/config/api";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import RichTextEditor from "@src/components/UI/RichTextEditor";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -330,29 +329,15 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
                   </div>
 
                   {/* Rich Text Editor */}
-                  <div
-                    className="mb-2"
-                    style={{ background: isDark ? "#333" : "#fff" }}
-                  >
-                    <ReactQuill
-                      theme="snow"
+                  <div className="mb-2">
+                    <RichTextEditor
                       value={item.description}
                       onChange={(val: string) =>
                         handleItemChange(idx, "description", val)
                       }
-                      modules={{
-                        toolbar: [
-                          ["bold", "italic", "underline", "strike"],
-                          [{ color: [] }, { background: [] }],
-                          [{ list: "ordered" }, { list: "bullet" }],
-                          ["clean"],
-                        ],
-                      }}
-                      style={{
-                        height: "100px",
-                        marginBottom: "40px",
-                        color: isDark ? "#fff" : "#000",
-                      }}
+                      height={110}
+                      isDark={isDark}
+                      placeholder="Item description..."
                     />
                   </div>
                 </div>

@@ -3,7 +3,7 @@
 // Get API URL from environment variable (set in .env file)
 // For Vite, environment variables must be prefixed with VITE_
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "/api";
+  import.meta.env.VITE_API_BASE_URL || "";
 
 /**
  * Get the URL for an uploaded image from the backend

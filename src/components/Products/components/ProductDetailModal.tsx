@@ -119,7 +119,22 @@ const ProductDetailModal = ({
                 {product?.p_status || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Description">
-                {product?.p_description || "N/A"}
+                {product?.p_description ? (
+                  <div
+                    style={{
+                      padding: 0,
+                      maxWidth: "100%",
+                      overflowWrap: "break-word",
+                      lineHeight: "1.6",
+                      fontSize: "13px",
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: product.p_description,
+                    }}
+                  />
+                ) : (
+                  "N/A"
+                )}
               </Descriptions.Item>
             </Descriptions>
           </Col>

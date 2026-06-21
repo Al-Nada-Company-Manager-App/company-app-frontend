@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
 import type { UpdateProductInput } from "@src/types/Products/product";
 import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+import RichTextEditor from "@src/components/UI/RichTextEditor";
 
 interface UpdateProductModalProps {
   modalOpen: boolean;
@@ -42,12 +43,17 @@ const UpdateProduct = ({
   const [previewImage, setPreviewImage] = useState<string | undefined>(
     product?.p_photo ? getImageUrl("products", product.p_photo) : undefined,
   );
+  const [description, setDescription] = useState<string>(
+    product?.p_description || "",
+  );
 
   useEffect(() => {
     if (product?.p_photo) {
       setPreviewImage(getImageUrl("products", product.p_photo));
     }
-  }, [product?.p_photo]);
+    // Sync description when product changes
+    setDescription(product?.p_description || "");
+  }, [product?.p_photo, product?.p_description]);
 
   const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
     const fileObj = info.file as RcFile;
@@ -82,7 +88,7 @@ const UpdateProduct = ({
       ...values,
       p_id: product?.p_id || -1,
       p_photo: photoFilename,
-      p_description: values.p_description ?? undefined,
+      p_description: description || null,
       model_code: values.model_code ?? undefined,
       expire_date: values.expire_date ?? undefined,
       p_status: values.p_status ?? undefined,
@@ -233,10 +239,13 @@ const UpdateProduct = ({
                 </Col>
               </Row>
 
-              <Form.Item name="p_description" label="Description">
-                <Input.TextArea
-                  rows={3}
-                  placeholder="Enter product description"
+              <Form.Item label="Description">
+                <RichTextEditor
+                  value={description}
+                  onChange={setDescription}
+                  height={130}
+                  isDark={isDark}
+                  placeholder="Enter product description..."
                 />
               </Form.Item>
 

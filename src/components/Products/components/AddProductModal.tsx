@@ -19,6 +19,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { Theme } from "@src/types/theme";
 import { useCreateProduct, useUpdateProductPhoto } from "@src/queries/Products";
 import CustomBtn from "@src/components/UI/customBtn";
+import RichTextEditor from "@src/components/UI/RichTextEditor";
 
 interface AddProductModalProps {
   open: boolean;
@@ -37,6 +38,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   const [previewImage, setPreviewImage] = useState<string | undefined>(
     undefined
   );
+  const [description, setDescription] = useState<string>("");
   const createProduct = useCreateProduct(isDark);
   const updateProductPhoto = useUpdateProductPhoto(isDark);
 
@@ -46,6 +48,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       form.resetFields();
       setImageFile(null);
       setPreviewImage(undefined);
+      setDescription("");
     }
   }, [open, form]);
 
@@ -74,6 +77,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     const newProduct: Omit<CreateProductInput, "p_id"> = {
       ...values,
       p_photo: photoFilename,
+      p_description: description || undefined,
     };
     const response = await createProduct.mutateAsync(newProduct);
 
@@ -84,6 +88,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     form.resetFields();
     setImageFile(null);
     setPreviewImage(undefined);
+    setDescription("");
     onClose();
   };
 
@@ -246,8 +251,14 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             </Col>
           </Row>
 
-          <Form.Item label="Description" name="p_description">
-            <Input.TextArea rows={3} />
+          <Form.Item label="Description">
+            <RichTextEditor
+              value={description}
+              onChange={setDescription}
+              height={130}
+              isDark={isDark}
+              placeholder="Enter product description..."
+            />
           </Form.Item>
           <Form.Item>
             <div className="flex justify-end gap-4">
