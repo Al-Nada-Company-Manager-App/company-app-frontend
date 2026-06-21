@@ -178,24 +178,32 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
       onSuccess: (data) => {
         window.open(`${API_BASE_URL}${data.pdfUrl}`, "_blank");
         onSuccess();
-        onClose();
-        form.resetFields();
-        setVat(0);
-        setDiscount(0);
-        setCurrency("EGP");
-        setItems([
-          {
-            productName: "",
-            description: "",
-            quantity: 1,
-            price: 0,
-            total: 0,
-            image: null,
-            includeImage: false,
-          },
-        ]);
+        handleClose();
       },
     });
+  };
+
+  const resetFormState = () => {
+    form.resetFields();
+    setVat(0);
+    setDiscount(0);
+    setCurrency("EGP");
+    setItems([
+      {
+        productName: "",
+        description: "",
+        quantity: 1,
+        price: 0,
+        total: 0,
+        image: null,
+        includeImage: false,
+      },
+    ]);
+  };
+
+  const handleClose = () => {
+    resetFormState();
+    onClose();
   };
 
   return (
@@ -204,7 +212,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
       <Modal
         wrapClassName="custom-modal"
         open={isOpen}
-        onCancel={onClose}
+        onCancel={handleClose}
         footer={null}
         centered
         width={1000}
@@ -306,6 +314,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <Select
                       showSearch
+                      value={item.productId || null}
                       placeholder="Search Product..."
                       loading={loadingProducts}
                       onChange={(val) => handleProductSelect(idx, val)}
