@@ -3,7 +3,7 @@ import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row, Spin } from "antd";
 import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
-import UpdateCustomerModal from "./UpdateCustomerModal";
+import CustomerModal from "./CustomerModal";
 import { useDeleteCustomer, useGetCustomerById } from "@src/queries/Customers";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -172,15 +172,13 @@ const CustomerDetailModal = ({
           </>
         )}
       </Modal>
-      {customer && (
-        <UpdateCustomerModal
-          key={customer?.c_id}
-          modalOpen={updateOpen}
-          onClose={handleUpdateClose}
-          customer={customer}
-          theme={theme}
-        />
-      )}
+      <CustomerModal
+        key={customer?.c_id}
+        isOpen={updateOpen}
+        onClose={handleUpdateClose}
+        customer={customer}
+        theme={theme}
+      />
     </>
   );
 };

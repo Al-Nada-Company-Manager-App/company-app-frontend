@@ -3,7 +3,7 @@ import { usePurchases } from "@src/hooks/Purchases/usePurchases";
 import PurchasesTable from "./components/PurchasesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddPurchaseModal from "./components/AddPurchaseModal";
+import PurchaseModal from "./components/PurchaseModal";
 import { useSearchContext } from "@src/contexts/search";
 
 interface PurchasesPageProps {
@@ -120,8 +120,8 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
           <PurchasesTable purchases={purchasesToShow ?? []} theme={theme} />
         </div>
       </div>
-      <AddPurchaseModal
-        modalOpen={showAddModal}
+      <PurchaseModal
+        isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
       />

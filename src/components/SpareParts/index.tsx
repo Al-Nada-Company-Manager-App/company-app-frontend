@@ -3,7 +3,7 @@ import { useProducts } from "@src/hooks/Products/useProducts";
 import ProductTable from "../Products/components/ProductTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddProductModal from "../Products/components/AddProductModal";
+import ProductModal from "../Products/components/ProductModal";
 import type { Product } from "@src/types/Products/product";
 import { useSearchContext } from "@src/contexts/search";
 
@@ -131,8 +131,8 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
         />
       )}
       {showAddModal && (
-        <AddProductModal
-          open={showAddModal}
+        <ProductModal
+          isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           theme={theme}
         />

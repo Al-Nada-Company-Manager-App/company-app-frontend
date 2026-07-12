@@ -7,7 +7,7 @@ import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
 import { useThemeContext } from "@src/contexts/theme";
 import { useState } from "react";
-import UpdateSaleModal from "./UpdateSaleModal";
+import SaleModal from "./SaleModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface SaleDetailModalProps {
@@ -153,8 +153,8 @@ const SaleDetailModal = ({
           </Col>
         </Row>
       </Modal>
-      <UpdateSaleModal
-        modalOpen={updateOpen}
+      <SaleModal
+        isOpen={updateOpen}
         onClose={() => setUpdateOpen(false)}
         sale={sale}
         theme={theme}

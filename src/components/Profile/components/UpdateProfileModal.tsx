@@ -2,24 +2,22 @@ import {
   Modal,
   Form,
   Input,
-  Upload,
   Button,
   Row,
   Col,
-  Image,
   DatePicker,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import { useAuthContext } from "@src/contexts/auth";
 import { useThemeContext } from "@src/contexts/theme";
 import { useUpdateEmployeePhoto } from "@src/queries/Employees";
-import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
+import type { RcFile, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
+import { ImageUpload } from "@src/components/UI";
 import moment from "moment";
-import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+import { getImageUrl } from "@src/config/api";
 
 interface UpdateProfileModalProps {
   modalOpen: boolean;
@@ -50,13 +48,7 @@ const UpdateProfileModal = ({
     }
   }, [user?.e_photo]);
 
-  const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
-    const fileObj = info.file as RcFile;
-    if (fileObj) {
-      setImageFile(info.file);
-      setPreviewImage(URL.createObjectURL(fileObj));
-    }
-  };
+
 
   const onFinish = async (values: Partial<Employee>) => {
     let photoFilename = user?.e_photo;
@@ -125,37 +117,15 @@ const UpdateProfileModal = ({
         >
           <Row gutter={[24, 24]}>
             <Col span={8}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-              >
-                <Image
-                  src={previewImage || getPlaceholderUrl("employees")}
-                  alt={`${user?.f_name} ${user?.l_name}`}
-                  style={{
-                    width: "100%",
-                    maxHeight: "200px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    border: `1px solid ${theme.row?.borderColor || "#E2E8F0"}`,
-                  }}
-                />
-                <Upload
-                  name="e_photo"
-                  showUploadList={false}
-                  beforeUpload={() => false} // Prevent auto-upload
-                  onChange={handleImageChange}
-                  accept="image/*"
-                >
-                  <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
-                    Change Photo
-                  </Button>
-                </Upload>
-              </div>
+              <ImageUpload
+                value={imageFile}
+                onChange={(file) => setImageFile(file)}
+                previewImage={previewImage}
+                onPreviewChange={setPreviewImage}
+                theme={theme}
+                isOpen={modalOpen}
+                altText={`${user?.f_name} ${user?.l_name}`}
+              />
             </Col>
             <Col span={16}>
               <Row gutter={[16, 16]}>

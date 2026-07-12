@@ -7,7 +7,7 @@ import ProductPurchasesTable from "./components/ProductPurchasesTable";
 import { useDeletePurchase } from "@src/queries/Purchases";
 import { useThemeContext } from "@src/contexts/theme";
 import { useState, useEffect } from "react";
-import UpdatePurchaseModal from "./UpdatePurchaseModal";
+import PurchaseModal from "./PurchaseModal";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface PurchaseDetailModalProps {
@@ -165,8 +165,8 @@ const PurchaseDetailModal = ({
           </Col>
         </Row>
       </Modal>
-      <UpdatePurchaseModal
-        modalOpen={updateOpen}
+      <PurchaseModal
+        isOpen={updateOpen}
         onClose={handleUpdateClose}
         purchase={purchase}
         theme={theme}

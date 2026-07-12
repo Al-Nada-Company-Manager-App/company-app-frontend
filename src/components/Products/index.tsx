@@ -3,7 +3,7 @@ import { useProducts } from "@src/hooks/Products/useProducts";
 import ProductTable from "./components/ProductTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddProductModal from "./components/AddProductModal";
+import ProductModal from "./components/ProductModal";
 import type { Product } from "@src/types/Products/product";
 import { useSearchContext } from "@src/contexts/search";
 
@@ -159,8 +159,8 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
         <ProductTable title="Others" products={inStockOthers} theme={theme} />
       )}
       {showAddModal && (
-        <AddProductModal
-          open={showAddModal}
+        <ProductModal
+          isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           theme={theme}
         />

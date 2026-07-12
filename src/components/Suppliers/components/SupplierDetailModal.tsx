@@ -4,7 +4,7 @@ import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row } from "antd";
 import { useState } from "react";
 import SupplierPurchasesTable from "./components/SupplierPurchasesTable";
-import UpdateSupplierModal from "./UpdateSupplierModal";
+import SupplierModal from "./SupplierModal";
 import { useDeleteSupplier } from "@src/queries/Suppliers";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -149,9 +149,9 @@ const SupplierDetailModal = ({
           </Col>
         </Row>
       </Modal>
-      <UpdateSupplierModal
+      <SupplierModal
         key={supplier?.s_id}
-        modalOpen={updateOpen}
+        isOpen={updateOpen}
         onClose={handleUpdateClose}
         supplier={supplier}
         theme={theme}

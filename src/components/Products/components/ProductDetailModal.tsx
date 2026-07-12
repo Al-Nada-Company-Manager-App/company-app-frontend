@@ -3,7 +3,7 @@ import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
 import { Col, Descriptions, Image, Modal, Row } from "antd";
 import { useState } from "react";
-import UpdateProduct from "./UpdateProduct";
+import ProductModal from "./ProductModal";
 import { useDeleteProduct } from "@src/queries/Products/productQueries";
 import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -140,9 +140,9 @@ const ProductDetailModal = ({
           </Col>
         </Row>
       </Modal>
-      <UpdateProduct
+      <ProductModal
         key={product?.p_id}
-        modalOpen={updateOpen}
+        isOpen={updateOpen}
         onClose={handleUpdateClose}
         product={product}
         theme={theme}

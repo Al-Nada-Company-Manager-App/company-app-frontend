@@ -3,7 +3,7 @@ import { useSuppliers } from "@src/hooks/Suppliers/useSuppliers";
 import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddSupplierModal from "./components/AddSupplierModal";
+import SupplierModal from "./components/SupplierModal";
 import { useSearchContext } from "@src/contexts/search";
 interface SuppliersProps {
   isDark: boolean;
@@ -177,8 +177,8 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
           </div>
         </div>
       </div>
-      <AddSupplierModal
-        modalOpen={showAddModal}
+      <SupplierModal
+        isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
       />

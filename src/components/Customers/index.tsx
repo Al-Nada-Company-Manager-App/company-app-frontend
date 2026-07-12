@@ -5,7 +5,7 @@ import CustomerTable from "./components/CustomerTable";
 import CustomerMap from "./components/CustomerMap";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddCustomerModal from "./components/AddCustomerModal";
+import CustomerModal from "./components/CustomerModal";
 import { useSearchContext } from "@src/contexts/search";
 
 interface CustomersProps {
@@ -219,8 +219,8 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
 
         <Tabs defaultActiveKey="customers" items={tabItems} size="large" />
       </div>
-      <AddCustomerModal
-        modalOpen={showAddModal}
+      <CustomerModal
+        isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
       />

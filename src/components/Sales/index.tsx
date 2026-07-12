@@ -3,7 +3,7 @@ import { useSales } from "@src/hooks/Sales/useSales";
 import SalesTable from "./components/SalesTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
-import AddSaleModal from "./components/AddSaleModal";
+import SaleModal from "./components/SaleModal";
 import { useSearchContext } from "@src/contexts/search";
 
 interface SalesPageProps {
@@ -119,8 +119,8 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
           <SalesTable sales={salesToShow ?? []} theme={theme} />
         </div>
       </div>
-      <AddSaleModal
-        modalOpen={showAddModal}
+      <SaleModal
+        isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         theme={theme}
       />
