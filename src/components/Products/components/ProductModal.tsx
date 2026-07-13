@@ -56,6 +56,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           p_sellprice: product.p_sellprice,
           p_quantity: product.p_quantity,
           model_code: product.model_code,
+          p_size: product.p_size,
           expire_date: product.expire_date ? dayjs(product.expire_date) : null,
           p_status: product.p_status,
           serial_number: product.serial_number,
@@ -107,6 +108,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         p_photo: photoFilename,
         p_description: description || null,
         model_code: formattedValues.model_code ?? undefined,
+        p_size: formattedValues.p_size ?? undefined,
         expire_date: formattedValues.expire_date ?? undefined,
         p_status: formattedValues.p_status ?? undefined,
       };
@@ -244,6 +246,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 <Col span={12}>
                   <Form.Item label="Model Code" name="model_code">
                     <Input placeholder="Enter model code" />
+                  </Form.Item>
+                </Col>
+              )}
+              {(category === "Laboratory Equipment" || category === "Chemical") && (
+                <Col span={12}>
+                  <Form.Item label="Size" name="p_size">
+                    <Input placeholder="Enter size (e.g., 50 ml)" />
                   </Form.Item>
                 </Col>
               )}

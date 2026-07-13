@@ -7,6 +7,7 @@ export interface Product {
   p_photo: string | null;
   p_description: string | null;
   p_category: string;
+  p_size: string | null;
   model_code: string | null;
   expire_date: string | null;
   p_status: string | null;
@@ -20,6 +21,7 @@ export interface CreateProductInput {
   p_sellprice: number;
   p_quantity: number;
   model_code?: string;
+  p_size?: string;
   p_description?: string;
   expire_date?: string | null;
   p_status?: string | null;
@@ -36,6 +38,7 @@ export interface UpdateProductInput {
   p_quantity?: number;
   p_description?: string | null;
   p_category?: string;
+  p_size?: string;
   model_code?: string;
   expire_date?: string | null;
   p_status?: string | null;
