@@ -333,6 +333,7 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
               theme={theme}
               btnTitle={customer ? "Update" : "Add"}
               onClick={() => form.submit()}
+              loading={customer ? updateCustomer.isPending : createCustomer.isPending}
             />
           </div>
         </Form.Item>

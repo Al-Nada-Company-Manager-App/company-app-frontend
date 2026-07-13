@@ -94,32 +94,53 @@ const ProductDetailModal = ({
               <Descriptions.Item label="Product Name">
                 {product?.p_name}
               </Descriptions.Item>
-              <Descriptions.Item label="Model Code">
-                {product?.model_code || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Serial Number">
-                {product?.serial_number || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Category">
-                {product?.p_category || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Quantity">
-                {product?.p_quantity || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Cost Price">
-                {product?.p_costprice || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Sell Price">
-                {product?.p_sellprice || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Expire Date">
-                {convertTimestampToDate(product?.expire_date) || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                {product?.p_status || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Description">
-                {product?.p_description ? (
+              {product?.p_category && (
+                <Descriptions.Item label="Category">
+                  {product.p_category}
+                </Descriptions.Item>
+              )}
+              {product?.p_size && (
+                <Descriptions.Item label="Size">
+                  {product.p_size}
+                </Descriptions.Item>
+              )}
+              {product?.model_code && (
+                <Descriptions.Item label="Model Code">
+                  {product.model_code}
+                </Descriptions.Item>
+              )}
+              {product?.serial_number && (
+                <Descriptions.Item label="Serial Number">
+                  {product.serial_number}
+                </Descriptions.Item>
+              )}
+              {product?.p_quantity !== undefined && product?.p_quantity !== null && (
+                <Descriptions.Item label="Quantity">
+                  {product.p_quantity}
+                </Descriptions.Item>
+              )}
+              {product?.p_costprice !== undefined && product?.p_costprice !== null && (
+                <Descriptions.Item label="Cost Price">
+                  {product.p_costprice}
+                </Descriptions.Item>
+              )}
+              {product?.p_sellprice !== undefined && product?.p_sellprice !== null && (
+                <Descriptions.Item label="Sell Price">
+                  {product.p_sellprice}
+                </Descriptions.Item>
+              )}
+              {product?.expire_date && (
+                <Descriptions.Item label="Expire Date">
+                  {convertTimestampToDate(product.expire_date)}
+                </Descriptions.Item>
+              )}
+              {product?.p_status && (
+                <Descriptions.Item label="Status">
+                  {product.p_status}
+                </Descriptions.Item>
+              )}
+              {product?.p_description && product.p_description !== "N/A" && product.p_description.trim() !== "" && (
+                <Descriptions.Item label="Description">
                   <div
                     style={{
                       padding: 0,
@@ -132,10 +153,8 @@ const ProductDetailModal = ({
                       __html: product.p_description,
                     }}
                   />
-                ) : (
-                  "N/A"
-                )}
-              </Descriptions.Item>
+                </Descriptions.Item>
+              )}
             </Descriptions>
           </Col>
         </Row>

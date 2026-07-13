@@ -131,6 +131,7 @@ const SparePartOperationsModal = ({
               type="primary"
               onClick={handleUpdateQuantity}
               style={{ width: "100%" }}
+              loading={updateRepair.isPending}
             >
               Save
             </Button>

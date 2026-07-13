@@ -145,6 +145,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           title="Lab Equipments"
           products={inStockLab}
           theme={theme}
+          showSize={true}
         />
       )}
       {inStockChemicals.length > 0 && (

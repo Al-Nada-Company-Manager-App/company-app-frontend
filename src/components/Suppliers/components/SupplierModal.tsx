@@ -311,6 +311,7 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
               theme={theme}
               btnTitle={supplier ? "Update" : "Add"}
               onClick={() => form.submit()}
+              loading={supplier ? updateSupplier.isPending : createSupplier.isPending}
             />
           </div>
         </Form.Item>

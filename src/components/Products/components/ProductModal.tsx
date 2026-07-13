@@ -315,6 +315,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               theme={theme}
               btnTitle={product ? "Update" : "Add"}
               onClick={() => form.submit()}
+              loading={product ? updateProduct.isPending : createProduct.isPending}
             />
           </div>
         </Form.Item>

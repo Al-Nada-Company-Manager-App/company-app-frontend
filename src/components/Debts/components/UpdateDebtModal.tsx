@@ -246,6 +246,7 @@ const UpdateDebtModal = ({
               theme={theme}
               btnTitle={loading ? "Updating..." : "Update Debt"}
               onClick={() => form.submit()}
+              loading={loading}
             />
           </div>
         </Form.Item>

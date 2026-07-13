@@ -227,6 +227,7 @@ const onFinish = async (values: {
               theme={theme}
               btnTitle="Submit"
               onClick={() => form.submit()}
+              loading={createRepair.isPending}
             />
           </div>
         </Form.Item>

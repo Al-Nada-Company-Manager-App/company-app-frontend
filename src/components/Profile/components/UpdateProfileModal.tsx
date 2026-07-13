@@ -303,6 +303,7 @@ const UpdateProfileModal = ({
                 theme={theme}
                 btnTitle="Update"
                 onClick={() => form.submit()}
+                loading={updateEmployeePhoto.isPending}
               />
             </div>
           </Form.Item>

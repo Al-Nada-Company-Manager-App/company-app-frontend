@@ -174,6 +174,7 @@ const ChangePasswordModal = ({
               theme={theme}
               btnTitle={loading ? "Changing..." : "Change Password"}
               onClick={() => form.submit()}
+              loading={loading}
             />
           </div>
         </Form.Item>

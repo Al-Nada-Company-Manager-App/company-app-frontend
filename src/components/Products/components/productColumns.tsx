@@ -9,6 +9,7 @@ export const getProductColumns = (
   theme: Theme,
   showExpireDate: boolean = false,
   showCategory: boolean = false,
+  showSize: boolean = false,
 ): ColumnsType<Product> => [
   {
     title: "Product",
@@ -83,17 +84,33 @@ export const getProductColumns = (
     },
     width: "8%",
   },
-  {
-    title: "Model Code",
-    dataIndex: "model_code",
-    key: "model_code",
-    filterSearch: true,
-    onFilter: (value, record) =>
-      record.model_code
-        ?.toLowerCase()
-        .includes((value as string).toLowerCase()) || false,
-    width: "12%",
-  },
+  ...(showSize
+    ? [
+        {
+          title: "Size",
+          dataIndex: "p_size",
+          key: "p_size",
+          filterSearch: true,
+          onFilter: (value: any, record: Product) =>
+            record.p_size
+              ?.toLowerCase()
+              .includes((value as string).toLowerCase()) || false,
+          width: "12%",
+        },
+      ]
+    : [
+        {
+          title: "Model Code",
+          dataIndex: "model_code",
+          key: "model_code",
+          filterSearch: true,
+          onFilter: (value: any, record: Product) =>
+            record.model_code
+              ?.toLowerCase()
+              .includes((value as string).toLowerCase()) || false,
+          width: "12%",
+        },
+      ]),
   ...(showExpireDate
     ? [
         {

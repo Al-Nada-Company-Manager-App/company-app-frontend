@@ -11,6 +11,7 @@ interface ProductTableProps {
   theme: Theme;
   showExpireDate?: boolean;
   showCategory?: boolean;
+  showSize?: boolean;
 }
 
 const ProductTable = ({
@@ -19,11 +20,12 @@ const ProductTable = ({
   theme,
   showExpireDate = false,
   showCategory = false,
+  showSize = false,
 }: ProductTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Product>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const columns = getProductColumns(theme, showExpireDate, showCategory);
+  const columns = getProductColumns(theme, showExpireDate, showCategory, showSize);
 
   return (
     <>

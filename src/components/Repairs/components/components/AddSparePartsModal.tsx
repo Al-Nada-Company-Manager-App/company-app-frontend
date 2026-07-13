@@ -146,6 +146,7 @@ const AddSparepartsModal = ({
               theme={theme}
               btnTitle="Submit"
               onClick={() => form.submit()}
+              loading={updateRepair.isPending}
             />
           </div>
         </Form.Item>
