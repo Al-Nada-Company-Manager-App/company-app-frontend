@@ -3,7 +3,6 @@ import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import dayjs from "dayjs";
 import { FileText, Edit } from "lucide-react";
-import { quotationApi } from "@src/queries/Quotations/quotationApi";
 
 export const getQuotationColumns = (
   theme: Theme,
@@ -85,7 +84,7 @@ export const getQuotationColumns = (
             onEdit(record.q_id);
           }}
           className="flex items-center justify-center gap-1 hover:underline cursor-pointer bg-transparent border-none p-0"
-          style={{ color: theme.status?.pending?.color || "#eab308" }}
+          style={{ color: "#eab308" }}
         >
           <Edit size={16} /> <span className="text-xs">Edit</span>
         </button>

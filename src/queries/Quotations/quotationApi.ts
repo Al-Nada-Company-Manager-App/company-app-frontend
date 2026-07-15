@@ -23,6 +23,7 @@ export const quotationApi = {
     refCode: string;
     pdfData: string;
     message?: string;
+    data?: any;
   }> => {
     const res = await fetchWithAuth(`${BASE_URL}/generate`, {
       method: "POST",
@@ -51,6 +52,7 @@ export const quotationApi = {
     refCode: string;
     pdfData: string;
     message?: string;
+    data?: any;
   }> => {
     const res = await fetchWithAuth(`${BASE_URL}/${params.id}`, {
       method: "PUT",

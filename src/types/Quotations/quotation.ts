@@ -12,8 +12,11 @@ export interface Quotation {
   q_customer_name: string;
   q_valid_until: string;
   q_total_amount: number;
-  q_pdf_path: string;
+  q_pdf_path?: string;
+  q_pdf_data?: string;
   q_created_at: string;
+  q_currency?: string;
+  c_id?: number;
   quotation_items?: QuotationItem[];
 }
 

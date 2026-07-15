@@ -7,7 +7,6 @@ import {
 } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
-import { quotationApi } from "@src/queries/Quotations/quotationApi";
 import moment from "moment";
 
 interface QuotationCardProps {
@@ -113,7 +112,7 @@ const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview }: Quotati
               onEdit(quotation.q_id);
             }}
             className="flex items-center gap-1 hover:underline text-sm font-medium bg-transparent border-none p-0 cursor-pointer"
-            style={{ color: theme.status?.pending?.color || "#eab308" }}
+            style={{ color: "#eab308" }}
           >
             Edit
           </button>
