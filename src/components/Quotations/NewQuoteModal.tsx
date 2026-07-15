@@ -18,7 +18,8 @@ import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 import { API_BASE_URL } from "@src/config/api";
 import ModalStyle from "@src/components/UI/ModalStyle";
-import { useCreateQuotation } from "@src/queries/Quotations";
+import { quotationApi } from "@src/queries/Quotations/quotationApi";
+import { useCreateQuotation, useGetQuotationById, useUpdateQuotation } from "@src/queries/Quotations";
 import { useGetAllCustomers } from "@src/queries/Customers";
 import { useGetAllProducts } from "@src/queries/Products";
 import { getImageUrl } from "@src/config/api";
@@ -27,10 +28,13 @@ import RichTextEditor from "@src/components/UI/RichTextEditor";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
+const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }: any) => {
   const { theme, isDark } = useThemeContext();
   const [form] = Form.useForm();
   const createQuotation = useCreateQuotation(isDark);
+  const updateQuotation = useUpdateQuotation(isDark);
+
+  const { data: quoteToEdit, isFetching: loadingQuote } = useGetQuotationById(editingQuoteId || null);
 
   // Fetch Data
   const { data: customersResponse, isLoading: loadingCustomers } =
@@ -58,7 +62,6 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
   const calculateTotal = useCallback(() => {
     const itemsTotal = items.reduce((sum, item) => sum + (item.total || 0), 0);
 
-    // Discount is now a percentage
     const discountAmount = itemsTotal * (discount / 100);
     const afterDiscount = Math.max(0, itemsTotal - discountAmount);
 
@@ -71,6 +74,36 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
   useEffect(() => {
     calculateTotal();
   }, [items, vat, discount, calculateTotal]);
+
+  useEffect(() => {
+    if (editingQuoteId && quoteToEdit) {
+      form.setFieldsValue({
+        customerId: quoteToEdit.c_id,
+        validUntil: dayjs(quoteToEdit.q_valid_until),
+      });
+      setCurrency(quoteToEdit.q_currency || "EGP");
+      
+      // Calculate derived vat/discount percentage from amounts if needed, 
+      // but if we store them in DB later it's better. For now we assume 0 or 
+      // if you added pq_discount we can use it. Since we didn't add it to DB,
+      // let's leave it as 0 unless you want to reverse engineer it.
+      // We will set items:
+      if (quoteToEdit.quotation_items) {
+        setItems(quoteToEdit.quotation_items.map((qi: any) => ({
+          productId: qi.p_id,
+          productName: qi.qi_product_name,
+          description: qi.qi_description || "",
+          quantity: qi.qi_quantity,
+          price: qi.qi_unit_price,
+          total: qi.qi_total,
+          image: qi.stock?.p_photo || null,
+          includeImage: !!qi.stock?.p_photo,
+        })));
+      }
+    } else if (!isOpen) {
+       resetFormState();
+    }
+  }, [editingQuoteId, quoteToEdit, form, isOpen]);
 
   const handleItemChange = (index: number, field: string, value: any) => {
     setItems((prevItems) => {
@@ -174,13 +207,21 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
       currency,
     };
 
-    createQuotation.mutate(payload, {
-      onSuccess: (data) => {
-        window.open(`${API_BASE_URL}${data.pdfUrl}`, "_blank");
-        onSuccess();
-        handleClose();
-      },
-    });
+    if (editingQuoteId) {
+      updateQuotation.mutate({ id: editingQuoteId, data: payload }, {
+        onSuccess: (data) => {
+          if (onPreview) onPreview(data.data.q_id);
+          onSuccess(data.data.q_id);
+        }
+      });
+    } else {
+      createQuotation.mutate(payload, {
+        onSuccess: (data) => {
+          if (onPreview) onPreview(data.data.q_id);
+          onSuccess(data.data.q_id);
+        },
+      });
+    }
   };
 
   const resetFormState = () => {
@@ -219,7 +260,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
         title={
           <div className="flex items-center gap-2">
             <FileText className="text-blue-600" size={20} />
-            <span>New Price Quotation</span>
+            <span>{editingQuoteId ? `Edit Quotation #${editingQuoteId}` : "New Price Quotation"}</span>
           </div>
         }
       >
@@ -471,16 +512,18 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess }: any) => {
           <div className="flex justify-end gap-3 mt-6">
             {" "}
             <div className="flex gap-3">
-              <Button size="large" onClick={onClose}>
-                Cancel
+              <Button size="large" onClick={handleClose}>
+                Close
               </Button>
               <CustomBtn
                 theme={theme}
                 btnTitle={
-                  createQuotation.isPending ? "Generating..." : "Generate Quote"
+                  editingQuoteId
+                    ? updateQuotation.isPending ? "Updating..." : "Update Quote"
+                    : createQuotation.isPending ? "Generating..." : "Generate Quote"
                 }
                 onClick={() => form.submit()}
-                loading={createQuotation.isPending}
+                loading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
                 className="h-10 px-6"
               />
             </div>

@@ -2,10 +2,14 @@ import type { ColumnsType } from "antd/es/table";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import dayjs from "dayjs";
-import { FileText } from "lucide-react";
-import { API_BASE_URL } from "@src/config/api";
+import { FileText, Edit } from "lucide-react";
+import { quotationApi } from "@src/queries/Quotations/quotationApi";
 
-export const getQuotationColumns = (theme: Theme): ColumnsType<Quotation> => [
+export const getQuotationColumns = (
+  theme: Theme,
+  onEdit: (id: number) => void,
+  onPreview: (id: number) => void,
+): ColumnsType<Quotation> => [
   {
     title: "Ref Code",
     dataIndex: "q_ref_code",
@@ -64,16 +68,28 @@ export const getQuotationColumns = (theme: Theme): ColumnsType<Quotation> => [
     key: "actions",
     align: "center",
     render: (_, record) => (
-      <a
-        href={`${API_BASE_URL}/${record.q_pdf_path}`}
-        target="_blank"
-        rel="noreferrer"
-        onClick={(e) => e.stopPropagation()}
-        className="flex items-center justify-center gap-1 hover:underline"
-        style={{ color: theme.button.background }}
-      >
-        <FileText size={16} /> <span className="text-xs">PDF</span>
-      </a>
+      <div className="flex items-center justify-center gap-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onPreview(record.q_id);
+          }}
+          className="flex items-center justify-center gap-1 hover:underline cursor-pointer bg-transparent border-none p-0"
+          style={{ color: theme.button.background }}
+        >
+          <FileText size={16} /> <span className="text-xs">PDF</span>
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(record.q_id);
+          }}
+          className="flex items-center justify-center gap-1 hover:underline cursor-pointer bg-transparent border-none p-0"
+          style={{ color: theme.status?.pending?.color || "#eab308" }}
+        >
+          <Edit size={16} /> <span className="text-xs">Edit</span>
+        </button>
+      </div>
     ),
   },
 ];

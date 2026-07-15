@@ -7,15 +7,18 @@ import {
 } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
+import { quotationApi } from "@src/queries/Quotations/quotationApi";
 import moment from "moment";
 
 interface QuotationCardProps {
   quotation: Quotation;
   theme: Theme;
   onClick?: () => void;
+  onEdit: (id: number) => void;
+  onPreview: (id: number) => void;
 }
 
-const QuotationCard = ({ quotation, theme, onClick }: QuotationCardProps) => {
+const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview }: QuotationCardProps) => {
   return (
     <Card
       style={{
@@ -91,6 +94,29 @@ const QuotationCard = ({ quotation, theme, onClick }: QuotationCardProps) => {
               <span>Items: {quotation.quotation_items.length}</span>
             </div>
           )}
+        </div>
+
+        <div className="flex justify-end gap-4 mt-2 border-t pt-3 border-gray-100/10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview(quotation.q_id);
+            }}
+            className="flex items-center gap-1 hover:underline text-sm font-medium bg-transparent border-none p-0 cursor-pointer"
+            style={{ color: theme.button.background }}
+          >
+            <FileTextOutlined /> PDF
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(quotation.q_id);
+            }}
+            className="flex items-center gap-1 hover:underline text-sm font-medium bg-transparent border-none p-0 cursor-pointer"
+            style={{ color: theme.status?.pending?.color || "#eab308" }}
+          >
+            Edit
+          </button>
         </div>
       </div>
     </Card>

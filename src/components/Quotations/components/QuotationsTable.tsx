@@ -7,12 +7,14 @@ import { getQuotationColumns } from "./quotationColumns";
 interface QuotationsTableProps {
   quotations: Quotation[];
   theme: Theme;
+  onEdit: (id: number) => void;
+  onPreview: (id: number) => void;
 }
 
-const QuotationsTable = ({ quotations, theme }: QuotationsTableProps) => {
+const QuotationsTable = ({ quotations, theme, onEdit, onPreview }: QuotationsTableProps) => {
   const { useBreakpoint } = Grid;
   const screens = useBreakpoint();
-  const columns = getQuotationColumns(theme);
+  const columns = getQuotationColumns(theme, onEdit, onPreview);
 
   return (
     <div className="custom-table">
@@ -23,6 +25,8 @@ const QuotationsTable = ({ quotations, theme }: QuotationsTableProps) => {
               key={quotation.q_id}
               quotation={quotation}
               theme={theme}
+              onEdit={onEdit}
+              onPreview={onPreview}
             />
           ))}
           {quotations.length === 0 && (

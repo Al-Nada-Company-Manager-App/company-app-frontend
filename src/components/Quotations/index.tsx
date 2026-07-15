@@ -6,12 +6,25 @@ import { useThemeContext } from "@src/contexts/theme";
 import { useSearchContext } from "@src/contexts/search";
 import CustomBtn from "../UI/customBtn";
 import QuotationsTable from "./components/QuotationsTable";
+import PdfPreviewModal from "./components/PdfPreviewModal";
 
 const Quotations = ({ isDark }: { isDark: boolean }) => {
   const { theme } = useThemeContext();
   const { searchQuery } = useSearchContext();
   const { data: quotes, isLoading, error } = useGetAllQuotations();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingQuoteId, setEditingQuoteId] = useState<number | null>(null);
+  const [previewQuoteId, setPreviewQuoteId] = useState<number | null>(null);
+
+  const handleOpenEdit = (id: number) => {
+    setEditingQuoteId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingQuoteId(null);
+  };
 
   if (isLoading) {
     return (
@@ -105,21 +118,34 @@ const Quotations = ({ isDark }: { isDark: boolean }) => {
             <CustomBtn
               theme={theme}
               btnTitle="New Quote"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setEditingQuoteId(null);
+                setIsModalOpen(true);
+              }}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
 
-          <QuotationsTable quotations={quotesToShow ?? []} theme={theme} />
+          <QuotationsTable 
+            quotations={quotesToShow ?? []} 
+            theme={theme} 
+            onEdit={handleOpenEdit}
+            onPreview={setPreviewQuoteId}
+          />
         </div>
       </div>
 
       <NewQuoteModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={() => {
-          setIsModalOpen(false);
-        }}
+        onClose={handleCloseModal}
+        editingQuoteId={editingQuoteId}
+        onSuccess={(id: number) => setEditingQuoteId(id)}
+        onPreview={(id: number) => setPreviewQuoteId(id)}
+      />
+
+      <PdfPreviewModal
+        quoteId={previewQuoteId}
+        onClose={() => setPreviewQuoteId(null)}
       />
     </>
   );
