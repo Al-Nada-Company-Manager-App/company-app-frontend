@@ -29,18 +29,8 @@ const Layout = () => {
     console.log("Breadcrumb item clicked:", itemId);
 
     // Handle profile navigation
-    if (itemId === "profile") {
+    if (itemId === "profile" || itemId === "settings") {
       navigate("/profile");
-    }
-    // Handle settings or other menu items here
-    if (itemId === "settings") {
-      navigate("/profile"); // For now, redirect settings to profile
-    }
-    // Handle help
-    if (itemId === "help") {
-      // Open help modal or navigate to help page
-      console.log("Opening help...");
-      // You can implement help modal or help page here
     }
     // Handle logout
     if (itemId === "logout") {
@@ -56,7 +46,7 @@ const Layout = () => {
 
   return (
     <>
-      <ModalStyle theme={itheme} />
+      <ModalStyle />
       <TableStyle theme={itheme} />
       <div
         className="relative w-screen h-screen"
@@ -65,6 +55,7 @@ const Layout = () => {
         {/* Mobile Hamburger Button - Visible only on small screens */}
         <div className="md:hidden fixed top-4 left-4 z-50">
           <Button
+            aria-label="Open navigation"
             icon={<MenuOutlined />}
             onClick={() => setMobileMenuOpen(true)}
             style={{
@@ -91,7 +82,7 @@ const Layout = () => {
           open={mobileMenuOpen}
           styles={{ body: { padding: 0, background: "transparent" } }}
           width={280}
-          closable={false}
+          closable={true}
           style={{ background: "transparent" }}
         >
           <div style={{ height: "100%", padding: "10px" }}>

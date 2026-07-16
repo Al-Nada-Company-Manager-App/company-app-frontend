@@ -1,4 +1,5 @@
-import { Table, Grid } from "antd";
+import { Table } from "antd";
+import ResponsiveList from "@src/components/UI/ResponsiveList";
 import PurchaseCard from "./PurchaseCard";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
@@ -11,44 +12,62 @@ interface PurchasesTableProps {
 }
 
 const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
   const [selectedRow, setSelectedRow] = useState<Purchases>();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  
+  const columns = getPurchasesColumns(theme);
+  const paginatedPurchases = purchases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const tableComponent = (
+    <Table
+      dataSource={paginatedPurchases}
+      columns={columns}
+      showHeader={true}
+      pagination={false}
+      rowKey="pch_id"
+      scroll={{ x: 1000 }}
+      onRow={(record) => ({
+        onClick: () => {
+          setSelectedRow(record);
+          setIsModalVisible(true);
+        },
+      })}
+    />
+  );
+
+  const cardsComponent = (
+    <div className="flex flex-col gap-4">
+      {paginatedPurchases.map((purchase) => (
+        <PurchaseCard
+          key={purchase.pch_id}
+          purchase={purchase}
+          theme={theme}
+          onClick={() => {
+            setSelectedRow(purchase);
+            setIsModalVisible(true);
+          }}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <>
       <div className="custom-table">
-        {!screens.md ? (
-          <div className="flex flex-col gap-4">
-            {purchases.map((purchase) => (
-              <PurchaseCard
-                key={purchase.pch_id}
-                purchase={purchase}
-                theme={theme}
-                onClick={() => {
-                  setSelectedRow(purchase);
-                  setIsModalVisible(true);
-                }}
-              />
-            ))}
-          </div>
-        ) : (
-          <Table
-            dataSource={purchases}
-            columns={getPurchasesColumns(theme)}
-            showHeader={true}
-            pagination={{ pageSize: 10 }}
-            rowKey="pch_id"
-            scroll={{ x: 1000 }}
-            onRow={(record) => ({
-              onClick: () => {
-                setSelectedRow(record);
-                setIsModalVisible(true);
-              },
-            })}
-          />
-        )}
+        <ResponsiveList
+          className="custom-table"
+          table={tableComponent}
+          cards={cardsComponent}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: purchases.length,
+            onChange: (page) => setCurrentPage(page),
+            showSizeChanger: false,
+          }}
+        />
       </div>
       <PurchaseDetailModal
         key={selectedRow?.pch_id}

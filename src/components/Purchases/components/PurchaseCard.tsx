@@ -1,13 +1,8 @@
-import { Card, Avatar } from "antd";
-import {
-  CalendarOutlined,
-  FileTextOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { Card } from "antd";
+import { ShoppingOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
-import moment from "moment";
-import { getImageUrl } from "@src/config/api";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface PurchaseCardProps {
   purchase: Purchases;
@@ -18,74 +13,67 @@ interface PurchaseCardProps {
 const PurchaseCard = ({ purchase, theme, onClick }: PurchaseCardProps) => {
   return (
     <Card
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
+        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
+      }`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
         borderColor: theme.row?.borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
       }}
-      bodyStyle={{ padding: 16 }}
+      bodyStyle={{ padding: "20px" }}
       onClick={onClick}
-      hoverable={!!onClick}
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-            <Avatar
-              size={40}
-              src={getImageUrl("suppliers", purchase.supplier?.s_photo)}
-              icon={<UserOutlined />}
-              style={{ backgroundColor: theme.avatar?.background || "#1890ff" }}
-            />
-            <div className="flex flex-col">
-              <span style={{ color: theme.title?.color, fontWeight: "bold" }}>
-                {purchase.supplier?.s_name || "Unknown Supplier"}
-              </span>
-              <span
-                style={{
-                  color: theme.employee?.roleSubtextColor,
-                  fontSize: "12px",
-                }}
+      <div className="flex items-start justify-between">
+        <div className="flex gap-4 w-full">
+          <div
+            className="flex items-center justify-center rounded-full"
+            style={{
+              width: 56,
+              height: 56,
+              flexShrink: 0,
+              backgroundColor: theme.avatar?.background || "#f0f2f5",
+              color: theme.title?.color || "#1890ff",
+              fontSize: 24,
+              border: `2px solid ${theme.row?.borderColor || "transparent"}`
+            }}
+          >
+            <ShoppingOutlined />
+          </div>
+          <div className="flex-1">
+            <div className="flex justify-between items-start">
+              <h4
+                className="text-lg font-semibold m-0"
+                style={{ color: theme.title?.color }}
               >
-                #{purchase.pch_id}
+                #{purchase.pch_id} - {purchase.supplier?.s_name || "Unknown Supplier"}
+              </h4>
+            </div>
+            
+            <span
+              style={{ color: theme.employee?.roleSubtextColor, opacity: 0.7, display: "block", fontSize: "13px" }}
+            >
+              Bill No: {purchase.pch_billnum}
+            </span>
+            
+            <div className="mt-2 flex flex-col gap-1">
+              <span
+                className="flex items-center gap-2 text-sm font-semibold"
+                style={{ color: "#faad14" }}
+              >
+                Total: {purchase.pch_currency} {purchase.pch_total?.toFixed(2)}
+              </span>
+              
+              <span
+                className="flex items-center gap-2 text-sm"
+                style={{ color: theme.employee?.roleSubtextColor }}
+              >
+                <CalendarOutlined /> {convertTimestampToDate(purchase.pch_date)}
               </span>
             </div>
           </div>
-          <div className="flex flex-col items-end">
-            <span
-              style={{
-                color: theme.title?.color,
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              ${purchase.pch_cost}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1 text-sm mt-2">
-          <div
-            className="flex items-center gap-2"
-            style={{ color: theme.employee?.roleSubtextColor }}
-          >
-            <FileTextOutlined />
-            <span>Bill #{purchase.pch_billnum}</span>
-          </div>
-          <div
-            className="flex items-center gap-2"
-            style={{ color: theme.employee?.roleSubtextColor }}
-          >
-            <CalendarOutlined />
-            <span>{moment(purchase.pch_date).format("YYYY-MM-DD")}</span>
-          </div>
-          {purchase.products && (
-            <div
-              className="flex items-center gap-2"
-              style={{ color: theme.employee?.roleSubtextColor }}
-            >
-              <span>Items: {purchase.products.length}</span>
-            </div>
-          )}
         </div>
       </div>
     </Card>

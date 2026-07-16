@@ -1,7 +1,8 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Image, Modal, Row } from "antd";
+import { Descriptions, Image } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import SupplierPurchasesTable from "./components/SupplierPurchasesTable";
 import SupplierModal from "./SupplierModal";
@@ -38,8 +39,7 @@ const SupplierDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Supplier Details"
         open={modalOpen}
         onCancel={onClose}
@@ -76,11 +76,10 @@ const SupplierDetailModal = ({
             />
           </div>
         }
-        centered
-        style={{ minWidth: 1400, width: "auto", maxWidth: "95vw" }}
+        width={1200}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full md:col-span-1">
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
                 src={getImageUrl("suppliers", supplier?.s_photo)}
@@ -89,8 +88,8 @@ const SupplierDetailModal = ({
                 style={{ borderRadius: "12px", width: "100%" }}
               />
             </div>
-          </Col>
-          <Col span={16}>
+          </div>
+          <div className="w-full md:col-span-2">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Type">
                 {supplier?.s_type === "PERSON" ? "Person" : "Company"}
@@ -138,17 +137,15 @@ const SupplierDetailModal = ({
                   </Descriptions.Item>
                 )}
             </Descriptions>
-          </Col>
-        </Row>
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          <Col span={24}>
+          </div>
+        </div>
+        <div className="mt-6 w-full overflow-x-auto">
             <SupplierPurchasesTable
               supplierId={supplier?.s_id || -1}
               theme={theme}
             />
-          </Col>
-        </Row>
-      </Modal>
+        </div>
+      </AppModal>
       <SupplierModal
         key={supplier?.s_id}
         isOpen={updateOpen}

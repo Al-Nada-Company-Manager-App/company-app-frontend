@@ -49,8 +49,18 @@ const NotificationIcon = ({
   return (
     <div className="relative">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Notifications"
+        aria-expanded={isOpen}
         className="cursor-pointer hover:opacity-70 transition-opacity relative"
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <Bell size={20} color={theme.notification.iconColor} />
         {unreadCount > 0 && (

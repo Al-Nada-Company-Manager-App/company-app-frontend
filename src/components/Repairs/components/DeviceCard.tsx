@@ -1,21 +1,17 @@
 import { Card, Tag } from "antd";
-import { ToolOutlined, CalendarOutlined, BarcodeOutlined } from "@ant-design/icons";
-import type { Repair } from "@src/types/Repairs/repair";
+import { DesktopOutlined, BarcodeOutlined } from "@ant-design/icons";
+import type { Device } from "@src/types/Devices/device";
 import type { Theme } from "@src/types/theme";
-import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
-interface RepairCardProps {
-  repair: Repair;
+interface DeviceCardProps {
+  device: Device;
   theme: Theme;
-  onClick?: () => void;
 }
 
-const RepairCard = ({ repair, theme, onClick }: RepairCardProps) => {
+const DeviceCard = ({ device, theme }: DeviceCardProps) => {
   return (
     <Card
-      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
-        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
-      }`}
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
@@ -24,7 +20,6 @@ const RepairCard = ({ repair, theme, onClick }: RepairCardProps) => {
         borderStyle: "solid",
       }}
       bodyStyle={{ padding: "20px" }}
-      onClick={onClick}
     >
       <div className="flex items-start justify-between">
         <div className="flex gap-4 w-full">
@@ -40,7 +35,7 @@ const RepairCard = ({ repair, theme, onClick }: RepairCardProps) => {
               border: `2px solid ${theme.row?.borderColor || "transparent"}`
             }}
           >
-            <ToolOutlined />
+            <DesktopOutlined />
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-start">
@@ -48,35 +43,22 @@ const RepairCard = ({ repair, theme, onClick }: RepairCardProps) => {
                 className="text-lg font-semibold m-0"
                 style={{ color: theme.title?.color }}
               >
-                {repair.stock?.p_name || "Unknown Device"}
+                {device.p_name}
               </h4>
-              <Tag color={repair.stock?.p_status === "Completed" ? "green" : repair.stock?.p_status === "Repairing" ? "orange" : "red"}>
-                {repair.stock?.p_status || "Unknown"}
+              <Tag color={device.p_status === "Completed" ? "green" : device.p_status === "Repairing" ? "orange" : "red"}>
+                {device.p_status || "Unknown"}
               </Tag>
             </div>
             
-            <span
-              style={{ color: theme.employee?.roleSubtextColor, opacity: 0.7, display: "block", fontSize: "13px" }}
-            >
-              Repair ID: #{repair.rep_id}
-            </span>
-            
             <div className="mt-2 flex flex-col gap-1">
-              {repair.stock?.serial_number && (
+              {device.serial_number && (
                 <span
                   className="flex items-center gap-2 text-sm"
                   style={{ color: theme.employee?.roleSubtextColor }}
                 >
-                  <BarcodeOutlined /> {repair.stock.serial_number}
+                  <BarcodeOutlined /> {device.serial_number}
                 </span>
               )}
-              
-              <span
-                className="flex items-center gap-2 text-sm"
-                style={{ color: theme.employee?.roleSubtextColor }}
-              >
-                <CalendarOutlined /> {convertTimestampToDate(repair.rep_date)}
-              </span>
             </div>
           </div>
         </div>
@@ -85,4 +67,4 @@ const RepairCard = ({ repair, theme, onClick }: RepairCardProps) => {
   );
 };
 
-export default RepairCard;
+export default DeviceCard;

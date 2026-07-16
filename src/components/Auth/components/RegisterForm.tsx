@@ -153,12 +153,14 @@ export const RegisterForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <label
+            htmlFor="reg-fname"
             style={{ color: theme.headers.color }}
             className="text-sm font-medium block"
           >
             First Name *
           </label>
           <input
+            id="reg-fname"
             type="text"
             name="fName"
             value={formData.fName}
@@ -176,12 +178,14 @@ export const RegisterForm = ({
         </div>
         <div className="space-y-2">
           <label
+            htmlFor="reg-lname"
             style={{ color: theme.headers.color }}
             className="text-sm font-medium block"
           >
             Last Name *
           </label>
           <input
+            id="reg-lname"
             type="text"
             name="lName"
             value={formData.lName}
@@ -202,12 +206,14 @@ export const RegisterForm = ({
       {/* Email Field */}
       <div className="space-y-2">
         <label
+          htmlFor="reg-email"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
           Email Address
         </label>
         <input
+          id="reg-email"
           type="email"
           name="email"
           value={formData.email}
@@ -226,12 +232,14 @@ export const RegisterForm = ({
       {/* Phone Field */}
       <div className="space-y-2">
         <label
+          htmlFor="reg-phone"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
           Phone Number
         </label>
         <input
+          id="reg-phone"
           type="tel"
           name="phone"
           value={formData.phone}
@@ -250,12 +258,14 @@ export const RegisterForm = ({
       {/* Username Field */}
       <div className="space-y-2">
         <label
+          htmlFor="reg-username"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
           Username *
         </label>
         <input
+          id="reg-username"
           type="text"
           name="username"
           value={formData.username}
@@ -275,6 +285,7 @@ export const RegisterForm = ({
       {/* Password Field */}
       <div className="space-y-2">
         <label
+          htmlFor="reg-password"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
@@ -282,6 +293,7 @@ export const RegisterForm = ({
         </label>
         <div className="relative">
           <input
+            id="reg-password"
             type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
@@ -298,6 +310,7 @@ export const RegisterForm = ({
           />
           <button
             type="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
             style={{ color: theme.headers.color }}

@@ -5,6 +5,7 @@ import {
   PhoneOutlined,
   MailOutlined,
 } from "@ant-design/icons";
+import { getImageUrl } from "@src/config/api";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 
@@ -17,19 +18,24 @@ interface CustomerCardProps {
 const CustomerCard = ({ customer, theme, onClick }: CustomerCardProps) => {
   return (
     <Card
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
+        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
+      }`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
         borderColor: theme.row?.borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
       }}
-      bodyStyle={{ padding: 16 }}
+      bodyStyle={{ padding: "20px" }}
       onClick={onClick}
-      hoverable={!!onClick}
     >
       <div className="flex items-start justify-between">
         <div className="flex gap-4">
           <Avatar
-            size={48}
+            size={56}
+            src={customer.c_photo ? getImageUrl("customers", customer.c_photo) : undefined}
             icon={
               customer.c_type === "COMPANY" ? (
                 <ShopOutlined />
@@ -40,6 +46,7 @@ const CustomerCard = ({ customer, theme, onClick }: CustomerCardProps) => {
             style={{
               flexShrink: 0,
               backgroundColor: theme.avatar?.background || "#1890ff",
+              border: `2px solid ${theme.row?.borderColor || "transparent"}`
             }}
           />
           <div>

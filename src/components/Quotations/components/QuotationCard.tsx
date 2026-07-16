@@ -1,121 +1,98 @@
-import { Card, Avatar } from "antd";
-import {
-  UserOutlined,
-  FileTextOutlined,
-  CalendarOutlined,
-  NumberOutlined,
-} from "@ant-design/icons";
+import { Card } from "antd";
+import { FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
-import moment from "moment";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface QuotationCardProps {
   quotation: Quotation;
   theme: Theme;
   onClick?: () => void;
-  onEdit: (id: number) => void;
-  onPreview: (id: number) => void;
+  onEdit?: (id: number) => void;
+  onPreview?: (id: number) => void;
 }
 
 const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview }: QuotationCardProps) => {
   return (
     <Card
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
+        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
+      }`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
         borderColor: theme.row?.borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
       }}
-      bodyStyle={{ padding: 16 }}
+      bodyStyle={{ padding: "20px" }}
       onClick={onClick}
-      hoverable={!!onClick}
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-            <Avatar
-              size={40}
-              icon={<UserOutlined />}
-              style={{ backgroundColor: theme.avatar?.background || "#1890ff" }}
-            />
-            <div className="flex flex-col">
-              <span style={{ color: theme.title?.color, fontWeight: "bold" }}>
-                {quotation.q_customer_name || "Unknown Customer"}
-              </span>
-              <span
-                style={{
-                  color: theme.employee?.roleSubtextColor,
-                  fontSize: "12px",
-                }}
-              >
-                #{quotation.q_id}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-end">
-            <span
-              style={{
-                color: theme.title?.color,
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              ${quotation.q_total_amount}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1 text-sm mt-2">
+      <div className="flex items-start justify-between">
+        <div className="flex gap-4 w-full">
           <div
-            className="flex items-center gap-2"
-            style={{ color: theme.employee?.roleSubtextColor }}
+            className="flex items-center justify-center rounded-full"
+            style={{
+              width: 56,
+              height: 56,
+              flexShrink: 0,
+              backgroundColor: theme.avatar?.background || "#f0f2f5",
+              color: theme.title?.color || "#1890ff",
+              fontSize: 24,
+              border: `2px solid ${theme.row?.borderColor || "transparent"}`
+            }}
           >
-            <NumberOutlined />
-            <span>Ref: {quotation.q_ref_code}</span>
+            <FileTextOutlined />
           </div>
-          {quotation.q_valid_until && (
-            <div
-              className="flex items-center gap-2"
-              style={{ color: theme.employee?.roleSubtextColor }}
-            >
-              <CalendarOutlined />
-              <span>
-                Valid Until:{" "}
-                {moment(quotation.q_valid_until).format("YYYY-MM-DD")}
+          <div className="flex-1">
+            <div className="flex justify-between items-start">
+              <h4
+                className="text-lg font-semibold m-0"
+                style={{ color: theme.title?.color }}
+              >
+                #{quotation.q_id} - {quotation.q_customer_name || "Unknown Customer"}
+              </h4>
+            </div>
+            
+            <div className="mt-2 flex flex-col gap-1">
+              <span
+                className="flex items-center gap-2 text-sm font-semibold"
+                style={{ color: "#faad14" }}
+              >
+                Total: {quotation.q_currency} {quotation.q_total_amount?.toFixed(2)}
+              </span>
+              
+              <span
+                className="flex items-center gap-2 text-sm"
+                style={{ color: theme.employee?.roleSubtextColor }}
+              >
+                <CalendarOutlined /> {convertTimestampToDate(quotation.q_created_at)}
               </span>
             </div>
-          )}
-          {quotation.quotation_items && (
-            <div
-              className="flex items-center gap-2"
-              style={{ color: theme.employee?.roleSubtextColor }}
-            >
-              <FileTextOutlined />
-              <span>Items: {quotation.quotation_items.length}</span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-end gap-4 mt-2 border-t pt-3 border-gray-100/10">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onPreview(quotation.q_id);
-            }}
-            className="flex items-center gap-1 hover:underline text-sm font-medium bg-transparent border-none p-0 cursor-pointer"
-            style={{ color: theme.button.background }}
-          >
-            <FileTextOutlined /> PDF
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(quotation.q_id);
-            }}
-            className="flex items-center gap-1 hover:underline text-sm font-medium bg-transparent border-none p-0 cursor-pointer"
-            style={{ color: "#eab308" }}
-          >
-            Edit
-          </button>
+            
+            {(onEdit || onPreview) && (
+              <div className="mt-4 flex gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                {onPreview && (
+                  <button
+                    className="px-3 py-1 text-sm font-medium rounded-md"
+                    style={{ backgroundColor: "#1890ff", color: "white", border: "none" }}
+                    onClick={() => onPreview(quotation.q_id)}
+                  >
+                    Preview
+                  </button>
+                )}
+                {onEdit && (
+                  <button
+                    className="px-3 py-1 text-sm font-medium rounded-md"
+                    style={{ backgroundColor: "#faad14", color: "white", border: "none" }}
+                    onClick={() => onEdit(quotation.q_id)}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Card>

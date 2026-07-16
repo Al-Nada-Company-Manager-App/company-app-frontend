@@ -1,6 +1,7 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Image, Modal, Row, Spin } from "antd";
+import { Descriptions, Image, Spin } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
 import CustomerModal from "./CustomerModal";
@@ -42,8 +43,7 @@ const CustomerDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Customer Details"
         open={modalOpen}
         onCancel={onClose}
@@ -80,9 +80,8 @@ const CustomerDetailModal = ({
             />
           </div>
         }
-        centered
+        width={1200}
         zIndex={10100}
-        style={{ minWidth: 1400, width: "auto", maxWidth: "95vw" }}
       >
         {isLoading ? (
           <div
@@ -97,8 +96,8 @@ const CustomerDetailModal = ({
           </div>
         ) : (
           <>
-            <Row gutter={[16, 16]}>
-              <Col span={8}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="w-full md:col-span-1">
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Image
                     src={getImageUrl("customers", customer?.c_photo)}
@@ -107,8 +106,8 @@ const CustomerDetailModal = ({
                     style={{ borderRadius: "12px", width: "100%" }}
                   />
                 </div>
-              </Col>
-              <Col span={16}>
+              </div>
+              <div className="w-full md:col-span-2">
                 <Descriptions bordered column={1}>
                   <Descriptions.Item label="Type">
                     {customer?.c_type === "PERSON" ? "Person" : "Company"}
@@ -159,19 +158,17 @@ const CustomerDetailModal = ({
                       </Descriptions.Item>
                     )}
                 </Descriptions>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-              <Col span={24}>
+              </div>
+            </div>
+            <div className="mt-6 w-full overflow-x-auto">
                 <CustomerSalesTable
                   customerId={customer?.c_id || -1}
                   theme={theme}
                 />
-              </Col>
-            </Row>
+            </div>
           </>
         )}
-      </Modal>
+      </AppModal>
       <CustomerModal
         key={customer?.c_id}
         isOpen={updateOpen}

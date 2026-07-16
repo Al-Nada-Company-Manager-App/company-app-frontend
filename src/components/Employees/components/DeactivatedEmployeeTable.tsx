@@ -1,4 +1,6 @@
-import { Table, Grid } from "antd";
+import { Table } from "antd";
+import ResponsiveList from "@src/components/UI/ResponsiveList";
+import { useState } from "react";
 import EmployeeCard from "./EmployeeCard";
 import * as Icons from "lucide-react";
 import type { Employee } from "@src/types/Employees/employee";
@@ -19,15 +21,15 @@ const DeactivatedEmployeeTable = ({
   theme,
   onActivate,
 }: DeactivatedEmployeeTableProps) => {
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
-  return (
-    <>
-      <div className="custom-table">
-        {!screens.md ? (
-          <div className="flex flex-col gap-4">
-            {employees.map((employee) => (
-              <EmployeeCard
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  
+  const paginatedEmployees = employees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const cardsComponent = (
+    <div className="flex flex-col gap-4">
+      {paginatedEmployees.map((employee) => (
+        <EmployeeCard
                 key={employee.e_id}
                 employee={employee}
                 theme={theme}
@@ -49,15 +51,17 @@ const DeactivatedEmployeeTable = ({
                 }
               />
             ))}
-          </div>
-        ) : (
-          <Table<Employee>
-            dataSource={employees}
-            pagination={{ pageSize: 10 }}
-            showHeader={true}
-            rowKey="e_id"
-            scroll={{ x: 800 }} // Enable horizontal scrolling
-          >
+      </div>
+  );
+
+  const tableComponent = (
+    <Table<Employee>
+      dataSource={paginatedEmployees}
+      pagination={false}
+      showHeader={true}
+      rowKey="e_id"
+      scroll={{ x: 800 }} // Enable horizontal scrolling
+    >
             <Column
               title="Employee"
               dataIndex="f_name"
@@ -86,10 +90,24 @@ const DeactivatedEmployeeTable = ({
                 </PermissionGuard>
               )}
             />
-          </Table>
-        )}
-      </div>
-    </>
+    </Table>
+  );
+
+  return (
+    <div className="custom-table">
+      <ResponsiveList
+        className="custom-table"
+        table={tableComponent}
+        cards={cardsComponent}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: employees.length,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false,
+        }}
+      />
+    </div>
   );
 };
 

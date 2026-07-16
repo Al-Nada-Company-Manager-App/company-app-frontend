@@ -1,4 +1,5 @@
-import { Table, Grid } from "antd";
+import { Table } from "antd";
+import ResponsiveList from "@src/components/UI/ResponsiveList";
 import RepairCard from "./RepairCard";
 import type { Repair } from "@src/types/Repairs/repair";
 import type { Theme } from "@src/types/theme";
@@ -16,8 +17,6 @@ interface RepairProcessTableProps {
 const { Column } = Table;
 
 const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
   const [selectedRow, setSelectedRow] = useState<Repair>();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { data: freshSelectedRepair } = useGetRepairById(
@@ -25,76 +24,98 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
     isModalVisible,
   );
 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  
+  const paginatedRepairs = repairs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const tableComponent = (
+    <Table<Repair>
+      dataSource={paginatedRepairs}
+      pagination={false}
+      rowKey="rep_id"
+      onRow={(record) => ({
+        onClick: () => {
+          setSelectedRow(record);
+          setIsModalVisible(true);
+        },
+      })}
+    >
+      <Column title="Repair ID" dataIndex="rep_id" key="rep_id" />
+
+      <Column
+        title="Repair Date"
+        dataIndex="rep_date"
+        key="rep_date"
+        render={(date: string) => convertTimestampToDate(date)}
+      />
+
+      <Column
+        title="Serial Number"
+        dataIndex={["stock", "serial_number"]}
+        key="serial_number"
+      />
+
+      <Column
+        title="Product Name"
+        dataIndex={["stock", "p_name"]}
+        key="p_name"
+      />
+
+      <Column
+        title="Status"
+        dataIndex={["stock", "p_status"]}
+        key="p_status"
+        render={(status: string) => <StatusBadge status={status} />}
+      />
+    </Table>
+  );
+
+  const cardsComponent = (
+    <div className="flex flex-col gap-4">
+      {paginatedRepairs.map((repair) => (
+        <RepairCard
+          key={repair.rep_id}
+          repair={repair}
+          theme={theme}
+          onClick={() => {
+            setSelectedRow(repair);
+            setIsModalVisible(true);
+          }}
+        />
+      ))}
+      {paginatedRepairs.length === 0 && (
+        <div
+          style={{
+            padding: "20px",
+            color: theme.employee.nameColor,
+            textAlign: "center",
+          }}
+        >
+          No repairs found
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <>
       <div className="custom-table">
-        {!screens.md ? (
-          <div className="flex flex-col gap-4">
-            {repairs.map((repair) => (
-              <RepairCard
-                key={repair.rep_id}
-                repair={repair}
-                theme={theme}
-                onClick={() => {
-                  setSelectedRow(repair);
-                  setIsModalVisible(true);
-                }}
-              />
-            ))}
-            {repairs.length === 0 && (
-              <div
-                style={{
-                  padding: "20px",
-                  color: theme.employee.nameColor,
-                  textAlign: "center",
-                }}
-              >
-                No repairs found
-              </div>
-            )}
-          </div>
-        ) : (
-          <Table<Repair>
-            dataSource={repairs}
-            pagination={{ pageSize: 10 }}
-            rowKey="rep_id"
-            onRow={(record) => ({
-              onClick: () => {
-                setSelectedRow(record);
-                setIsModalVisible(true);
-              },
-            })}
-          >
-            <Column title="Repair ID" dataIndex="rep_id" key="rep_id" />
-
-            <Column
-              title="Repair Date"
-              dataIndex="rep_date"
-              key="rep_date"
-              render={(date: string) => convertTimestampToDate(date)}
-            />
-
-            <Column
-              title="Serial Number"
-              dataIndex={["stock", "serial_number"]}
-              key="serial_number"
-            />
-
-            <Column
-              title="Product Name"
-              dataIndex={["stock", "p_name"]}
-              key="p_name"
-            />
-
-            <Column
-              title="Status"
-              dataIndex={["stock", "p_status"]}
-              key="p_status"
-              render={(status: string) => <StatusBadge status={status} />}
-            />
-          </Table>
-        )}
+        <ResponsiveList
+          className="custom-table"
+          table={tableComponent}
+          cards={cardsComponent}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: repairs.length,
+            onChange: (page) => setCurrentPage(page),
+            showSizeChanger: false,
+          }}
+        />
       </div>
+
 
       <RepairDetailModal
         modalOpen={isModalVisible}

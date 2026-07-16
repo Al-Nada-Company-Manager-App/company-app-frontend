@@ -1,4 +1,5 @@
-import { Modal, Descriptions, Tag, Row, Col } from "antd";
+import { Descriptions, Tag } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import type { Debt } from "@src/types/Debts/debt";
 import type { Theme } from "@src/types/theme";
 import moment from "moment";
@@ -64,8 +65,7 @@ const DebtDetailModal = ({
   };
 
   return (
-    <Modal
-      className="custom-modal"
+    <AppModal
       title="Debt Details"
       open={modalOpen}
       onCancel={onClose}
@@ -105,12 +105,11 @@ const DebtDetailModal = ({
           )}
         </div>
       }
-      centered
       width={900}
     >
-      <Row gutter={[24, 24]}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Customer Information */}
-        <Col span={8}>
+        <div className="w-full md:col-span-1">
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "24px" }}>
             <img
               src={
@@ -148,10 +147,10 @@ const DebtDetailModal = ({
               Customer ID: {debt.sales?.c_id || "N/A"}
             </p>
           </div>
-        </Col>
+        </div>
 
         {/* Debt Information */}
-        <Col span={16}>
+        <div className="w-full md:col-span-2">
           <Descriptions bordered column={1} size="middle">
             <Descriptions.Item label="Debt ID">
               <span style={{ fontFamily: "monospace", fontWeight: "600" }}>
@@ -191,10 +190,11 @@ const DebtDetailModal = ({
               {moment(debt.d_date).format("MMMM DD, YYYY")}
             </Descriptions.Item>
           </Descriptions>
-        </Col>
+        </div>
+      </div>
 
-        {/* Sale Information */}
-        <Col span={24}>
+      {/* Sale Information */}
+      <div className="mt-6">
           <h3
             style={{
               color: theme.employee?.nameColor,
@@ -207,7 +207,7 @@ const DebtDetailModal = ({
           >
             Related Sale Information
           </h3>
-          <Descriptions bordered column={2} size="middle">
+          <Descriptions bordered column={{ xs: 1, sm: 1, md: 2 }} size="middle">
             <Descriptions.Item label="Sale ID">
               <span style={{ fontFamily: "monospace", fontWeight: "600" }}>
                 #{debt.sales.sl_id}
@@ -276,9 +276,8 @@ const DebtDetailModal = ({
               {debt.sales.sl_currency} {debt.sales.sl_inamount.toFixed(2)}
             </Descriptions.Item>
           </Descriptions>
-        </Col>
-      </Row>
-    </Modal>
+      </div>
+    </AppModal>
   );
 };
 

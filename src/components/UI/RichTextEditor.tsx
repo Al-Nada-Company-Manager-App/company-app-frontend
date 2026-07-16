@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import DOMPurify from "dompurify";
 
 // Register font sizes
 const Size = Quill.import("attributors/style/size") as any;
@@ -127,7 +128,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       <ReactQuill
         theme="snow"
         value={value || ""}
-        onChange={onChange}
+        onChange={(val: string) => {
+          if (onChange) {
+            const sanitized = DOMPurify.sanitize(val, {
+              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'span', 'ul', 'ol', 'li', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'],
+              ALLOWED_ATTR: ['href', 'target', 'style', 'class']
+            });
+            onChange(sanitized);
+          }
+        }}
         modules={modules}
         formats={formats}
         placeholder={placeholder}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Modal, Form, Button, Row, Col, Select, InputNumber, Divider } from "antd";
+import { Form, Button, Select, InputNumber, Divider, message } from "antd";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
 import { useThemeContext } from "@src/contexts/theme";
@@ -15,6 +15,7 @@ import SaleFinancialInfo from "./components/SaleFinancialInfo";
 import ProductSelection from "./components/ProductSelection";
 import SaleModalButtons from "./components/SaleModalButtons";
 import type { Product } from "@src/types/Products/product";
+import AppModal from "@src/components/UI/AppModal";
 
 const { Option } = Select;
 
@@ -218,6 +219,15 @@ const SaleModal: React.FC<SaleModalProps> = ({
         });
       } else {
         // Add Mode
+        if (values.sl_type === "SELLITEMS" && selectedProducts.length === 0) {
+          message.error("Please add at least one product before submitting.");
+          return;
+        }
+        if (values.sl_type === "REPAIR" && selectedRepairItems.length === 0) {
+          message.error("Please select at least one repair item before submitting.");
+          return;
+        }
+
         const saleData: Partial<Sales> = {
           sl_type: values.sl_type,
           customer: { c_id: values.customer_id },
@@ -276,14 +286,15 @@ const SaleModal: React.FC<SaleModalProps> = ({
   if (sale) {
     // Edit Modal Layout
     return (
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Update Sale"
         open={isOpen}
         onCancel={onClose}
         footer={null}
         centered
         width={600}
+        form={form}
+        isLoading={updateSale.isPending}
       >
         <Form
           form={form}
@@ -291,8 +302,8 @@ const SaleModal: React.FC<SaleModalProps> = ({
           onFinish={onFinish}
           style={{ maxWidth: "100%" }}
         >
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
+        <div className="w-full">
+            <div className="w-full">
               <div
                 style={{
                   background: theme.container.background || "#f5f5f5",
@@ -327,11 +338,11 @@ const SaleModal: React.FC<SaleModalProps> = ({
                   {remainingAmount < 0 && " (Overpaid)"}
                 </p>
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
 
-          <Row gutter={[16, 16]}>
-            <Col span={12}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full">
               <Form.Item
                 name="sl_payed"
                 label="Paid Amount"
@@ -347,8 +358,8 @@ const SaleModal: React.FC<SaleModalProps> = ({
                   precision={2}
                 />
               </Form.Item>
-            </Col>
-            <Col span={12}>
+            </div>
+            <div className="w-full">
               <Form.Item
                 name="sl_inamount"
                 label="Insurance Amount"
@@ -364,11 +375,11 @@ const SaleModal: React.FC<SaleModalProps> = ({
                   precision={2}
                 />
               </Form.Item>
-            </Col>
-          </Row>
+            </div>
+          </div>
 
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full md:col-span-2">
               <Form.Item
                 name="sl_status"
                 label="Sale Status"
@@ -380,8 +391,8 @@ const SaleModal: React.FC<SaleModalProps> = ({
                   <Option value="CANCELED">Canceled</Option>
                 </Select>
               </Form.Item>
-            </Col>
-          </Row>
+            </div>
+          </div>
 
           <Form.Item>
             <div className="flex justify-end gap-4">
@@ -411,20 +422,21 @@ const SaleModal: React.FC<SaleModalProps> = ({
             </div>
           </Form.Item>
         </Form>
-      </Modal>
+      </AppModal>
     );
   }
 
   // Add Modal Layout
   return (
-    <Modal
-      className="custom-modal"
+    <AppModal
       title="Add New Sale"
       open={isOpen}
       onCancel={onClose}
       footer={null}
       centered
       width={1200}
+      form={form}
+      isLoading={createSale.isPending}
     >
       <Form
         form={form}
@@ -439,7 +451,7 @@ const SaleModal: React.FC<SaleModalProps> = ({
           in_due_date: dayjs().add(30, "days"),
         }}
       >
-        <Row gutter={[24, 24]}>
+        <div className="flex flex-col md:flex-row gap-6">
           <SaleBasicInfo
             customers={customers}
             loadingCustomers={loadingCustomers}
@@ -459,7 +471,7 @@ const SaleModal: React.FC<SaleModalProps> = ({
             onAmountPaidChange={setAmountPaid}
             onInsuranceAmountChange={setInsuranceAmount}
           />
-        </Row>
+        </div>
 
         <ProductSelection
           saleType={saleType}
@@ -487,7 +499,7 @@ const SaleModal: React.FC<SaleModalProps> = ({
           />
         </Form.Item>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

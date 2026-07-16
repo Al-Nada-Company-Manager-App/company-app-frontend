@@ -68,12 +68,14 @@ export const LoginForm = ({
       {/* Username Field */}
       <div className="space-y-2">
         <label
+          htmlFor="login-username"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
           Username
         </label>
         <input
+          id="login-username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -91,6 +93,7 @@ export const LoginForm = ({
       {/* Password Field */}
       <div className="space-y-2">
         <label
+          htmlFor="login-password"
           style={{ color: theme.headers.color }}
           className="text-sm font-medium block"
         >
@@ -98,6 +101,7 @@ export const LoginForm = ({
         </label>
         <div className="relative">
           <input
+            id="login-password"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -112,6 +116,7 @@ export const LoginForm = ({
           />
           <button
             type="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
             style={{ color: theme.headers.color }}
@@ -123,8 +128,9 @@ export const LoginForm = ({
 
       {/* Remember Me & Forgot Password */}
       <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label htmlFor="login-remember" className="flex items-center gap-2 cursor-pointer">
           <input
+            id="login-remember"
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}

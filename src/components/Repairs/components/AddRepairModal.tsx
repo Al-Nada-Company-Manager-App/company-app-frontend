@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import {
-  Modal,
   Form,
   Input,
+  message,
   Select,
   DatePicker,
   InputNumber,
-  Row,
-  Col,
   Button,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -22,6 +20,7 @@ import type { Device } from "@src/types/Devices/device";
 import type { CreateRepairInput } from "@src/types/Repairs/repair";
 
 const { Option } = Select;
+import AppModal from "@src/components/UI/AppModal";
 
 interface AddRepairModalProps {
   open: boolean;
@@ -56,6 +55,22 @@ const AddRepairModal: React.FC<AddRepairModalProps> = ({
     field: keyof SelectedSparePart,
     value: number | null
   ) => {
+    if (field === "sp_id" && value) {
+      if (selectedSpareParts.some((p, i) => i !== index && p.sp_id === value)) {
+        message.warning("This spare part is already selected.");
+        return;
+      }
+    }
+
+    if (field === "sp_quantity" && value) {
+      const spId = selectedSpareParts[index].sp_id;
+      const sp = spareParts.find((s: SparePart) => s.p_id === spId);
+      if (sp && value > sp.p_quantity) {
+        message.warning(`Cannot exceed available stock of ${sp.p_quantity}.`);
+        return;
+      }
+    }
+
     const updated = [...selectedSpareParts];
     updated[index][field] = value as never;
     setSelectedSpareParts(updated);
@@ -100,14 +115,15 @@ const onFinish = async (values: {
 
 
   return (
-    <Modal
+    <AppModal
       centered
       title="Add New Repair Process"
       open={open}
       onCancel={onClose}
       footer={null}
       width={800}
-      className="custom-modal"
+      form={form}
+      isLoading={createRepair.isPending}
     >
       <Form
         form={form}
@@ -115,9 +131,9 @@ const onFinish = async (values: {
         onFinish={onFinish}
         className="space-y-2"
       >
-        <Row gutter={[16, 16]}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Device Selection */}
-          <Col span={12}>
+          <div className="w-full">
             <Form.Item
               name="p_id"
               label="Device Under Maintenance"
@@ -134,20 +150,19 @@ const onFinish = async (values: {
                 ))}
               </Select>
             </Form.Item>
-          </Col>
-
+          </div>
           {/* Remarks */}
-          <Col span={12}>
+          <div className="w-full">
             <Form.Item name="remarks" label="Repair Remarks">
               <Input.TextArea placeholder="Enter remarks about the repair" />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         {/* Conditionally show Repair Date */}
         {selectedDeviceStatus === "Completed" && (
-          <Row gutter={[16, 16]}>
-            <Col span={12}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full">
               <Form.Item
                 name="rep_date"
                 label="Repair Date"
@@ -157,16 +172,16 @@ const onFinish = async (values: {
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
-            </Col>
-          </Row>
+            </div>
+          </div>
         )}
 
         {/* Spare Parts Section */}
         <div>
           <h4 className="mb-2">Spare Parts</h4>
           {selectedSpareParts.map((part, index) => (
-            <Row gutter={[16, 16]} key={index} style={{ marginBottom: "10px" }}>
-              <Col span={16}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3" key={index}>
+              <div className="w-full md:col-span-2">
                 <Select
                   placeholder="Select Spare Part"
                   style={{ width: "100%" }}
@@ -179,8 +194,8 @@ const onFinish = async (values: {
                     </Option>
                   ))}
                 </Select>
-              </Col>
-              <Col span={8}>
+              </div>
+              <div className="w-full">
                 <InputNumber
                   min={1}
                   placeholder="Quantity"
@@ -190,8 +205,8 @@ const onFinish = async (values: {
                   }
                   value={part.sp_quantity}
                 />
-              </Col>
-            </Row>
+              </div>
+            </div>
           ))}
 
           <Button
@@ -232,7 +247,7 @@ const onFinish = async (values: {
           </div>
         </Form.Item>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

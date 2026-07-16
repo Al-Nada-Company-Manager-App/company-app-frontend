@@ -26,7 +26,7 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
 
   return (
     <>
-      <ModalStyle theme={theme} />
+      <ModalStyle />
       <Modal
         open={!!quoteId}
         onCancel={onClose}

@@ -1,4 +1,5 @@
-import { Table, Grid } from "antd";
+import { Table } from "antd";
+import ResponsiveList from "@src/components/UI/ResponsiveList";
 import DebtCard from "./DebtCard";
 import { useState } from "react";
 import type { Debt } from "@src/types/Debts/debt";
@@ -15,13 +16,13 @@ interface DebtTableProps {
 }
 
 const DebtTable = ({ debts, theme }: DebtTableProps) => {
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
   const { isDark } = useThemeContext();
 
   const [selectedDebt, setSelectedDebt] = useState<Debt | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const deleteDebt = useDeleteDebt(isDark);
 
   const handleView = (debt: Debt) => {
@@ -42,43 +43,59 @@ const DebtTable = ({ debts, theme }: DebtTableProps) => {
 
   const columns = getDebtColumns(theme);
 
+  const paginatedDebts = debts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const tableComponent = (
+    <Table
+      className="custom-table"
+      columns={columns}
+      dataSource={paginatedDebts}
+      rowKey="d_id"
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            handleView(record);
+          },
+        };
+      }}
+      pagination={false}
+      scroll={{ x: 1200 }}
+      style={{
+        background: theme.container?.background,
+        borderRadius: "12px",
+      }}
+    />
+  );
+
+  const cardsComponent = (
+    <div className="flex flex-col gap-4 mb-4">
+      {paginatedDebts.map((debt) => (
+        <DebtCard
+          key={debt.d_id}
+          debt={debt}
+          theme={theme}
+          onClick={() => handleView(debt)}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <>
-      {!screens.md ? (
-        <div className="flex flex-col gap-4 mb-4">
-          {debts.map((debt) => (
-            <DebtCard
-              key={debt.d_id}
-              debt={debt}
-              theme={theme}
-              onClick={() => handleView(debt)}
-            />
-          ))}
-        </div>
-      ) : (
-        <Table
+      <div className="custom-table">
+        <ResponsiveList
           className="custom-table"
-          columns={columns}
-          dataSource={debts}
-          rowKey="d_id"
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                handleView(record);
-              },
-            };
-          }}
+          table={tableComponent}
+          cards={cardsComponent}
           pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-          }}
-          scroll={{ x: 1200 }}
-          style={{
-            background: theme.container?.background,
-            borderRadius: "12px",
+            current: currentPage,
+            pageSize: pageSize,
+            total: debts.length,
+            onChange: (page) => setCurrentPage(page),
+            showSizeChanger: false,
           }}
         />
-      )}
+      </div>
 
       {/* Detail Modal */}
       <DebtDetailModal

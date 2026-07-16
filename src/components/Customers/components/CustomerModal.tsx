@@ -1,10 +1,7 @@
 import {
-  Modal,
   Form,
   Input,
   Button,
-  Row,
-  Col,
   Radio,
   Select,
 } from "antd";
@@ -22,6 +19,7 @@ import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
 import { ImageUpload } from "@src/components/UI";
 import { getImageUrl } from "@src/config/api";
+import AppModal from "@src/components/UI/AppModal";
 
 interface CustomerModalProps {
   isOpen: boolean;
@@ -119,8 +117,7 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
   };
 
   return (
-    <Modal
-      className="custom-modal"
+    <AppModal
       title={customer ? "Update Customer" : "Add Customer"}
       open={isOpen}
       onCancel={onClose}
@@ -128,6 +125,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
       centered
       width={800}
       zIndex={10200}
+      form={form}
+      isLoading={customer ? updateCustomer.isPending : createCustomer.isPending}
     >
       <Form
         form={form}
@@ -135,8 +134,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
         onFinish={onFinish}
         style={{ maxWidth: "100%" }}
       >
-        <Row gutter={[24, 24]}>
-          <Col span={8}>
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="w-full md:w-1/3">
             <ImageUpload
               value={imageFile}
               onChange={(file) => setImageFile(file)}
@@ -146,10 +145,10 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
               isOpen={isOpen}
               altText={customer ? customer.c_name : "Customer"}
             />
-          </Col>
-          <Col span={16}>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+          </div>
+          <div className="w-full md:w-2/3 flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item name="c_type" label="Type" initialValue="COMPANY">
                   <Radio.Group
                     onChange={(e) => setCustomerType(e.target.value)}
@@ -158,9 +157,9 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                     <Radio value="PERSON">Person</Radio>
                   </Radio.Group>
                 </Form.Item>
-              </Col>
+              </div>
               {customerType === "PERSON" && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item name="c_company_id" label="Company">
                     <Select
                       placeholder="Select Company"
@@ -176,11 +175,11 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                       }))}
                     />
                   </Form.Item>
-                </Col>
+                </div>
               )}
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   name="c_name"
                   label="Customer Name"
@@ -193,13 +192,13 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                 >
                   <Input placeholder="Enter customer name" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item name="c_business_type" label="Type of Business">
                   <Input placeholder="Enter type of business" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="c_email"
               label="Email"
@@ -208,11 +207,12 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                   message: "Please enter the customer email",
                 },
               ]}
+              className="mb-0"
             >
               <Input placeholder="Enter email" />
             </Form.Item>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   name="c_phone"
                   label="Phone"
@@ -224,8 +224,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                 >
                   <Input placeholder="Enter phone number" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   name="c_fax"
                   label="Fax"
@@ -237,8 +237,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                 >
                   <Input placeholder="Enter fax number" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="c_address"
               label="Address"
@@ -247,11 +247,12 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                   message: "Please enter the customer address",
                 },
               ]}
+              className="mb-0"
             >
               <Input.TextArea placeholder="Enter address" rows={3} />
             </Form.Item>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   name="c_city"
                   label="City"
@@ -263,8 +264,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                 >
                   <Input placeholder="Enter city" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   name="c_country"
                   label="Country"
@@ -276,8 +277,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                 >
                   <Input placeholder="Enter country" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="c_zipcode"
               label="Zip Code"
@@ -286,11 +287,12 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                   message: "Please enter the customer zipcode",
                 },
               ]}
+              className="mb-0"
             >
               <Input placeholder="Enter zip code" />
             </Form.Item>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item name="c_latitude" label="Latitude">
                   <Input
                     type="number"
@@ -298,8 +300,8 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                     step="0.0001"
                   />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item name="c_longitude" label="Longitude">
                   <Input
                     type="number"
@@ -307,11 +309,11 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                     step="0.0001"
                   />
                 </Form.Item>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Form.Item>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Form.Item className="mt-6">
           <div className="flex justify-end gap-4">
             <Button
               onClick={onClose}
@@ -338,7 +340,7 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
           </div>
         </Form.Item>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

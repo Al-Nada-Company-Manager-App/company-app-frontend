@@ -1,4 +1,4 @@
-import { EmployeePermissions } from "@src/types/Employees/employee";
+import type { EmployeePermissions } from "@src/types/Employees/employee";
 
 export type RouteMeta = {
   path: string;

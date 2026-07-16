@@ -1,5 +1,5 @@
 import type { SidebarMenuItemProps } from "@src/types/Sidebar/sidebar";
-import type { MouseEvent } from "react";
+
 import { NavLink } from "react-router-dom";
 
 const SidebarMenuItem = ({

@@ -18,20 +18,24 @@ interface SupplierCardProps {
 const SupplierCard = ({ supplier, theme, onClick }: SupplierCardProps) => {
   return (
     <Card
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
+        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
+      }`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
         borderColor: theme.row?.borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
       }}
-      bodyStyle={{ padding: 16 }}
+      bodyStyle={{ padding: "20px" }}
       onClick={onClick}
-      hoverable={!!onClick}
     >
       <div className="flex items-start justify-between">
         <div className="flex gap-4">
           <Avatar
-            size={48}
-            src={getImageUrl("suppliers", supplier.s_photo)}
+            size={56}
+            src={supplier.s_photo ? getImageUrl("suppliers", supplier.s_photo) : undefined}
             icon={
               supplier.s_type === "COMPANY" ? (
                 <ShopOutlined />
@@ -42,6 +46,7 @@ const SupplierCard = ({ supplier, theme, onClick }: SupplierCardProps) => {
             style={{
               flexShrink: 0,
               backgroundColor: theme.avatar?.background || "#1890ff",
+              border: `2px solid ${theme.row?.borderColor || "transparent"}`
             }}
           />
           <div>

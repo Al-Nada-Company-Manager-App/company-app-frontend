@@ -1,12 +1,8 @@
-import { Card, Tag, Avatar } from "antd";
-import {
-  UserOutlined,
-  CalendarOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
+import { Card, Tag } from "antd";
+import { ShoppingCartOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import moment from "moment";
+import { convertTimestampToDate } from "@src/utils/ConvertDate";
 
 interface SaleCardProps {
   sale: Sales;
@@ -17,11 +13,11 @@ interface SaleCardProps {
 const SaleCard = ({ sale, theme, onClick }: SaleCardProps) => {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "COMPLETED":
+      case "Completed":
         return "green";
-      case "PENDING":
+      case "Pending":
         return "orange";
-      case "CANCELLED":
+      case "Cancelled":
         return "red";
       default:
         return "default";
@@ -30,73 +26,70 @@ const SaleCard = ({ sale, theme, onClick }: SaleCardProps) => {
 
   return (
     <Card
+      className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
+        onClick ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : ""
+      }`}
       style={{
         marginBottom: 16,
         background: theme.container?.background,
         borderColor: theme.row?.borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
       }}
-      bodyStyle={{ padding: 16 }}
+      bodyStyle={{ padding: "20px" }}
       onClick={onClick}
-      hoverable={!!onClick}
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-            <Avatar
-              size={40}
-              icon={<UserOutlined />}
-              style={{ backgroundColor: theme.avatar?.background || "#1890ff" }}
-              src={sale.customer?.c_photo}
-            />
-            <div className="flex flex-col">
-              <span style={{ color: theme.title?.color, fontWeight: "bold" }}>
-                {sale.customer?.c_name || "Unknown Customer"}
-              </span>
-              <span
-                style={{
-                  color: theme.employee?.roleSubtextColor,
-                  fontSize: "12px",
-                }}
-              >
-                Sale ID: #{sale.sl_id}
-              </span>
-            </div>
-          </div>
-          <Tag color={getStatusColor(sale.sl_status)}>{sale.sl_status}</Tag>
-        </div>
-
-        <div className="flex flex-col gap-1 text-sm mt-2">
-          <div className="flex justify-between items-center w-full">
-            <div
-              className="flex items-center gap-2"
-              style={{ color: theme.employee?.roleSubtextColor }}
-            >
-              <FileTextOutlined />
-              <span>Bill #{sale.sl_billnum}</span>
-            </div>
-            <div
-              className="flex items-center gap-2 font-bold"
-              style={{ color: theme.title?.color, fontSize: "16px" }}
-            >
-              <span>${sale.sl_total}</span>
-            </div>
-          </div>
-
+      <div className="flex items-start justify-between">
+        <div className="flex gap-4 w-full">
           <div
-            className="flex items-center gap-2"
-            style={{ color: theme.employee?.roleSubtextColor }}
+            className="flex items-center justify-center rounded-full"
+            style={{
+              width: 56,
+              height: 56,
+              flexShrink: 0,
+              backgroundColor: theme.avatar?.background || "#f0f2f5",
+              color: theme.title?.color || "#1890ff",
+              fontSize: 24,
+              border: `2px solid ${theme.row?.borderColor || "transparent"}`
+            }}
           >
-            <CalendarOutlined />
-            <span>Date: {moment(sale.sl_date).format("YYYY-MM-DD")}</span>
+            <ShoppingCartOutlined />
           </div>
-          {sale.products && (
-            <div
-              className="flex items-center gap-2"
-              style={{ color: theme.employee?.roleSubtextColor }}
-            >
-              <span>Items: {sale.products.length}</span>
+          <div className="flex-1">
+            <div className="flex justify-between items-start">
+              <h4
+                className="text-lg font-semibold m-0"
+                style={{ color: theme.title?.color }}
+              >
+                #{sale.sl_id} - {sale.customer?.c_name || "Unknown Customer"}
+              </h4>
+              <Tag color={getStatusColor(sale.sl_status)}>
+                {sale.sl_status}
+              </Tag>
             </div>
-          )}
+            
+            <span
+              style={{ color: theme.employee?.roleSubtextColor, opacity: 0.7, display: "block", fontSize: "13px" }}
+            >
+              Bill No: {sale.sl_billnum}
+            </span>
+            
+            <div className="mt-2 flex flex-col gap-1">
+              <span
+                className="flex items-center gap-2 text-sm font-semibold"
+                style={{ color: "#faad14" }}
+              >
+                Total: {sale.sl_currency} {sale.sl_total?.toFixed(2)}
+              </span>
+              
+              <span
+                className="flex items-center gap-2 text-sm"
+                style={{ color: theme.employee?.roleSubtextColor }}
+              >
+                <CalendarOutlined /> {convertTimestampToDate(sale.sl_date)}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </Card>

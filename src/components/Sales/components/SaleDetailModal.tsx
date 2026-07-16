@@ -2,7 +2,8 @@ import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
 import type { Sales } from "@src/types/Sales/sales";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Modal, Row, Image } from "antd";
+import { Descriptions, Image } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import ProductSalesTable from "./components/ProductSalesTable";
 import { useDeleteSale } from "@src/queries/Sales";
 import { useThemeContext } from "@src/contexts/theme";
@@ -34,8 +35,7 @@ const SaleDetailModal = ({
   };
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Sale Details"
         open={modalOpen}
         onCancel={onClose}
@@ -72,11 +72,10 @@ const SaleDetailModal = ({
             />
           </div>
         }
-        centered
-        style={{ minWidth: 1100, width: "auto", maxWidth: "95vw" }}
+        width={1000}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full md:col-span-1">
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
                 src={
@@ -104,8 +103,8 @@ const SaleDetailModal = ({
                 {sale?.customer?.c_email || ""}
               </div>
             </div>
-          </Col>
-          <Col span={16}>
+          </div>
+          <div className="w-full md:col-span-2">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Sale Date">
                 {convertTimestampToDate(sale?.sl_date) || "N/A"}
@@ -139,20 +138,18 @@ const SaleDetailModal = ({
                 {sale?.sl_currency}
               </Descriptions.Item>
             </Descriptions>
-          </Col>
-        </Row>
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          <Col span={24}>
-            {sale?.sl_type === "REPAIR" || sale?.sl_type === "SELLITEMS" ? (
+          </div>
+        </div>
+        <div className="mt-6 w-full overflow-x-auto">
+          {sale?.sl_type === "REPAIR" || sale?.sl_type === "SELLITEMS" ? (
               <ProductSalesTable
                 saleId={sale?.sl_id || -1}
                 saleType={sale?.sl_type || ""}
                 theme={theme}
               />
-            ) : null}
-          </Col>
-        </Row>
-      </Modal>
+          ) : null}
+        </div>
+      </AppModal>
       <SaleModal
         isOpen={updateOpen}
         onClose={() => setUpdateOpen(false)}

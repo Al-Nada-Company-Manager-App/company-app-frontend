@@ -1,11 +1,9 @@
 import {
-  Modal,
   Form,
   Input,
+  message,
   DatePicker,
   Button,
-  Row,
-  Col,
   Typography,
   Divider,
   Select,
@@ -22,6 +20,7 @@ import { useGetAllCustomers } from "@src/queries/Customers";
 import { useGetAllProducts } from "@src/queries/Products";
 import { getImageUrl } from "@src/config/api";
 import RichTextEditor from "@src/components/UI/RichTextEditor";
+import AppModal from "@src/components/UI/AppModal";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -182,6 +181,12 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
   };
 
   const handleSubmit = (values: any) => {
+    const validItems = items.filter((item) => item.productName && item.price >= 0);
+    if (validItems.length === 0) {
+      message.error("Please add at least one valid item with a product name.");
+      return;
+    }
+
     // Find customer name from ID
     const customer = customers?.find((c) => c.c_id === values.customerId);
 
@@ -247,14 +252,15 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
 
   return (
     <>
-      <ModalStyle theme={theme} />
-      <Modal
-        wrapClassName="custom-modal"
+      <ModalStyle />
+      <AppModal
         open={isOpen}
         onCancel={handleClose}
         footer={null}
         centered
         width={1000}
+        form={form}
+        isLoading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
         title={
           <div className="flex items-center gap-2">
             <FileText className="text-blue-600" size={20} />
@@ -271,8 +277,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
           }}
         >
           {/* Customer Info Row - Removed Global Checkbox */}
-          <Row gutter={16}>
-            <Col span={10}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full">
               <Form.Item
                 name="customerId"
                 label="Customer"
@@ -297,13 +303,13 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                   ))}
                 </Select>
               </Form.Item>
-            </Col>
-            <Col span={8}>
+            </div>
+            <div className="w-full">
               <Form.Item name="validUntil" label="Valid Until">
                 <DatePicker className="w-full" size="large" />
               </Form.Item>
-            </Col>
-          </Row>
+            </div>
+          </div>
 
           <Divider orientation="left">Items</Divider>
 
@@ -527,7 +533,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             </div>
           </div>
         </Form>
-      </Modal>
+      </AppModal>
     </>
   );
 };

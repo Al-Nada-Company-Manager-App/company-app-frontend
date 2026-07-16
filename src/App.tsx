@@ -7,8 +7,10 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
+import { useThemeContext } from "@src/contexts/theme";
 import { AuthProvider } from "@src/contexts/auth";
 import { SearchProvider, useSearchContext } from "@src/contexts/search";
+import { ConfigProvider, theme as antTheme } from "antd";
 import Layout from "@src/components/Layout";
 import ManagerDashboard from "@src/components/dashboards/ManagerDashboard";
 import EmployeesPage from "@src/components/pages/EmployeesPage";
@@ -166,16 +168,68 @@ function RouteHandler() {
   );
 }
 
+function AppConfigProvider({ children }: { children: React.ReactNode }) {
+  const { isDark, theme } = useThemeContext();
+
+  return (
+    <ConfigProvider
+      theme={{
+        algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
+        token: {
+          colorPrimary: theme.button?.background,
+          colorBgBase: theme.containerBg,
+          colorBgContainer: theme.modal?.background || theme.containerBg,
+          colorText: theme.title?.color,
+          colorBorder: theme.row?.borderColor,
+          borderRadius: 8,
+        },
+        components: {
+          Modal: {
+            contentBg: theme.modal?.background,
+            headerBg: 'transparent',
+            titleColor: theme.modal?.color,
+          },
+          Table: {
+            headerBg: 'transparent',
+            headerColor: theme.headers?.color,
+            rowHoverBg: theme.row?.hoverBackground,
+            borderColor: theme.row?.borderColor,
+          },
+          Button: {
+            colorPrimary: theme.button?.background,
+            colorPrimaryHover: theme.button?.hoverBackground,
+            colorPrimaryActive: theme.button?.hoverBackground,
+          },
+          Input: {
+            colorBgContainer: theme.modal?.background || '#fff',
+            colorText: theme.modal?.color || '#222',
+            colorBorder: theme.row?.borderColor || '#d9d9d9',
+          },
+          Select: {
+            colorBgContainer: theme.modal?.background || '#fff',
+            colorText: theme.modal?.color || '#222',
+            colorBorder: theme.row?.borderColor || '#d9d9d9',
+          }
+        }
+      }}
+    >
+      {children}
+    </ConfigProvider>
+  );
+}
+
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <SearchProvider>
-          <Router
-            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-          >
-            <RouteHandler />
-          </Router>
+          <AppConfigProvider>
+            <Router
+              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            >
+              <RouteHandler />
+            </Router>
+          </AppConfigProvider>
         </SearchProvider>
       </AuthProvider>
     </ThemeProvider>

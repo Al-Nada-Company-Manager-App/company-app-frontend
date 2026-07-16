@@ -2,7 +2,8 @@ import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
 import type { Purchases } from "@src/types/Purchases/purchases";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Modal, Row, Image } from "antd";
+import { Descriptions, Image } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import ProductPurchasesTable from "./components/ProductPurchasesTable";
 import { useDeletePurchase } from "@src/queries/Purchases";
 import { useThemeContext } from "@src/contexts/theme";
@@ -52,8 +53,7 @@ const PurchaseDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Purchase Details"
         open={modalOpen}
         onCancel={onClose}
@@ -90,11 +90,10 @@ const PurchaseDetailModal = ({
             />
           </div>
         }
-        centered
-        style={{ minWidth: 1100, width: "auto", maxWidth: "95vw" }}
+        width={1000}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full md:col-span-1">
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
                 src={
@@ -122,8 +121,8 @@ const PurchaseDetailModal = ({
                 {purchase?.supplier?.s_email || ""}
               </div>
             </div>
-          </Col>
-          <Col span={16}>
+          </div>
+          <div className="w-full md:col-span-2">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Purchase Date">
                 {convertTimestampToDate(purchase?.pch_date) || "N/A"}
@@ -153,18 +152,16 @@ const PurchaseDetailModal = ({
                 {purchase?.pch_customsnum}
               </Descriptions.Item>
             </Descriptions>
-          </Col>
-        </Row>
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          <Col span={24}>
+          </div>
+        </div>
+        <div className="mt-6 w-full overflow-x-auto">
             <ProductPurchasesTable
               key={`${purchase?.pch_id}-${refreshKey}`}
               purchaseId={purchase?.pch_id || -1}
               theme={theme}
             />
-          </Col>
-        </Row>
-      </Modal>
+        </div>
+      </AppModal>
       <PurchaseModal
         isOpen={updateOpen}
         onClose={handleUpdateClose}

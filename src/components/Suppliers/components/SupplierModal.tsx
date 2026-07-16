@@ -1,10 +1,7 @@
 import {
-  Modal,
   Form,
   Input,
   Button,
-  Row,
-  Col,
   Radio,
   Select,
 } from "antd";
@@ -22,6 +19,7 @@ import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
 import { ImageUpload } from "@src/components/UI";
 import { getImageUrl } from "@src/config/api";
+import AppModal from "@src/components/UI/AppModal";
 
 interface SupplierModalProps {
   isOpen: boolean;
@@ -115,15 +113,18 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
     onClose();
   };
 
+  const isLoading = supplier ? updateSupplier.isPending : createSupplier.isPending;
+
   return (
-    <Modal
-      className="custom-modal"
+    <AppModal
       title={supplier ? "Update Supplier" : "Add Supplier"}
       open={isOpen}
       onCancel={onClose}
       footer={null}
       centered
       width={800}
+      form={form}
+      isLoading={isLoading}
     >
       <Form
         form={form}
@@ -131,8 +132,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
         onFinish={onFinish}
         style={{ maxWidth: "100%" }}
       >
-        <Row gutter={[24, 24]}>
-          <Col span={8}>
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="w-full md:w-1/3">
             <ImageUpload
               value={imageFile}
               onChange={(file) => setImageFile(file)}
@@ -142,10 +143,10 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
               isOpen={isOpen}
               altText={supplier ? supplier.s_name : "Supplier"}
             />
-          </Col>
-          <Col span={16}>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+          </div>
+          <div className="w-full md:w-2/3 flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item name="s_type" label="Type" initialValue="COMPANY">
                   <Radio.Group
                     onChange={(e) => setSupplierType(e.target.value)}
@@ -154,9 +155,9 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                     <Radio value="PERSON">Person</Radio>
                   </Radio.Group>
                 </Form.Item>
-              </Col>
+              </div>
               {supplierType === "PERSON" && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item name="s_company_id" label="Company">
                     <Select
                       placeholder="Select Company"
@@ -172,11 +173,11 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                       }))}
                     />
                   </Form.Item>
-                </Col>
+                </div>
               )}
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full md:col-span-2">
                 <Form.Item
                   name="s_name"
                   label="Supplier Name"
@@ -189,8 +190,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                 >
                   <Input placeholder="Enter supplier name" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="s_email"
               label="Email"
@@ -200,11 +201,12 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                   message: "Please enter the supplier email",
                 },
               ]}
+              className="mb-0"
             >
               <Input placeholder="Enter email" />
             </Form.Item>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   name="s_phone"
                   label="Phone"
@@ -217,8 +219,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                 >
                   <Input placeholder="Enter phone number" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   name="s_fax"
                   label="Fax"
@@ -231,8 +233,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                 >
                   <Input placeholder="Enter fax number" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="s_address"
               label="Address"
@@ -242,11 +244,12 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                   message: "Please enter the supplier address",
                 },
               ]}
+              className="mb-0"
             >
               <Input placeholder="Enter address" />
             </Form.Item>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   name="s_city"
                   label="City"
@@ -259,8 +262,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                 >
                   <Input placeholder="Enter city" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   name="s_country"
                   label="Country"
@@ -273,8 +276,8 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                 >
                   <Input placeholder="Enter country" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
             <Form.Item
               name="s_zipcode"
               label="Zip Code"
@@ -284,12 +287,13 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
                   message: "Please enter the supplier zipcode",
                 },
               ]}
+              className="mb-0"
             >
               <Input placeholder="Enter zip code" />
             </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item>
+          </div>
+        </div>
+        <Form.Item className="mt-6">
           <div className="flex justify-end gap-4">
             <Button
               onClick={onClose}
@@ -316,7 +320,7 @@ const SupplierModal = ({ isOpen, onClose, theme, supplier }: SupplierModalProps)
           </div>
         </Form.Item>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

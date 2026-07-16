@@ -1,6 +1,7 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Modal, Row } from "antd";
+import { Descriptions } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import SparePartsTable from "./components/SparePartsTable";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -38,8 +39,7 @@ const RepairDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Repair Process Details"
         open={modalOpen}
         onCancel={onClose}
@@ -61,11 +61,10 @@ const RepairDetailModal = ({
             />
           </div>
         }
-        centered
-        style={{ minWidth: 900, width: "auto", maxWidth: "95vw" }}
+        width={900}
       >
-        <Row gutter={[16, 16]} justify="center">
-          <Col span={16}>
+        <div className="flex justify-center mb-4">
+          <div className="w-full md:w-2/3">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Product Name">
                 {`${repair?.stock?.p_name || "N/A"}`}
@@ -80,13 +79,9 @@ const RepairDetailModal = ({
                 {`${repair?.stock?.p_status || "N/A"}`}
               </Descriptions.Item>
             </Descriptions>
-          </Col>
-        </Row>
-        <Row
-          gutter={[16, 16]}
-          justify="end"
-          style={{ marginTop: 16, marginRight: 8 }}
-        >
+          </div>
+        </div>
+        <div className="flex justify-end mt-4 mr-2">
           <CustomBtn
             btnTitle="Edit Remarks & Status"
             className="px-6 py-2 mb-5 mr-5 w-55"
@@ -102,18 +97,16 @@ const RepairDetailModal = ({
               },
             }}
           />
-        </Row>
+        </div>
 
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          <Col span={24}>
+        <div className="mt-6 w-full overflow-x-auto">
             <SparePartsTable
               spareParts={repair?.repair_process}
               theme={theme}
               repair={repair}
             />
-          </Col>
-        </Row>
-      </Modal>
+        </div>
+      </AppModal>
       <UpdateStatusModal
         key={repair?.rep_id}
         modalOpen={updateOpen}

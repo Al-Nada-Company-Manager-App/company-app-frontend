@@ -1,7 +1,8 @@
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Product } from "@src/types/Products/product";
 import type { Theme } from "@src/types/theme";
-import { Col, Descriptions, Image, Modal, Row } from "antd";
+import { Descriptions, Image } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import ProductModal from "./ProductModal";
 import { useDeleteProduct } from "@src/queries/Products/productQueries";
@@ -9,6 +10,7 @@ import { useThemeContext } from "@src/contexts/theme";
 import CustomBtn from "@src/components/UI/customBtn";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
 import { getImageUrl, getPlaceholderUrl } from "@src/config/api";
+import DOMPurify from "dompurify";
 
 interface DetailModal {
   modalOpen: boolean;
@@ -39,8 +41,7 @@ const ProductDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Product Details"
         open={modalOpen}
         onCancel={onClose}
@@ -77,19 +78,18 @@ const ProductDetailModal = ({
             />
           </div>
         }
-        centered
-        style={{ minWidth: 900, width: "auto", maxWidth: "95vw" }}
+        width={1000}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full md:col-span-1">
             <Image
               src={getImageUrl("products", product?.p_photo)}
               fallback={getPlaceholderUrl("products")}
               alt={product?.p_name}
               style={{ borderRadius: "12px", width: "100%" }}
             />
-          </Col>
-          <Col span={16}>
+          </div>
+          <div className="w-full md:col-span-2">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Product Name">
                 {product?.p_name}
@@ -155,15 +155,18 @@ const ProductDetailModal = ({
                       fontSize: "13px",
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: product.p_description,
+                      __html: DOMPurify.sanitize(product.p_description, {
+                        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'span', 'ul', 'ol', 'li', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'],
+                        ALLOWED_ATTR: ['href', 'target', 'style', 'class']
+                      }),
                     }}
                   />
                 </Descriptions.Item>
               )}
             </Descriptions>
-          </Col>
-        </Row>
-      </Modal>
+          </div>
+        </div>
+      </AppModal>
       <ProductModal
         key={product?.p_id}
         isOpen={updateOpen}

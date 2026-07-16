@@ -1,4 +1,5 @@
-import { Modal, Descriptions, Tag, Row, Col, Image, Button } from "antd";
+import { Descriptions, Tag, Image, Button } from "antd";
+import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import type { Employee } from "../../../types/Employees/employee";
 import type { Theme } from "@src/types/theme";
@@ -46,8 +47,7 @@ const EmployeeDetailModal = ({
 
   return (
     <>
-      <Modal
-        className="custom-modal"
+      <AppModal
         title="Employee Details"
         open={modalOpen}
         onCancel={onClose}
@@ -102,12 +102,10 @@ const EmployeeDetailModal = ({
             </PermissionGuard>
           </div>
         }
-        centered
-        width="95vw"
-        style={{ maxWidth: 1400 }}
+        width={1000}
       >
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={8}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full md:col-span-1">
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Image
                 src={getImageUrl("employees", employee?.e_photo)}
@@ -116,9 +114,9 @@ const EmployeeDetailModal = ({
                 style={{ borderRadius: "12px", width: "100%" }}
               />
             </div>
-          </Col>
-          <Col xs={24} sm={16}>
-            <Descriptions bordered column={{ xs: 1, sm: 1 }}>
+          </div>
+          <div className="w-full md:col-span-2">
+            <Descriptions bordered column={1}>
               <Descriptions.Item label="Name">
                 {`${employee?.f_name} ${employee?.l_name}`}
               </Descriptions.Item>
@@ -165,9 +163,9 @@ const EmployeeDetailModal = ({
                 {employee?.e_zipcode}
               </Descriptions.Item>
             </Descriptions>
-          </Col>
-        </Row>
-      </Modal>
+          </div>
+        </div>
+      </AppModal>
       <UpdatePermissionsModal
         modalOpen={updateOpen}
         onClose={() => setUpdateOpen(false)}

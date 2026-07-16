@@ -74,6 +74,7 @@ const ProductSelection = ({
         <Button
           type="text"
           danger
+          aria-label={`Remove ${record.p_name}`}
           icon={<DeleteOutlined />}
           onClick={() => onRepairItemRemove(record.p_id)}
         />
@@ -140,6 +141,7 @@ const ProductSelection = ({
         <Button
           type="text"
           danger
+          aria-label={`Remove ${record.p_name}`}
           icon={<DeleteOutlined />}
           onClick={() => onProductRemove(record.p_id)}
         />
@@ -218,6 +220,7 @@ const ProductSelection = ({
 
       {saleType === "SELLITEMS" && selectedProducts.length > 0 && (
         <>
+        <div className="overflow-x-auto w-full">
           <Table
             className="custom-table"
             dataSource={selectedProducts}
@@ -226,11 +229,13 @@ const ProductSelection = ({
             size="small"
             rowKey="p_id"
           />
+        </div>
         </>
       )}
 
       {saleType === "REPAIR" && selectedRepairItems.length > 0 && (
         <div>
+        <div className="overflow-x-auto w-full">
           <Table
             className="custom-table"
             dataSource={selectedRepairItems.map((itemId) => {
@@ -245,6 +250,7 @@ const ProductSelection = ({
             size="small"
             rowKey="p_id"
           />
+        </div>
         </div>
       )}
     </>

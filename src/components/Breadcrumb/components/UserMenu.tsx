@@ -28,7 +28,17 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
       {/* User Profile */}
       {profileItem && (
         <div
-          className="flex items-center gap-1 sm:gap-2 hover:opacity-70 transition-opacity px-1 sm:px-2 py-1 rounded-lg"
+          role="button"
+          tabIndex={0}
+          aria-label={`Profile: ${profileItem.label}`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleItemClick(profileItem.id);
+            }
+          }}
+          onClick={() => handleItemClick(profileItem.id)}
+          className="flex items-center gap-1 sm:gap-2 hover:opacity-70 transition-opacity px-1 sm:px-2 py-1 rounded-lg cursor-pointer"
           style={{
             backgroundColor: theme.userProfile.containerBackground,
             border: `1px solid ${theme.userProfile.containerBorder}`,
@@ -59,8 +69,17 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
           return (
             <div
               key={item.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Toggle theme (currently ${isDark ? "dark" : "light"})`}
               className="cursor-pointer hover:opacity-70 transition-opacity"
               onClick={() => handleItemClick(item.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleItemClick(item.id);
+                }
+              }}
             >
               {isDark ? (
                 <Icons.Sun size={20} color={theme.userMenu.iconColor} />
@@ -98,8 +117,17 @@ const UserMenu = ({ theme, items, onItemClick, isDark }: UserMenuProps) => {
         return (
           <div
             key={item.id}
+            role="button"
+            tabIndex={0}
+            aria-label={item.label || item.id}
             className="cursor-pointer hover:opacity-70 transition-opacity"
             onClick={() => handleItemClick(item.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleItemClick(item.id);
+              }
+            }}
           >
             <IconComponent size={20} color={theme.userMenu.iconColor} />
           </div>

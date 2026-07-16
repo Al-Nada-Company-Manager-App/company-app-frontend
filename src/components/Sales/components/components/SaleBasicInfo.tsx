@@ -1,7 +1,5 @@
 import {
   Form,
-  Row,
-  Col,
   Select,
   DatePicker,
   InputNumber,
@@ -28,7 +26,7 @@ const SaleBasicInfo = ({
   onOpenCustomersPage,
 }: SaleBasicInfoProps) => {
   return (
-    <Col span={12}>
+    <div className="w-full md:w-1/2 flex flex-col gap-4">
       <Form.Item
         name="sl_type"
         label="Sale Type"
@@ -74,8 +72,8 @@ const SaleBasicInfo = ({
         </Select>
       </Form.Item>
 
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="w-full">
           <Form.Item
             name="sl_billnum"
             label="Bill Number"
@@ -87,8 +85,8 @@ const SaleBasicInfo = ({
               min={1}
             />
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </div>
+        <div className="w-full">
           <Form.Item
             name="sl_status"
             label="Status"
@@ -100,11 +98,11 @@ const SaleBasicInfo = ({
               <Option value="CANCELLED">Cancelled</Option>
             </Select>
           </Form.Item>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="w-full">
           <Form.Item
             name="sl_currency"
             label="Currency"
@@ -116,8 +114,8 @@ const SaleBasicInfo = ({
               <Option value="EUR">EUR</Option>
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </div>
+        <div className="w-full">
           <Form.Item
             name="sl_date"
             label="Sale Date"
@@ -125,9 +123,9 @@ const SaleBasicInfo = ({
           >
             <DatePicker style={{ width: "100%" }} />
           </Form.Item>
-        </Col>
-      </Row>
-    </Col>
+        </div>
+      </div>
+    </div>
   );
 };
 

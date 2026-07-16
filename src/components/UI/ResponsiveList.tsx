@@ -20,7 +20,6 @@ export const ResponsiveList: React.FC<ResponsiveListProps> = ({
   table,
   cards,
   pagination,
-  loading,
   empty,
   className = "",
 }) => {

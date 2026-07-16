@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Modal,
   Form,
-  Row,
-  Col,
+  message,
   DatePicker,
   Select,
   InputNumber,
@@ -21,6 +19,7 @@ import { useCreatePurchase, useUpdatePurchase } from "@src/queries/Purchases";
 import { useGetAllSuppliers } from "@src/queries/Suppliers";
 import { useGetAllProducts } from "@src/queries/Products";
 import dayjs from "dayjs";
+import AppModal from "@src/components/UI/AppModal";
 
 interface PurchaseModalProps {
   isOpen: boolean;
@@ -154,6 +153,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   const handleSubmit = async (values: any) => {
     try {
+      if (selectedProducts.length === 0) {
+        message.error("Please add at least one product before submitting.");
+        return;
+      }
       setIsSubmitting(true);
 
       const productsData = selectedProducts.map((p) => ({
@@ -219,8 +222,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   };
 
   return (
-    <Modal
-      className="custom-modal"
+    <AppModal
       title={purchase ? "Update Purchase" : "Add New Purchase"}
       open={isOpen}
       onCancel={handleCancel}
@@ -228,6 +230,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
       centered
       style={{ minWidth: 1000 }}
       width="90%"
+      form={form}
+      isLoading={isSubmitting}
     >
       <Form
         form={form}
@@ -245,8 +249,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
         }}
         style={{ maxWidth: "100%" }}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <Form.Item
               label="Supplier"
               name="supplier_id"
@@ -270,8 +274,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 ))}
               </Select>
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full">
             <Form.Item
               label="Purchase Date"
               name="pch_date"
@@ -279,11 +283,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             >
               <DatePicker style={{ width: "100%" }} disabled={!!purchase} />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <Form.Item
               label="Total Amount (Calculated)"
               name="pch_total"
@@ -297,8 +301,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 readOnly
               />
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full">
             <Form.Item label="Tax" name="pch_tax">
               <InputNumber
                 style={{ width: "100%" }}
@@ -307,11 +311,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="0.00"
               />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <Form.Item label="Cost (Base from Products)" name="pch_cost">
               <InputNumber
                 style={{ width: "100%" }}
@@ -320,8 +324,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="0.00"
               />
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full">
             <Form.Item
               label="Bill Number"
               name="pch_billnum"
@@ -329,11 +333,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             >
               <InputNumber style={{ width: "100%" }} disabled={!!purchase} />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <Form.Item label="Currency" name="pch_currency">
               <Select placeholder="Select currency" disabled={!!purchase}>
                 <Select.Option value="USD">USD</Select.Option>
@@ -341,8 +345,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 <Select.Option value="EGP">EGP</Select.Option>
               </Select>
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full">
             <Form.Item label="Expense" name="pch_expense">
               <InputNumber
                 style={{ width: "100%" }}
@@ -351,11 +355,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="0.00"
               />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <Form.Item label="Customs Cost" name="pch_customscost">
               <InputNumber
                 style={{ width: "100%" }}
@@ -364,27 +368,28 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="0.00"
               />
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full">
             <Form.Item label="Customs Number" name="pch_customsnum">
               <InputNumber style={{ width: "100%" }} disabled={!!purchase} />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         <Divider>Product Selection</Divider>
 
         <Card size="small" style={{ marginBottom: 16 }}>
           <Form
             form={productForm}
-            layout="inline"
+            layout="vertical"
             onFinish={addProduct}
-            style={{ width: "100%" }}
+            className="flex flex-col md:flex-row gap-4 items-end"
           >
             <Form.Item
               name="product_id"
               rules={[{ required: true, message: "Select a product" }]}
-              style={{ width: "30%" }}
+              className="w-full md:w-[40%] mb-0"
+              label="Product"
             >
               <Select
                 placeholder="Search by name, ID, price, model, or serial..."
@@ -429,7 +434,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             <Form.Item
               name="quantity"
               rules={[{ required: true, message: "Enter quantity" }]}
-              style={{ width: "20%" }}
+              className="w-full md:w-[20%] mb-0"
+              label="Qty"
             >
               <InputNumber
                 placeholder="Quantity"
@@ -441,7 +447,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             <Form.Item
               name="costprice"
               rules={[{ required: true, message: "Enter cost price" }]}
-              style={{ width: "25%" }}
+              className="w-full md:w-[25%] mb-0"
+              label="Price"
             >
               <InputNumber
                 placeholder="Cost Price"
@@ -451,7 +458,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
               />
             </Form.Item>
 
-            <Form.Item style={{ width: "20%" }}>
+            <Form.Item className="w-full md:w-auto mb-0">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -469,47 +476,50 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
         {selectedProducts.length > 0 && (
           <Card size="small" style={{ marginBottom: 16 }}>
-            <Table
-              className="custom-table"
-              dataSource={selectedProducts}
-              rowKey="p_id"
-              pagination={false}
-              size="small"
-            >
-              <Table.Column title="Product" dataIndex="p_name" key="p_name" />
-              <Table.Column title="Quantity" dataIndex="quantity" key="quantity" />
-              <Table.Column
-                title="Cost Price"
-                dataIndex="costprice"
-                key="costprice"
-                render={(value: number) => `$${value.toFixed(2)}`}
-              />
-              <Table.Column
-                title="Total"
-                dataIndex="total"
-                key="total"
-                render={(value: number) => `$${value.toFixed(2)}`}
-              />
-              <Table.Column
-                title="Action"
-                key="action"
-                render={(_, record: SelectedProduct) => (
-                  <Popconfirm
-                    title="Remove this product?"
-                    onConfirm={() => removeProduct(record.p_id)}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      size="small"
-                    />
-                  </Popconfirm>
-                )}
-              />
-            </Table>
+            <div className="overflow-x-auto w-full">
+              <Table
+                className="custom-table"
+                dataSource={selectedProducts}
+                rowKey="p_id"
+                pagination={false}
+                size="small"
+              >
+                <Table.Column title="Product" dataIndex="p_name" key="p_name" />
+                <Table.Column title="Quantity" dataIndex="quantity" key="quantity" />
+                <Table.Column
+                  title="Cost Price"
+                  dataIndex="costprice"
+                  key="costprice"
+                  render={(value: number) => `$${value.toFixed(2)}`}
+                />
+                <Table.Column
+                  title="Total"
+                  dataIndex="total"
+                  key="total"
+                  render={(value: number) => `$${value.toFixed(2)}`}
+                />
+                <Table.Column
+                  title="Action"
+                  key="action"
+                  render={(_, record: SelectedProduct) => (
+                    <Popconfirm
+                      title="Remove this product?"
+                      onConfirm={() => removeProduct(record.p_id)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button
+                        type="text"
+                        danger
+                        aria-label="Remove product"
+                        icon={<DeleteOutlined />}
+                        size="small"
+                      />
+                    </Popconfirm>
+                  )}
+                />
+              </Table>
+            </div>
 
             <div
               style={{
@@ -525,20 +535,16 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </Card>
         )}
 
-        <Row>
-          <Col span={24}>
-            <div style={{ textAlign: "right", marginTop: 16 }}>
-              <Button onClick={handleCancel} style={{ marginRight: 8 }}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                {purchase ? "Update Purchase" : "Create Purchase"}
-              </Button>
-            </div>
-          </Col>
-        </Row>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button type="primary" htmlType="submit" loading={isSubmitting}>
+            {purchase ? "Update Purchase" : "Create Purchase"}
+          </Button>
+        </div>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

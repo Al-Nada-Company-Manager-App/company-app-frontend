@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Modal,
   Form,
   Input,
   InputNumber,
   DatePicker,
   Select,
-  Row,
-  Col,
   Button,
 } from "antd";
 import type { RcFile } from "antd/es/upload";
@@ -19,6 +16,7 @@ import CustomBtn from "@src/components/UI/customBtn";
 import RichTextEditor from "@src/components/UI/RichTextEditor";
 import { ImageUpload } from "@src/components/UI";
 import { getImageUrl } from "@src/config/api";
+import AppModal from "@src/components/UI/AppModal";
 import { useGetAllSuppliers } from "@src/queries/Suppliers/supplierQueries";
 import dayjs from "dayjs";
 
@@ -138,15 +136,18 @@ const ProductModal: React.FC<ProductModalProps> = ({
     onClose();
   };
 
+  const isLoading = product ? updateProduct.isPending : createProduct.isPending;
+
   return (
-    <Modal
+    <AppModal
       centered
       title={product ? "Update Product" : "Add New Product"}
       open={isOpen}
       onCancel={onClose}
-      className="custom-modal"
       width={800}
       footer={null}
+      form={form}
+      isLoading={isLoading}
     >
       <Form
         form={form}
@@ -154,8 +155,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
         onFinish={onFinish}
         className="space-y-2"
       >
-        <Row gutter={[24, 24]}>
-          <Col span={8}>
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="w-full md:w-1/3">
             <ImageUpload
               value={imageFile}
               onChange={(file) => setImageFile(file)}
@@ -165,10 +166,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
               isOpen={isOpen}
               altText={product ? product.p_name : "Product"}
             />
-          </Col>
-          <Col span={16}>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+          </div>
+          <div className="w-full md:w-2/3 flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   label="Product Name"
                   name="p_name"
@@ -178,8 +179,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 >
                   <Input placeholder="Enter product name" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   label="Category"
                   name="p_category"
@@ -201,10 +202,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <Select.Option value="Others">Others</Select.Option>
                   </Select>
                 </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full md:col-span-2">
                 <Form.Item label="Manufacturer / Supplier" name="s_id">
                   <Select 
                     placeholder="Select a supplier" 
@@ -223,10 +224,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     ))}
                   </Select>
                 </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   label="Cost Price (EGP)"
                   name="p_costprice"
@@ -239,8 +240,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 >
                   <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter cost price" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+              <div className="w-full">
                 <Form.Item
                   label="Sell Price (EGP)"
                   name="p_sellprice"
@@ -253,10 +254,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 >
                   <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter selling price" />
                 </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
                 <Form.Item
                   label="Quantity"
                   name="p_quantity"
@@ -266,48 +267,48 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 >
                   <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
                 </Form.Item>
-              </Col>
+              </div>
               {!(category === "Laboratory Equipment" || category === "Chemical") && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item label="Model Code" name="model_code">
                     <Input placeholder="Enter model code" />
                   </Form.Item>
-                </Col>
+                </div>
               )}
               {(category === "Laboratory Equipment" || category === "Chemical") && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item label="Size" name="p_size">
                     <Input placeholder="Enter size (e.g., 50 ml)" />
                   </Form.Item>
-                </Col>
+                </div>
               )}
-            </Row>
-            <Row gutter={[16, 16]}>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {!(category === "Laboratory Equipment" || category === "Chemical") && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item
                     label="Serial Number"
                     name="serial_number"
                   >
                     <Input placeholder="Enter serial number" />
                   </Form.Item>
-                </Col>
+                </div>
               )}
               {category === "Chemical" && (
-                <Col span={12}>
+                <div className="w-full">
                   <Form.Item label="Expire Date" name="expire_date">
                     <DatePicker className="w-full" />
                   </Form.Item>
-                </Col>
+                </div>
               )}
-            </Row>
+            </div>
             {product && (
               <Form.Item name="p_status" label="Status">
                 <Input placeholder="Enter product status" />
               </Form.Item>
             )}
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         <Form.Item label="Description">
           <RichTextEditor
@@ -345,7 +346,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           </div>
         </Form.Item>
       </Form>
-    </Modal>
+    </AppModal>
   );
 };
 

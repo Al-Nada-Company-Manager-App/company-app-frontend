@@ -1,4 +1,4 @@
-import { Form, Row, Col, InputNumber, DatePicker } from "antd";
+import { Form, InputNumber, DatePicker } from "antd";
 
 interface SaleFinancialInfoProps {
   saleType: string;
@@ -24,7 +24,7 @@ const SaleFinancialInfo = ({
   onInsuranceAmountChange,
 }: SaleFinancialInfoProps) => {
   return (
-    <Col span={12}>
+    <div className="w-full md:w-1/2 flex flex-col gap-4">
       {saleType !== "SELLITEMS" && (
         <Form.Item
           name="sl_cost"
@@ -41,8 +41,8 @@ const SaleFinancialInfo = ({
         </Form.Item>
       )}
 
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="w-full">
           <Form.Item name="discount_percentage" label="Discount (%)">
             <InputNumber
               placeholder="Enter discount %"
@@ -53,8 +53,8 @@ const SaleFinancialInfo = ({
               onChange={(value) => onDiscountChange(value || 0)}
             />
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </div>
+        <div className="w-full">
           <Form.Item name="tax_percentage" label="Tax (%)">
             <InputNumber
               placeholder="Enter tax %"
@@ -65,10 +65,10 @@ const SaleFinancialInfo = ({
               onChange={(value) => onTaxChange(value || 0)}
             />
           </Form.Item>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
-      <Form.Item name="sl_total" label="Total Amount">
+      <Form.Item name="sl_total" label="Total Amount" className="mb-0">
         <InputNumber
           placeholder="Total (auto-calculated)"
           style={{ width: "100%" }}
@@ -77,8 +77,8 @@ const SaleFinancialInfo = ({
         />
       </Form.Item>
 
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="w-full">
           <Form.Item name="sl_payed" label="Amount Paid">
             <InputNumber
               placeholder="Enter amount paid"
@@ -88,8 +88,8 @@ const SaleFinancialInfo = ({
               onChange={(value) => onAmountPaidChange(value || 0)}
             />
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </div>
+        <div className="w-full">
           <Form.Item name="sl_inamount" label="Insurance Amount">
             <InputNumber
               placeholder="Enter insurance amount"
@@ -99,12 +99,12 @@ const SaleFinancialInfo = ({
               onChange={(value) => onInsuranceAmountChange(value || 0)}
             />
           </Form.Item>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
-      <Row gutter={[16, 16]}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {shouldShowDueDate && (
-          <Col span={shouldShowInsuranceDueDate ? 12 : 24}>
+          <div className={shouldShowInsuranceDueDate ? "w-full" : "w-full md:col-span-2"}>
             <Form.Item
               name="due_date"
               label="Due Date"
@@ -112,10 +112,10 @@ const SaleFinancialInfo = ({
             >
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
-          </Col>
+          </div>
         )}
         {shouldShowInsuranceDueDate && (
-          <Col span={shouldShowDueDate ? 12 : 24}>
+          <div className={shouldShowDueDate ? "w-full" : "w-full md:col-span-2"}>
             <Form.Item
               name="in_due_date"
               label="Insurance Due Date"
@@ -128,10 +128,10 @@ const SaleFinancialInfo = ({
             >
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
-          </Col>
+          </div>
         )}
-      </Row>
-    </Col>
+      </div>
+    </div>
   );
 };
 

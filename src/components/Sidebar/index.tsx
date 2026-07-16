@@ -1,7 +1,6 @@
 import { useSidebar } from "@src/hooks/Sidebar/useSidebar";
 import type { SidebarProps } from "@src/types/Sidebar/sidebar";
 
-import HelpSection from "./components/HelpSection";
 import NavigationMenu from "./components/NavigationMenu";
 import Logo from "./components/Logo";
 
@@ -55,10 +54,6 @@ const Sidebar = ({
         onItemClick={handleItemClick}
       />
 
-      {/* Decorative Circles (optional) */}
-
-      {/* Help Section */}
-      <HelpSection isDark={isDark} currentPath={currentPath} />
     </div>
   );
 };
