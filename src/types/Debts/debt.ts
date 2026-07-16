@@ -27,3 +27,19 @@ export interface Debt {
     } | null;
   };
 }
+
+export interface DebtQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedDebtResponse {
+  data: Debt[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

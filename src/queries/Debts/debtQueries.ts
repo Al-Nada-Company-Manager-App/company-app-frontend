@@ -2,21 +2,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { debtApi } from "./debtApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Debt } from "@src/types/Debts/debt";
+import type { Debt, DebtQueryParams } from "@src/types/Debts/debt";
 
 export const debtKeys = {
   all: ["debts"] as const,
   lists: () => [...debtKeys.all, "list"] as const,
-  list: (filters: string) => [...debtKeys.lists(), { filters }] as const,
+  list: (params: DebtQueryParams) => [...debtKeys.lists(), params] as const,
   details: () => [...debtKeys.all, "detail"] as const,
   detail: (id: number) => [...debtKeys.details(), id] as const,
 };
 
 // Get all debts
-export const useGetAllDebts = () => {
+export const useGetAllDebts = (params: DebtQueryParams = {}) => {
   return useQuery({
-    queryKey: debtKeys.lists(),
-    queryFn: debtApi.getAllDebts,
+    queryKey: debtKeys.list(params),
+    queryFn: () => debtApi.getAllDebts(params),
   });
 };
 

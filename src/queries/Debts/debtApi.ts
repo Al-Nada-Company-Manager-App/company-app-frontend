@@ -1,13 +1,21 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import { API_BASE_URL } from "@src/config/api";
-import type { Debt } from "@src/types/Debts/debt";
+import type { Debt, DebtQueryParams, PaginatedDebtResponse } from "@src/types/Debts/debt";
 
 const DEBTS_URL = `${API_BASE_URL}/debts`;
 
 export const debtApi = {
   //Get all debts
-  getAllDebts: async (): Promise<Debt[]> => {
-    const response = await fetchWithAuth(`${DEBTS_URL}`);
+  getAllDebts: async (params: DebtQueryParams = {}): Promise<PaginatedDebtResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${DEBTS_URL}?${queryString}` : DEBTS_URL;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch debts");
     }

@@ -4,14 +4,26 @@ import type {
   Product,
   CreateProductInput,
   UpdateProductInput,
+  ProductQueryParams,
+  PaginatedProductResponse,
 } from "@src/types/Products/product";
 
 const PRODUCTS_URL = `${API_BASE_URL}/products`;
 
 export const productsApi = {
   // Get all products
-  getAllProducts: async (): Promise<Product[]> => {
-    const response = await fetchWithAuth(`${PRODUCTS_URL}`);
+  getAllProducts: async (params: ProductQueryParams = {}): Promise<PaginatedProductResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+    if (params.category) searchParams.set("category", params.category);
+    if (params.status) searchParams.set("status", params.status);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${PRODUCTS_URL}?${queryString}` : PRODUCTS_URL;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }

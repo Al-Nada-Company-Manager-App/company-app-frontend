@@ -37,3 +37,19 @@ export interface Products {
     };
     products?: Partial<Products>[];
   }
+
+export interface SalesQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedSalesResponse {
+  data: Sales[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

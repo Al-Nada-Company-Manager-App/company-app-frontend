@@ -3,29 +3,21 @@ import type { Employee } from "@src/types/Employees/employee";
 import { useGetAllEmployees } from "@src/queries/Employees/employeeQueries";
 import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
 
-export const useEmployees = (isDark: boolean) => {
+export const useEmployees = (isDark: boolean, page = 1, limit = 10, search = "", status = "") => {
   const theme = useMemo(
     () => (isDark ? darkTheme : lightTheme),
     [isDark]
   );
 
   // Use React Query to fetch employees data
-  const { data: employees, isLoading, error } = useGetAllEmployees();
+  const { data, isLoading, error } = useGetAllEmployees(page, limit, search, status);
 
-  const activeEmployees = useMemo(
-    () => (employees ?? []).filter((employee: Employee) => employee.e_active),
-    [employees]
-  );
-
-  const deactivatedEmployees = useMemo(
-    () => (employees ?? []).filter((employee: Employee) => !employee.e_active),
-    [employees]
-  );
+  const employees = data?.data ?? [];
+  const metadata = data?.metadata;
 
   return {
     employees,
-    activeEmployees,
-    deactivatedEmployees,
+    metadata,
     theme,
     isLoading,
     error,

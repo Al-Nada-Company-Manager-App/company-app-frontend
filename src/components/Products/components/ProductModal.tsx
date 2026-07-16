@@ -34,7 +34,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
   product,
 }) => {
   const { isDark } = useThemeContext();
-  const { data: suppliers } = useGetAllSuppliers();
+  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 1000 });
+  const suppliers = paginatedSuppliers?.data;
   const [form] = Form.useForm();
   const category = Form.useWatch("p_category", form);
   const [imageFile, setImageFile] = useState<RcFile | null>(null);

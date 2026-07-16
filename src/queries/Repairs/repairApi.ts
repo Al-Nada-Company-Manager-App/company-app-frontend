@@ -4,13 +4,23 @@ import type {
   Repair,
   CreateRepairInput,
   UpdateRepairInput,
+  RepairQueryParams,
+  PaginatedRepairResponse,
 } from "@src/types/Repairs/repair";
 
 const REPAIRS_URL = `${API_BASE_URL}/repairs`;
 
 export const repairApi = {
-  getAllRepairs: async (): Promise<Repair[]> => {
-    const res = await fetchWithAuth(`${REPAIRS_URL}`);
+  getAllRepairs: async (params: RepairQueryParams = {}): Promise<PaginatedRepairResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${REPAIRS_URL}?${queryString}` : REPAIRS_URL;
+
+    const res = await fetchWithAuth(url);
     if (!res.ok) throw new Error("Failed to fetch repairs");
     return res.json();
   },

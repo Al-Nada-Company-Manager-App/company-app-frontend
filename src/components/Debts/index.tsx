@@ -9,8 +9,15 @@ interface DebtsProps {
 }
 
 const DebtsPage = ({ isDark }: DebtsProps) => {
-  const { debts, theme, isLoading, error } = useDebts(isDark);
   const { searchQuery } = useSearchContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const { debts, theme, total, isLoading, error } = useDebts(isDark, {
+    page: currentPage,
+    limit: pageSize,
+    search: searchQuery,
+  });
 
   if (isLoading) {
     return (
@@ -71,23 +78,7 @@ const DebtsPage = ({ isDark }: DebtsProps) => {
     );
   }
 
-  // Filter debts by customer name, debt type, or bill number
-  const filteredDebts = debts?.filter((debt) => {
-    const customerName = debt.sales.customer?.c_name?.toLowerCase() || "";
-    const debtType = debt.d_type.toLowerCase();
-    const billNumber = debt.sales.sl_billnum.toString();
-    const debtId = debt.d_id.toString();
-    const query = searchQuery.toLowerCase();
 
-    return (
-      customerName.includes(query) ||
-      debtType.includes(query) ||
-      billNumber.includes(query) ||
-      debtId.includes(query)
-    );
-  });
-
-  const debtsToShow = searchQuery.trim() === "" ? debts : filteredDebts;
 
   return (
     <div className="p-6">
@@ -131,16 +122,24 @@ const DebtsPage = ({ isDark }: DebtsProps) => {
                   fontWeight: "600",
                 }}
               >
-                {debtsToShow?.length || 0}
+                {total || 0}
               </span>
             </div>
           </div>
         </div>
 
         {/* Statistics Cards */}
-        <DebtCards debtsToShow={debtsToShow ?? []} theme={theme} />
+        <DebtCards debtsToShow={debts ?? []} theme={theme} />
 
-        <DebtTable debts={debtsToShow ?? []} theme={theme} />
+        <DebtTable 
+          debts={debts ?? []} 
+          theme={theme} 
+          total={total}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+          loading={isLoading}
+        />
       </div>
     </div>
   );

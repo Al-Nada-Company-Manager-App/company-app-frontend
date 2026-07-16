@@ -30,3 +30,19 @@ export interface CreateQuotationInput {
     price: number;
   }[];
 }
+
+export interface QuotationQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedQuotationResponse {
+  data: Quotation[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

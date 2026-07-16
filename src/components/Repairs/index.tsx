@@ -13,10 +13,17 @@ interface RepairsProps {
 }
 
 const RepairsPage = ({ isDark }: RepairsProps) => {
-  const { theme, isLoading, error, repairs, devices } = useRepairs(isDark);
+  const { searchQuery } = useSearchContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const { theme, isLoading, error, repairs, total, devices } = useRepairs(isDark, {
+    page: currentPage,
+    limit: pageSize,
+    search: searchQuery,
+  });
   const [showAddRepairModal, setShowAddRepairModal] = useState(false);
   const [showAddDeviceModal, setShowAddDeviceModal] = useState(false);
-  const { searchQuery } = useSearchContext();
 
   if (isLoading) {
     return (
@@ -38,14 +45,7 @@ const RepairsPage = ({ isDark }: RepairsProps) => {
     );
   }
 
-  // Filter repairs by product name or serial number
-  const filteredRepairs = repairs?.filter((repair) => {
-    const productName = repair.stock?.p_name?.toLowerCase() || "";
-    const serialNumber = repair.stock?.serial_number?.toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
 
-    return productName.includes(query) || serialNumber.includes(query);
-  });
 
   // Filter devices by product name or serial number
   const filteredDevices = devices?.filter((device) => {
@@ -56,7 +56,7 @@ const RepairsPage = ({ isDark }: RepairsProps) => {
     return productName.includes(query) || serialNumber.includes(query);
   });
 
-  const repairsToShow = searchQuery.trim() === "" ? repairs : filteredRepairs;
+
   const devicesToShow = searchQuery.trim() === "" ? devices : filteredDevices;
 
   return (
@@ -85,7 +85,15 @@ const RepairsPage = ({ isDark }: RepairsProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <RepairProcessTable repairs={repairsToShow} theme={theme} />
+          <RepairProcessTable 
+            repairs={repairs ?? []} 
+            theme={theme} 
+            total={total}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+            loading={isLoading}
+          />
         </div>
       </div>
 

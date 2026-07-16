@@ -106,22 +106,16 @@ const Layout = () => {
         {/* Background layers */}
         <div className="absolute inset-0 pointer-events-none">
           <div
-            className="absolute inset-0 scale-110 bg-cover bg-center blur-[30px]"
+            className="absolute inset-0 scale-110 bg-cover bg-center blur-[10px]"
             style={{ backgroundImage: `url(${theme.backgroundImage})` }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundImage: theme.gradient1 }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundImage: theme.gradient2 }}
           />
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="scrollable-content fixed left-0 md:left-[298px] top-0 right-0 bottom-0 overflow-y-auto pt-[101px] transition-all duration-300">
-          <Outlet />
+        <div className="scrollable-content fixed left-0 md:left-[298px] top-[101px] right-0 bottom-0 overflow-y-auto transition-all duration-300 p-4 md:p-6 md:pr-8">
+          <div className="w-full min-h-full rounded-3xl">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>

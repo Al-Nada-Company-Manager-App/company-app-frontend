@@ -11,9 +11,16 @@ interface SalesPageProps {
 }
 
 const SalesPage = ({ isDark }: SalesPageProps) => {
-  const { sales, theme, isLoading, error } = useSales(isDark);
   const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const { sales, theme, total, isLoading, error } = useSales(isDark, {
+    page: currentPage,
+    limit: pageSize,
+    search: searchQuery,
+  });
 
   if (isLoading) {
     return (
@@ -74,21 +81,7 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
     );
   }
 
-  // Filter sales by customer name, customer email, or bill number
-  const filteredSales = sales?.filter((sale) => {
-    const customerName = sale.customer?.c_name?.toLowerCase() || "";
-    const customerEmail = sale.customer?.c_email?.toLowerCase() || "";
-    const billNumber = sale.sl_billnum?.toString().toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
 
-    return (
-      customerName.includes(query) ||
-      customerEmail.includes(query) ||
-      billNumber.includes(query)
-    );
-  });
-
-  const salesToShow = searchQuery.trim() === "" ? sales : filteredSales;
 
   return (
     <>
@@ -116,7 +109,15 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <SalesTable sales={salesToShow ?? []} theme={theme} />
+          <SalesTable 
+            sales={sales ?? []} 
+            theme={theme} 
+            total={total}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+            loading={isLoading}
+          />
         </div>
       </div>
       <SaleModal

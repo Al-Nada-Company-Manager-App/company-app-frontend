@@ -1,13 +1,21 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import { API_BASE_URL } from "@src/config/api";
-import type { Purchases, Products } from "@src/types/Purchases/purchases";
+import type { Purchases, Products, PurchaseQueryParams, PaginatedPurchaseResponse } from "@src/types/Purchases/purchases";
 
 const PURCHASES_URL = `${API_BASE_URL}/purchases`;
 
 export const purchasesApi = {
   // Get all purchases
-  getAllPurchases: async (): Promise<Purchases[]> => {
-    const response = await fetchWithAuth(`${PURCHASES_URL}`);
+  getAllPurchases: async (params: PurchaseQueryParams = {}): Promise<PaginatedPurchaseResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${PURCHASES_URL}?${queryString}` : PURCHASES_URL;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch Purchases");
     }

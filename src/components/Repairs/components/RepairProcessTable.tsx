@@ -12,11 +12,16 @@ import StatusBadge from "@src/components/UI/StatusBadge";
 interface RepairProcessTableProps {
   repairs: Repair[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
 const { Column } = Table;
 
-const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
+const RepairProcessTable = ({ repairs, theme, total, currentPage, pageSize, onPageChange, loading }: RepairProcessTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Repair>();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { data: freshSelectedRepair } = useGetRepairById(
@@ -25,14 +30,10 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
   );
 
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-  
-  const paginatedRepairs = repairs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
   const tableComponent = (
     <Table<Repair>
-      dataSource={paginatedRepairs}
+      dataSource={repairs}
+      loading={loading}
       pagination={false}
       rowKey="rep_id"
       onRow={(record) => ({
@@ -74,7 +75,7 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedRepairs.map((repair) => (
+      {repairs.map((repair) => (
         <RepairCard
           key={repair.rep_id}
           repair={repair}
@@ -85,7 +86,7 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
           }}
         />
       ))}
-      {paginatedRepairs.length === 0 && (
+      {repairs.length === 0 && (
         <div
           style={{
             padding: "20px",
@@ -109,9 +110,9 @@ const RepairProcessTable = ({ repairs, theme }: RepairProcessTableProps) => {
           pagination={{
             current: currentPage,
             pageSize: pageSize,
-            total: repairs.length,
-            onChange: (page) => setCurrentPage(page),
-            showSizeChanger: false,
+            total: total,
+            onChange: onPageChange,
+            showSizeChanger: true,
           }}
         />
       </div>

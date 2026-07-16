@@ -10,22 +10,23 @@ import { getEmployeeColumns } from "./employeeColumns";
 interface EmployeeTableProps {
   employees: Employee[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
 }
 
 
 
-const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
+const EmployeeTable = ({ employees, theme, total, currentPage, pageSize, onPageChange }: EmployeeTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Employee>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
 
   const columns = getEmployeeColumns(theme);
-  const paginatedEmployees = employees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const tableComponent = (
     <Table<Employee>
-      dataSource={paginatedEmployees}
+      dataSource={employees}
       showHeader={true}
       pagination={false}
       rowKey="e_id"
@@ -43,7 +44,7 @@ const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedEmployees.map((employee) => (
+      {employees.map((employee) => (
         <EmployeeCard
           key={employee.e_id}
           employee={employee}
@@ -67,8 +68,8 @@ const EmployeeTable = ({ employees, theme }: EmployeeTableProps) => {
           pagination={{
             current: currentPage,
             pageSize: pageSize,
-            total: employees.length,
-            onChange: (page) => setCurrentPage(page),
+            total: total,
+            onChange: onPageChange,
             showSizeChanger: false,
           }}
         />

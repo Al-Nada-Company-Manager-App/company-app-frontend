@@ -1,18 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { quotationApi } from "./quotationApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
+import type { QuotationQueryParams } from "@src/types/Quotations/quotation";
 
 export const quotationKeys = {
   all: ["quotations"] as const,
   lists: () => [...quotationKeys.all, "list"] as const,
+  list: (params: QuotationQueryParams) => [...quotationKeys.lists(), params] as const,
   detail: (id: number) => [...quotationKeys.all, "detail", id] as const,
 };
 
 // Get all quotations hook
-export const useGetAllQuotations = () => {
+export const useGetAllQuotations = (params: QuotationQueryParams = {}) => {
   return useQuery({
-    queryKey: quotationKeys.lists(),
-    queryFn: quotationApi.getAllQuotations,
+    queryKey: quotationKeys.list(params),
+    queryFn: () => quotationApi.getAllQuotations(params),
   });
 };
 

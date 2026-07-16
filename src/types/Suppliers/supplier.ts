@@ -27,3 +27,20 @@ export interface SupplierPurchases {
   pch_customscost: string;
   pch_customsnum: number;
 }
+
+export interface SupplierQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: string;
+}
+
+export interface PaginatedSupplierResponse {
+  data: Supplier[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

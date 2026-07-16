@@ -13,16 +13,19 @@ import { useThemeContext } from "@src/contexts/theme";
 interface DebtTableProps {
   debts: Debt[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
-const DebtTable = ({ debts, theme }: DebtTableProps) => {
+const DebtTable = ({ debts, theme, total, currentPage, pageSize, onPageChange, loading }: DebtTableProps) => {
   const { isDark } = useThemeContext();
 
   const [selectedDebt, setSelectedDebt] = useState<Debt | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
   const deleteDebt = useDeleteDebt(isDark);
 
   const handleView = (debt: Debt) => {
@@ -43,13 +46,12 @@ const DebtTable = ({ debts, theme }: DebtTableProps) => {
 
   const columns = getDebtColumns(theme);
 
-  const paginatedDebts = debts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
   const tableComponent = (
     <Table
       className="custom-table"
       columns={columns}
-      dataSource={paginatedDebts}
+      dataSource={debts}
+      loading={loading}
       rowKey="d_id"
       onRow={(record) => {
         return {
@@ -69,7 +71,7 @@ const DebtTable = ({ debts, theme }: DebtTableProps) => {
 
   const cardsComponent = (
     <div className="flex flex-col gap-4 mb-4">
-      {paginatedDebts.map((debt) => (
+      {debts.map((debt) => (
         <DebtCard
           key={debt.d_id}
           debt={debt}
@@ -90,9 +92,9 @@ const DebtTable = ({ debts, theme }: DebtTableProps) => {
           pagination={{
             current: currentPage,
             pageSize: pageSize,
-            total: debts.length,
-            onChange: (page) => setCurrentPage(page),
-            showSizeChanger: false,
+            total: total,
+            onChange: onPageChange,
+            showSizeChanger: true,
           }}
         />
       </div>

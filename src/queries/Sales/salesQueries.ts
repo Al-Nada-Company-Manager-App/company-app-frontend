@@ -2,22 +2,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { salesApi } from "./salesApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Sales } from "@src/types/Sales/sales";
+import type { Sales, SalesQueryParams } from "@src/types/Sales/sales";
 import { productKeys } from "../Products/productQueries";
 
 export const salesKeys = {
   all: ["sales"] as const,
   lists: () => [...salesKeys.all, "list"] as const,
-  list: (filters: string) => [...salesKeys.lists(), { filters }] as const,
+  list: (params: SalesQueryParams) => [...salesKeys.lists(), params] as const,
   details: () => [...salesKeys.all, "detail"] as const,
   detail: (id: number) => [...salesKeys.details(), id] as const,
 };
 
 // Get all sales
-export const useGetAllSales = () => {
+export const useGetAllSales = (params: SalesQueryParams = {}) => {
   return useQuery({
-    queryKey: salesKeys.lists(),
-    queryFn: salesApi.getAllSales,
+    queryKey: salesKeys.list(params),
+    queryFn: () => salesApi.getAllSales(params),
   });
 };
 

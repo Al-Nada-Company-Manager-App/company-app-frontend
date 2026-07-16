@@ -6,16 +6,16 @@ import type { EmployeePermissions } from "@src/types/Employees/employee";
 export const employeeKeys = {
   all: ["employees"] as const,
   lists: () => [...employeeKeys.all, "list"] as const,
-  list: (filters: string) => [...employeeKeys.lists(), { filters }] as const,
+  list: (page: number, limit: number, search: string, status: string) => [...employeeKeys.lists(), { page, limit, search, status }] as const,
   details: () => [...employeeKeys.all, "detail"] as const,
   detail: (id: number) => [...employeeKeys.details(), id] as const,
 };
 
 // Get all employees
-export const useGetAllEmployees = () => {
+export const useGetAllEmployees = (page = 1, limit = 10, search = "", status = "") => {
   return useQuery({
-    queryKey: employeeKeys.lists(),
-    queryFn: employeeApi.getAllEmployees,
+    queryKey: employeeKeys.list(page, limit, search, status),
+    queryFn: () => employeeApi.getAllEmployees(page, limit, search, status),
   });
 };
 

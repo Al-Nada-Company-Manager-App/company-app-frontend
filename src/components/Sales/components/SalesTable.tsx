@@ -10,22 +10,23 @@ import { getSalesColumns } from "./salesColumns";
 interface SalesTableProps {
   sales: Sales[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
-const SalesTable = ({ sales, theme }: SalesTableProps) => {
+const SalesTable = ({ sales, theme, total, currentPage, pageSize, onPageChange, loading }: SalesTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Sales>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-
   const columns = getSalesColumns(theme);
   
-  const paginatedSales = sales.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
   const tableComponent = (
     <Table
       columns={columns}
-      dataSource={paginatedSales}
+      dataSource={sales}
+      loading={loading}
       showHeader={true}
       pagination={false}
       rowKey="sl_id"
@@ -41,7 +42,7 @@ const SalesTable = ({ sales, theme }: SalesTableProps) => {
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedSales.map((sale) => (
+      {sales.map((sale) => (
         <SaleCard
           key={sale.sl_id}
           sale={sale}
@@ -52,7 +53,7 @@ const SalesTable = ({ sales, theme }: SalesTableProps) => {
           }}
         />
       ))}
-      {paginatedSales.length === 0 && (
+      {sales.length === 0 && (
         <div
           style={{
             padding: "20px",
@@ -76,9 +77,9 @@ const SalesTable = ({ sales, theme }: SalesTableProps) => {
           pagination={{
             current: currentPage,
             pageSize: pageSize,
-            total: sales.length,
-            onChange: (page) => setCurrentPage(page),
-            showSizeChanger: false,
+            total: total,
+            onChange: onPageChange,
+            showSizeChanger: true,
           }}
         />
       </div>

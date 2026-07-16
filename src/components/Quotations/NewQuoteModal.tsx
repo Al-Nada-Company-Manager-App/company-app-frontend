@@ -37,7 +37,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
   const { data: customersResponse, isLoading: loadingCustomers } =
     useGetAllCustomers({ limit: 10 });
   const customers = customersResponse?.data;
-  const { data: products, isLoading: loadingProducts } = useGetAllProducts();
+  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 1000 });
+  const products = paginatedProducts?.data;
 
   const [items, setItems] = useState<any[]>([
     {

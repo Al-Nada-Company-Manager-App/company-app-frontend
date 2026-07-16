@@ -1,21 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { productsApi } from "./productApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
+import type { ProductQueryParams } from "@src/types/Products/product";
 
 
 export const productKeys = {
   all: ["products"] as const,
   lists: () => [...productKeys.all, "list"] as const,
-  list: (filters: string) => [...productKeys.lists(), { filters }] as const,
+  list: (params: ProductQueryParams) => [...productKeys.lists(), params] as const,
   details: () => [...productKeys.all, "detail"] as const,
   detail: (id: number) => [...productKeys.details(), id] as const,
 };
 
 // Get all products
-export const useGetAllProducts = () => {
+export const useGetAllProducts = (params: ProductQueryParams = {}) => {
   return useQuery({
-    queryKey: productKeys.lists(),
-    queryFn: productsApi.getAllProducts,
+    queryKey: productKeys.list(params),
+    queryFn: () => productsApi.getAllProducts(params),
   });
 };
 

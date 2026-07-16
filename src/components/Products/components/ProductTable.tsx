@@ -14,6 +14,11 @@ interface ProductTableProps {
   showExpireDate?: boolean;
   showCategory?: boolean;
   showSize?: boolean;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
 const ProductTable = ({
@@ -23,19 +28,21 @@ const ProductTable = ({
   showExpireDate = false,
   showCategory = false,
   showSize = false,
+  total,
+  currentPage,
+  pageSize,
+  onPageChange,
+  loading,
 }: ProductTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Product>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
 
   const columns = getProductColumns(theme, showExpireDate, showCategory, showSize);
 
-  const paginatedProducts = products.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
   const tableComponent = (
     <Table<Product>
-      dataSource={paginatedProducts}
+      dataSource={products}
+      loading={loading}
       showHeader={true}
       pagination={false}
       rowKey="p_id"
@@ -53,7 +60,7 @@ const ProductTable = ({
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedProducts.map((product) => (
+      {products.map((product) => (
         <ProductCard
           key={product.p_id}
           product={product}
@@ -97,9 +104,9 @@ const ProductTable = ({
             pagination={{
               current: currentPage,
               pageSize: pageSize,
-              total: products.length,
-              onChange: (page) => setCurrentPage(page),
-              showSizeChanger: false,
+              total: total,
+              onChange: onPageChange,
+              showSizeChanger: true,
             }}
           />
         </div>

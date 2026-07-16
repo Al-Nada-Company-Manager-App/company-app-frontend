@@ -11,18 +11,21 @@ interface QuotationsTableProps {
   theme: Theme;
   onEdit: (id: number) => void;
   onPreview: (id: number) => void;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
-const QuotationsTable = ({ quotations, theme, onEdit, onPreview }: QuotationsTableProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+const QuotationsTable = ({ quotations, theme, onEdit, onPreview, total, currentPage, pageSize, onPageChange, loading }: QuotationsTableProps) => {
   const columns = getQuotationColumns(theme, onEdit, onPreview);
-  const paginatedQuotations = quotations.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const tableComponent = (
     <Table
       columns={columns}
-      dataSource={paginatedQuotations}
+      dataSource={quotations}
+      loading={loading}
       showHeader={true}
       pagination={false}
       rowKey="q_id"
@@ -40,7 +43,7 @@ const QuotationsTable = ({ quotations, theme, onEdit, onPreview }: QuotationsTab
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedQuotations.map((quotation) => (
+      {quotations.map((quotation) => (
         <QuotationCard
           key={quotation.q_id}
           quotation={quotation}
@@ -49,7 +52,7 @@ const QuotationsTable = ({ quotations, theme, onEdit, onPreview }: QuotationsTab
           onPreview={onPreview}
         />
       ))}
-      {paginatedQuotations.length === 0 && (
+      {quotations.length === 0 && (
         <div
           style={{
             padding: "20px",
@@ -72,9 +75,9 @@ const QuotationsTable = ({ quotations, theme, onEdit, onPreview }: QuotationsTab
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: quotations.length,
-          onChange: (page) => setCurrentPage(page),
-          showSizeChanger: false,
+          total: total,
+          onChange: onPageChange,
+          showSizeChanger: true,
         }}
       />
     </div>

@@ -11,9 +11,16 @@ interface PurchasesPageProps {
 }
 
 const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
-  const { purchases, theme, isLoading, error } = usePurchases(isDark);
   const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const { purchases, theme, total, isLoading, error } = usePurchases(isDark, {
+    page: currentPage,
+    limit: pageSize,
+    search: searchQuery,
+  });
 
   if (isLoading) {
     return (
@@ -74,22 +81,7 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
     );
   }
 
-  // Filter purchases by supplier name, supplier email, or bill number
-  const filteredPurchases = purchases?.filter((purchase) => {
-    const supplierName = purchase.supplier?.s_name?.toLowerCase() || "";
-    const supplierEmail = purchase.supplier?.s_email?.toLowerCase() || "";
-    const billNumber = purchase.pch_billnum?.toString().toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
 
-    return (
-      supplierName.includes(query) ||
-      supplierEmail.includes(query) ||
-      billNumber.includes(query)
-    );
-  });
-
-  const purchasesToShow =
-    searchQuery.trim() === "" ? purchases : filteredPurchases;
 
   return (
     <>
@@ -117,7 +109,15 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
           </div>
-          <PurchasesTable purchases={purchasesToShow ?? []} theme={theme} />
+          <PurchasesTable 
+            purchases={purchases ?? []} 
+            theme={theme} 
+            total={total}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+            loading={isLoading}
+          />
         </div>
       </div>
       <PurchaseModal

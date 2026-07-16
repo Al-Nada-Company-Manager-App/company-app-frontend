@@ -48,7 +48,8 @@ const SaleModal: React.FC<SaleModalProps> = ({
   // Queries for Add mode
   const { data: customersResponse, isLoading: loadingCustomers } = useGetAllCustomers({ limit: 1000 });
   const customers = customersResponse?.data;
-  const { data: products, isLoading: loadingProducts } = useGetAllProducts();
+  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 1000 });
+  const products = paginatedProducts?.data;
 
   // State management for Add mode
   const [saleType, setSaleType] = useState<string>("");

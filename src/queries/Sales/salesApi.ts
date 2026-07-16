@@ -1,13 +1,21 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
 import { API_BASE_URL } from "@src/config/api";
-import type { Sales, Products } from "@src/types/Sales/sales";
+import type { Sales, Products, SalesQueryParams, PaginatedSalesResponse } from "@src/types/Sales/sales";
 
 const SALES_URL = `${API_BASE_URL}/sales`;
 
 export const salesApi = {
   // Get all sales
-  getAllSales: async (): Promise<Sales[]> => {
-    const response = await fetchWithAuth(`${SALES_URL}`);
+  getAllSales: async (params: SalesQueryParams = {}): Promise<PaginatedSalesResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${SALES_URL}?${queryString}` : SALES_URL;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch Sales");
     }

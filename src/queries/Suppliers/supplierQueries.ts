@@ -2,21 +2,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supplierApi } from "./supplierApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Supplier } from "@src/types/Suppliers/supplier";
+import type { Supplier, SupplierQueryParams } from "@src/types/Suppliers/supplier";
 
 export const supplierKeys = {
   all: ["suppliers"] as const,
   lists: () => [...supplierKeys.all, "list"] as const,
-  list: (filters: string) => [...supplierKeys.lists(), { filters }] as const,
+  list: (params: SupplierQueryParams) => [...supplierKeys.lists(), params] as const,
   details: () => [...supplierKeys.all, "detail"] as const,
   detail: (id: number) => [...supplierKeys.details(), id] as const,
 };
 
 // Get all suppliers
-export const useGetAllSuppliers = () => {
+export const useGetAllSuppliers = (params: SupplierQueryParams = {}) => {
   return useQuery({
-    queryKey: supplierKeys.lists(),
-    queryFn: supplierApi.getAllSuppliers,
+    queryKey: supplierKeys.list(params),
+    queryFn: () => supplierApi.getAllSuppliers(params),
   });
 };
 

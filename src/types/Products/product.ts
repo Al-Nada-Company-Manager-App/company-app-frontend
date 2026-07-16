@@ -51,3 +51,22 @@ export interface UpdateProductInput {
   p_photo?: string | null;
   s_id?: number | null;
 }
+
+export interface ProductQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: string;
+  category?: string;
+  status?: string;
+}
+
+export interface PaginatedProductResponse {
+  data: Product[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

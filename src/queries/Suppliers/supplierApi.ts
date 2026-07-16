@@ -3,14 +3,25 @@ import { API_BASE_URL } from "@src/config/api";
 import type {
   Supplier,
   SupplierPurchases,
+  SupplierQueryParams,
+  PaginatedSupplierResponse,
 } from "@src/types/Suppliers/supplier";
 
 const SUPPLIERS_URL = `${API_BASE_URL}/suppliers`;
 
 export const supplierApi = {
   // Get all suppliers
-  getAllSuppliers: async (): Promise<Supplier[]> => {
-    const response = await fetchWithAuth(`${SUPPLIERS_URL}`);
+  getAllSuppliers: async (params: SupplierQueryParams = {}): Promise<PaginatedSupplierResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+    if (params.type) searchParams.set("type", params.type);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${SUPPLIERS_URL}?${queryString}` : SUPPLIERS_URL;
+
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       throw new Error("Failed to fetch suppliers");
     }

@@ -11,6 +11,10 @@ import { PermissionGuard } from "@src/components/Auth/PermissionGuard";
 interface DeactivatedEmployeeTableProps {
   employees: Employee[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
   onActivate?: (employeeId: number) => void;
 }
 
@@ -19,16 +23,16 @@ const { Column } = Table;
 const DeactivatedEmployeeTable = ({
   employees,
   theme,
+  total,
+  currentPage,
+  pageSize,
+  onPageChange,
   onActivate,
 }: DeactivatedEmployeeTableProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-  
-  const paginatedEmployees = employees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedEmployees.map((employee) => (
+      {employees.map((employee) => (
         <EmployeeCard
                 key={employee.e_id}
                 employee={employee}
@@ -56,7 +60,7 @@ const DeactivatedEmployeeTable = ({
 
   const tableComponent = (
     <Table<Employee>
-      dataSource={paginatedEmployees}
+      dataSource={employees}
       pagination={false}
       showHeader={true}
       rowKey="e_id"
@@ -102,8 +106,8 @@ const DeactivatedEmployeeTable = ({
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: employees.length,
-          onChange: (page) => setCurrentPage(page),
+          total: total,
+          onChange: onPageChange,
           showSizeChanger: false,
         }}
       />

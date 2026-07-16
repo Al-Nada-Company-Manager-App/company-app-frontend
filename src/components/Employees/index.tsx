@@ -5,15 +5,28 @@ import { useActivateEmployee } from "@src/queries";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import { useSearchContext } from "@src/contexts/search";
 
+import { useState } from "react";
+
 interface EmployeesProps {
   isDark: boolean;
 }
 
 const Employees = ({ isDark }: EmployeesProps) => {
-  const { activeEmployees, deactivatedEmployees, theme, isLoading, error } =
-    useEmployees(isDark);
-  const activateEmployee = useActivateEmployee(isDark);
+  const [activePage, setActivePage] = useState(1);
+  const [deactivePage, setDeactivePage] = useState(1);
+  const pageSize = 10;
   const { searchQuery } = useSearchContext();
+
+  const { employees: activeEmployees, metadata: activeMeta, theme, isLoading: loadingActive, error: errorActive } =
+    useEmployees(isDark, activePage, pageSize, searchQuery, "active");
+    
+  const { employees: deactivatedEmployees, metadata: deactiveMeta, isLoading: loadingDeactive, error: errorDeactive } =
+    useEmployees(isDark, deactivePage, pageSize, searchQuery, "deactivated");
+
+  const activateEmployee = useActivateEmployee(isDark);
+  
+  const isLoading = loadingActive || loadingDeactive;
+  const error = errorActive || errorDeactive;
 
   if (isLoading) {
     return (
@@ -74,39 +87,7 @@ const Employees = ({ isDark }: EmployeesProps) => {
     );
   }
 
-  // Filter employees based on search query (name, email, phone)
-  const filteredActiveEmployees = activeEmployees.filter((employee) => {
-    const fullName = `${employee.f_name} ${employee.l_name}`.toLowerCase();
-    const email = employee.e_email?.toLowerCase() || "";
-    const phone = employee.e_phone?.toLowerCase() || "";
-    const query = searchQuery.toLowerCase();
 
-    return (
-      fullName.includes(query) || email.includes(query) || phone.includes(query)
-    );
-  });
-
-  const filteredDeactivatedEmployees = deactivatedEmployees.filter(
-    (employee) => {
-      const fullName = `${employee.f_name} ${employee.l_name}`.toLowerCase();
-      const email = employee.e_email?.toLowerCase() || "";
-      const phone = employee.e_phone?.toLowerCase() || "";
-      const query = searchQuery.toLowerCase();
-
-      return (
-        fullName.includes(query) ||
-        email.includes(query) ||
-        phone.includes(query)
-      );
-    },
-  );
-
-  const activeEmployeesToShow = searchQuery
-    ? filteredActiveEmployees
-    : activeEmployees;
-  const deactivatedEmployeesToShow = searchQuery
-    ? filteredDeactivatedEmployees
-    : deactivatedEmployees;
 
   const handleActivate = async (employeeId: number) => {
     await activateEmployee.mutateAsync(employeeId);
@@ -132,7 +113,14 @@ const Employees = ({ isDark }: EmployeesProps) => {
               Activated Employees
             </h2>
           </div>
-          <EmployeeTable employees={activeEmployeesToShow} theme={theme} />
+          <EmployeeTable
+            employees={activeEmployees}
+            theme={theme}
+            total={activeMeta?.total || 0}
+            currentPage={activePage}
+            pageSize={pageSize}
+            onPageChange={(page) => setActivePage(page)}
+          />
         </div>
         <div
           className="w-full rounded-2xl p-6"
@@ -153,8 +141,12 @@ const Employees = ({ isDark }: EmployeesProps) => {
           </div>
 
           <DeactivatedEmployeeTable
-            employees={deactivatedEmployeesToShow}
+            employees={deactivatedEmployees}
             theme={theme}
+            total={deactiveMeta?.total || 0}
+            currentPage={deactivePage}
+            pageSize={pageSize}
+            onPageChange={(page) => setDeactivePage(page)}
             onActivate={handleActivate}
           />
         </div>

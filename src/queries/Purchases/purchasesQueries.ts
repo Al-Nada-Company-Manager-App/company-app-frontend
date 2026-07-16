@@ -2,21 +2,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { purchasesApi } from "./purchasesApi";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
-import type { Purchases } from "@src/types/Purchases/purchases";
+import type { Purchases, PurchaseQueryParams } from "@src/types/Purchases/purchases";
 
 export const purchasesKeys = {
   all: ["purchases"] as const,
   lists: () => [...purchasesKeys.all, "list"] as const,
-  list: (filters: string) => [...purchasesKeys.lists(), { filters }] as const,
+  list: (params: PurchaseQueryParams) => [...purchasesKeys.lists(), params] as const,
   details: () => [...purchasesKeys.all, "detail"] as const,
   detail: (id: number) => [...purchasesKeys.details(), id] as const,
 };
 
 // Get all purchases
-export const useGetAllPurchases = () => {
+export const useGetAllPurchases = (params: PurchaseQueryParams = {}) => {
   return useQuery({
-    queryKey: purchasesKeys.lists(),
-    queryFn: purchasesApi.getAllPurchases,
+    queryKey: purchasesKeys.list(params),
+    queryFn: () => purchasesApi.getAllPurchases(params),
   });
 };
 

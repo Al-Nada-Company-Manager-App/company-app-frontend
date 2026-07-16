@@ -1,18 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSuppliers } from "@src/hooks/Suppliers/useSuppliers";
 import SupplierTable from "./components/SupplierTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import SupplierModal from "./components/SupplierModal";
 import { useSearchContext } from "@src/contexts/search";
+
 interface SuppliersProps {
   isDark: boolean;
 }
-const SuppliersPage = ({ isDark }: SuppliersProps) => {
-  const { suppliers, theme, isLoading, error } = useSuppliers(isDark);
-  const { searchQuery } = useSearchContext();
 
+const SuppliersPage = ({ isDark }: SuppliersProps) => {
+  const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  const [companyPage, setCompanyPage] = useState(1);
+  const [companyPageSize, setCompanyPageSize] = useState(10);
+  const [personPage, setPersonPage] = useState(1);
+  const [personPageSize, setPersonPageSize] = useState(10);
+
+  useEffect(() => {
+    // Reset to first page when search changes
+    setCompanyPage(1);
+    setPersonPage(1);
+  }, [searchQuery]);
+
+  const { suppliers: companies, total: companyTotal, theme, isLoading: companiesLoading, error: companiesError } = useSuppliers(isDark, {
+    page: companyPage,
+    limit: companyPageSize,
+    search: searchQuery,
+    type: "COMPANY",
+  });
+
+  const { suppliers: persons, total: personTotal, isLoading: personsLoading, error: personsError } = useSuppliers(isDark, {
+    page: personPage,
+    limit: personPageSize,
+    search: searchQuery,
+    type: "PERSON",
+  });
+
+  const isLoading = companiesLoading || personsLoading;
+  const error = companiesError || personsError;
   if (isLoading) {
     return (
       <div className="p-6">
@@ -72,50 +100,7 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
     );
   }
 
-  // Filter suppliers with relational logic
-  const filteredSuppliers = (() => {
-    if (!suppliers) return [];
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return suppliers;
 
-    const directMatches = suppliers.filter((supplier) => {
-      const name = supplier.s_name?.toLowerCase() || "";
-      const email = supplier.s_email?.toLowerCase() || "";
-      const fax = supplier.s_fax?.toLowerCase() || "";
-      const phone = supplier.s_phone?.toLowerCase() || "";
-
-      return (
-        name.includes(query) ||
-        email.includes(query) ||
-        fax.includes(query) ||
-        phone.includes(query)
-      );
-    });
-
-    const relatedIds = new Set<number>();
-
-    directMatches.forEach((match) => {
-      relatedIds.add(match.s_id);
-
-      // If match is a Person, add their Company
-      if (match.s_type === "PERSON" && match.s_company_id) {
-        relatedIds.add(match.s_company_id);
-      }
-
-      // If match is a Company, add all their Employees
-      if (match.s_type === "COMPANY") {
-        // Find all employees for this company
-        const employees = suppliers.filter(
-          (s) => s.s_company_id === match.s_id,
-        );
-        employees.forEach((emp) => relatedIds.add(emp.s_id));
-      }
-    });
-
-    return suppliers.filter((s) => relatedIds.has(s.s_id));
-  })();
-
-  const suppliersToShow = filteredSuppliers;
 
   return (
     <>
@@ -153,10 +138,15 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
               Companies
             </h3>
             <SupplierTable
-              suppliers={
-                suppliersToShow?.filter((s) => s.s_type !== "PERSON") ?? []
-              }
+              suppliers={companies}
               theme={theme}
+              total={companyTotal}
+              currentPage={companyPage}
+              pageSize={companyPageSize}
+              onPageChange={(page, size) => {
+                setCompanyPage(page);
+                setCompanyPageSize(size);
+              }}
             />
           </div>
 
@@ -169,10 +159,15 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
               Persons
             </h3>
             <SupplierTable
-              suppliers={
-                suppliersToShow?.filter((s) => s.s_type === "PERSON") ?? []
-              }
+              suppliers={persons}
               theme={theme}
+              total={personTotal}
+              currentPage={personPage}
+              pageSize={personPageSize}
+              onPageChange={(page, size) => {
+                setPersonPage(page);
+                setPersonPageSize(size);
+              }}
             />
           </div>
         </div>

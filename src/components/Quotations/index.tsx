@@ -11,7 +11,14 @@ import PdfPreviewModal from "./components/PdfPreviewModal";
 const Quotations = ({ isDark }: { isDark: boolean }) => {
   const { theme } = useThemeContext();
   const { searchQuery } = useSearchContext();
-  const { data: quotes, isLoading, error } = useGetAllQuotations();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const { data, isLoading, error } = useGetAllQuotations({
+    page: currentPage,
+    limit: pageSize,
+    search: searchQuery,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingQuoteId, setEditingQuoteId] = useState<number | null>(null);
   const [previewQuoteId, setPreviewQuoteId] = useState<number | null>(null);
@@ -85,16 +92,8 @@ const Quotations = ({ isDark }: { isDark: boolean }) => {
     );
   }
 
-  // Filter logic
-  const filteredQuotes = quotes?.filter((quote) => {
-    const query = searchQuery.toLowerCase();
-    const ref = quote.q_ref_code?.toLowerCase() || "";
-    const name = quote.q_customer_name?.toLowerCase() || "";
-
-    return ref.includes(query) || name.includes(query);
-  });
-
-  const quotesToShow = searchQuery.trim() === "" ? quotes : filteredQuotes;
+  const quotesToShow = data?.data ?? [];
+  const total = data?.metadata?.total ?? 0;
 
   return (
     <>
@@ -131,6 +130,11 @@ const Quotations = ({ isDark }: { isDark: boolean }) => {
             theme={theme} 
             onEdit={handleOpenEdit}
             onPreview={setPreviewQuoteId}
+            total={total}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+            loading={isLoading}
           />
         </div>
       </div>

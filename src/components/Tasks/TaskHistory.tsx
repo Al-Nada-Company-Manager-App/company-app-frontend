@@ -13,8 +13,9 @@ const TaskHistory = () => {
   const { theme, isDark } = useThemeContext();
   const { user } = useAuthContext();
   const { data: tasks, isLoading: isLoadingTasks } = useGetAllTasks();
-  const { data: employees, isLoading: isLoadingEmployees } =
-    useGetAllEmployees();
+  const { data: paginatedEmployees, isLoading: isLoadingEmployees } =
+    useGetAllEmployees({ limit: 1000 });
+  const employees = paginatedEmployees?.data;
   // Using a custom hook or just checking user role/permissions roughly here
   // Ideally, we'd use useGetPermissions but we need it for the *current* user.
   // Assuming the user object has role or we have a way to check.

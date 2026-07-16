@@ -2,6 +2,8 @@ import { fetchWithAuth } from "@src/utils/apiClient";
 import type {
   Quotation,
   CreateQuotationInput,
+  QuotationQueryParams,
+  PaginatedQuotationResponse,
 } from "@src/types/Quotations/quotation";
 import { API_BASE_URL } from "@src/config/api";
 
@@ -9,8 +11,16 @@ const BASE_URL = `${API_BASE_URL}/quotes`;
 
 export const quotationApi = {
   // Get all quotations
-  getAllQuotations: async (): Promise<Quotation[]> => {
-    const res = await fetchWithAuth(BASE_URL);
+  getAllQuotations: async (params: QuotationQueryParams = {}): Promise<PaginatedQuotationResponse> => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.search) searchParams.set("search", params.search);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${BASE_URL}?${queryString}` : BASE_URL;
+
+    const res = await fetchWithAuth(url);
     if (!res.ok) throw new Error("Failed to fetch quotations");
     return res.json();
   },

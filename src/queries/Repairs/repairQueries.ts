@@ -4,6 +4,7 @@ import type {
   CreateRepairInput,
   Repair,
   UpdateRepairInput,
+  RepairQueryParams,
 } from "@src/types/Repairs/repair";
 import { useThemedMessage } from "@src/hooks/useThemedMessage";
 import { productKeys } from "@src/queries/Products";
@@ -12,14 +13,15 @@ import { sparePartKeys } from "@src/queries/SpareParts";
 export const repairKeys = {
   all: ["repairs"] as const,
   lists: () => [...repairKeys.all, "list"] as const,
+  list: (params: RepairQueryParams) => [...repairKeys.lists(), params] as const,
   detail: (id: number) => [...repairKeys.all, "detail", id] as const,
 };
 
 // Get all repairs
-export const useGetAllRepairs = () =>
+export const useGetAllRepairs = (params: RepairQueryParams = {}) =>
   useQuery({
-    queryKey: repairKeys.lists(),
-    queryFn: repairApi.getAllRepairs,
+    queryKey: repairKeys.list(params),
+    queryFn: () => repairApi.getAllRepairs(params),
   });
 
 // Create repair

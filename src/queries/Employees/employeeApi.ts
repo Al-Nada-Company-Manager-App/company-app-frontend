@@ -10,8 +10,14 @@ const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 // Employee API functions
 export const employeeApi = {
   // Get all employees
-  getAllEmployees: async (): Promise<Employee[]> => {
-    const response = await fetchWithAuth(`${EMPLOYEES_URL}`);
+  getAllEmployees: async (page = 1, limit = 10, search = "", status = ""): Promise<{ data: Employee[], metadata: { total: number, page: number, limit: number, totalPages: number } }> => {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(search && { search }),
+      ...(status && { status })
+    });
+    const response = await fetchWithAuth(`${EMPLOYEES_URL}?${params.toString()}`);
     if (!response.ok) {
       throw new Error("Failed to fetch employees");
     }

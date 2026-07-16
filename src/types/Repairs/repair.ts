@@ -42,3 +42,19 @@ export interface UpdateRepairInput {
   spare_parts?: { sp_id: number; sp_quantity: number }[];
 }
 
+export interface RepairQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedRepairResponse {
+  data: Repair[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+

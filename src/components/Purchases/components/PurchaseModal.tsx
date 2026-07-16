@@ -54,8 +54,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   const createPurchase = useCreatePurchase(isDark);
   const updatePurchase = useUpdatePurchase(isDark);
-  const { data: suppliers } = useGetAllSuppliers();
-  const { data: products } = useGetAllProducts();
+  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 1000 });
+  const suppliers = paginatedSuppliers?.data;
+  const { data: paginatedProducts } = useGetAllProducts({ limit: 1000 });
+  const products = paginatedProducts?.data;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);

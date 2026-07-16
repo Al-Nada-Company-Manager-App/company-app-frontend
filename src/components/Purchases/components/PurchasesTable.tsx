@@ -9,20 +9,22 @@ import { getPurchasesColumns } from "./purchasesColumns";
 interface PurchasesTableProps {
   purchases: Purchases[];
   theme: Theme;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number, pageSize: number) => void;
+  loading?: boolean;
 }
 
-const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
+const PurchasesTable = ({ purchases, theme, total, currentPage, pageSize, onPageChange, loading }: PurchasesTableProps) => {
   const [selectedRow, setSelectedRow] = useState<Purchases>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-  
   const columns = getPurchasesColumns(theme);
-  const paginatedPurchases = purchases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const tableComponent = (
     <Table
-      dataSource={paginatedPurchases}
+      dataSource={purchases}
+      loading={loading}
       columns={columns}
       showHeader={true}
       pagination={false}
@@ -39,7 +41,7 @@ const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
 
   const cardsComponent = (
     <div className="flex flex-col gap-4">
-      {paginatedPurchases.map((purchase) => (
+      {purchases.map((purchase) => (
         <PurchaseCard
           key={purchase.pch_id}
           purchase={purchase}
@@ -63,9 +65,9 @@ const PurchasesTable = ({ purchases, theme }: PurchasesTableProps) => {
           pagination={{
             current: currentPage,
             pageSize: pageSize,
-            total: purchases.length,
-            onChange: (page) => setCurrentPage(page),
-            showSizeChanger: false,
+            total: total,
+            onChange: onPageChange,
+            showSizeChanger: true,
           }}
         />
       </div>

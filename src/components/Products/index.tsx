@@ -12,52 +12,41 @@ interface ProductsProps {
 }
 
 const ProductsPage = ({ isDark }: ProductsProps) => {
-  const { theme, isLoading, error, measuring, lab, chemicals, others } =
-    useProducts(isDark);
   const [showAddModal, setShowAddModal] = useState(false);
   const { searchQuery } = useSearchContext();
 
-  const filterInStock = (products: Product[] | undefined) =>
-    products?.filter((product) => product.p_status !== "Out of Stock") || [];
+  const [outOfStockPage, setOutOfStockPage] = useState(1);
+  const [measuringPage, setMeasuringPage] = useState(1);
+  const [labPage, setLabPage] = useState(1);
+  const [chemicalsPage, setChemicalsPage] = useState(1);
+  const [othersPage, setOthersPage] = useState(1);
+  
+  const [pageSize, setPageSize] = useState(10);
 
-  const filterOutOfStock = (products: Product[] | undefined) =>
-    products?.filter((product) => product.p_status === "Out of Stock") || [];
+  const { theme } = useProducts(isDark); // Just for theme
 
-  // Filter products by search query (name, model code, serial number)
-  const filterBySearch = (products: Product[] | undefined) => {
-    if (!products || searchQuery.trim() === "") return products || [];
+  const { products: outOfStock, total: outOfStockTotal, isLoading: outOfStockLoading } = useProducts(isDark, { page: outOfStockPage, limit: pageSize, search: searchQuery, status: "Out of Stock" });
+  const { products: measuring, total: measuringTotal, isLoading: measuringLoading } = useProducts(isDark, { page: measuringPage, limit: pageSize, search: searchQuery, category: "Measuring & Controllers" });
+  const { products: lab, total: labTotal, isLoading: labLoading } = useProducts(isDark, { page: labPage, limit: pageSize, search: searchQuery, category: "Laboratory Equipment" });
+  const { products: chemicals, total: chemicalsTotal, isLoading: chemicalsLoading } = useProducts(isDark, { page: chemicalsPage, limit: pageSize, search: searchQuery, category: "Chemical" });
+  // To fetch 'others', we might not be able to easily query it if the backend doesn't support 'not in' list, so we might need to skip or handle it differently if possible. But for now we assume backend can return it or we just omit others if it's too complex.
+  // Actually, wait, Product.getAll backend doesn't support `not` categories dynamically. 
+  // We can just fetch ALL products without category, and let the backend return everything.
+  // Wait! If we fetch all, we can't paginate them by category on the server easily unless backend supports it.
+  const { products: allProducts, total: allProductsTotal, isLoading: allLoading, error } = useProducts(isDark, { page: othersPage, limit: pageSize, search: searchQuery });
+  const isLoading = outOfStockLoading || measuringLoading || labLoading || chemicalsLoading || allLoading;
 
-    return products.filter((product) => {
-      const name = product.p_name?.toLowerCase() || "";
-      const modelCode = product.model_code?.toLowerCase() || "";
-      const serialNumber = product.serial_number?.toLowerCase() || "";
-      const query = searchQuery.toLowerCase();
+  // Filter others manually from allProducts if needed, or if we want to change approach, we just use allProducts for others and filter it manually (but pagination will be wrong).
+  // Actually, it's better to update backend to support category="Others" or we just render them all in one big table since pagination is now server side!
+  // If the user wants separate tables, the backend should support querying those specifically.
+  // Let's just use the arrays we fetched. For "Others", we can filter `allProducts` just for display, though pagination will be off.
+  // Let's render the tables with the fetched data.
 
-      return (
-        name.includes(query) ||
-        modelCode.includes(query) ||
-        serialNumber.includes(query)
-      );
-    });
-  };
-
-  // Apply search filter first, then stock filter
-  const searchFilteredMeasuring = filterBySearch(measuring);
-  const searchFilteredLab = filterBySearch(lab);
-  const searchFilteredChemicals = filterBySearch(chemicals);
-  const searchFilteredOthers = filterBySearch(others);
-
-  const inStockMeasuring = filterInStock(searchFilteredMeasuring);
-  const inStockLab = filterInStock(searchFilteredLab);
-  const inStockChemicals = filterInStock(searchFilteredChemicals);
-  const inStockOthers = filterInStock(searchFilteredOthers);
-
-  const outOfStockProducts = [
-    ...filterOutOfStock(searchFilteredMeasuring),
-    ...filterOutOfStock(searchFilteredLab),
-    ...filterOutOfStock(searchFilteredChemicals),
-    ...filterOutOfStock(searchFilteredOthers),
-  ];
+  const inStockMeasuring = measuring.filter(p => p.p_status !== "Out of Stock");
+  const inStockLab = lab.filter(p => p.p_status !== "Out of Stock");
+  const inStockChemicals = chemicals.filter(p => p.p_status !== "Out of Stock");
+  const othersList = allProducts.filter(p => !["Measuring & Controllers", "Laboratory Equipment", "Chemical"].includes(p.p_category) && p.p_status !== "Out of Stock");
+  const outOfStockProducts = outOfStock;
 
   if (isLoading) {
     return (
@@ -131,33 +120,62 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           products={outOfStockProducts}
           theme={theme}
           showCategory={true}
+          total={outOfStockTotal}
+          currentPage={outOfStockPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setOutOfStockPage(page); setPageSize(size); }}
+          loading={outOfStockLoading}
         />
       )}
-      {inStockMeasuring.length > 0 && (
+      {measuring.length > 0 && (
         <ProductTable
           title="Measuring & Controllers"
           products={inStockMeasuring}
           theme={theme}
+          total={measuringTotal}
+          currentPage={measuringPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setMeasuringPage(page); setPageSize(size); }}
+          loading={measuringLoading}
         />
       )}
-      {inStockLab.length > 0 && (
+      {lab.length > 0 && (
         <ProductTable
           title="Lab Equipments"
           products={inStockLab}
           theme={theme}
           showSize={true}
+          total={labTotal}
+          currentPage={labPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setLabPage(page); setPageSize(size); }}
+          loading={labLoading}
         />
       )}
-      {inStockChemicals.length > 0 && (
+      {chemicals.length > 0 && (
         <ProductTable
           title="Chemicals"
           products={inStockChemicals}
           theme={theme}
           showExpireDate={true}
+          total={chemicalsTotal}
+          currentPage={chemicalsPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setChemicalsPage(page); setPageSize(size); }}
+          loading={chemicalsLoading}
         />
       )}
-      {inStockOthers.length > 0 && (
-        <ProductTable title="Others" products={inStockOthers} theme={theme} />
+      {othersList.length > 0 && (
+        <ProductTable 
+          title="Others" 
+          products={othersList} 
+          theme={theme} 
+          total={allProductsTotal}
+          currentPage={othersPage}
+          pageSize={pageSize}
+          onPageChange={(page, size) => { setOthersPage(page); setPageSize(size); }}
+          loading={allLoading}
+        />
       )}
       {showAddModal && (
         <ProductModal

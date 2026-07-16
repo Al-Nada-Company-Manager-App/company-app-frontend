@@ -39,3 +39,19 @@ export interface Products {
     };
     products?: Partial<Products>[];
   }
+
+export interface PurchaseQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedPurchaseResponse {
+  data: Purchases[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
