@@ -45,10 +45,30 @@ const SaleModal: React.FC<SaleModalProps> = ({
   const createSale = useCreateSale(isDark);
   const updateSale = useUpdateSale(isDark);
 
+  // Search states for dropdowns
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [debouncedCustomerSearch, setDebouncedCustomerSearch] = useState("");
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [debouncedProductSearch, setDebouncedProductSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedCustomerSearch(customerSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [customerSearchTerm]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedProductSearch(productSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [productSearchTerm]);
+
   // Queries for Add mode
-  const { data: customersResponse, isLoading: loadingCustomers } = useGetAllCustomers({ limit: 1000 });
+  const { data: customersResponse, isLoading: loadingCustomers } = useGetAllCustomers({ limit: 50, search: debouncedCustomerSearch });
   const customers = customersResponse?.data;
-  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 1000 });
+  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 50, search: debouncedProductSearch });
   const products = paginatedProducts?.data;
 
   // State management for Add mode
@@ -459,6 +479,7 @@ const SaleModal: React.FC<SaleModalProps> = ({
             saleType={saleType}
             onSaleTypeChange={handleSaleTypeChange}
             onOpenCustomersPage={openCustomersPage}
+            onCustomerSearch={setCustomerSearchTerm}
           />
 
           <SaleFinancialInfo
@@ -486,6 +507,7 @@ const SaleModal: React.FC<SaleModalProps> = ({
           onProductRemove={handleProductRemove}
           onRepairItemRemove={handleRepairItemRemove}
           onOpenStockPage={openStockPage}
+          onProductSearch={setProductSearchTerm}
           theme={theme}
         />
 

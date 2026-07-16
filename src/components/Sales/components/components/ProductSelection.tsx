@@ -40,6 +40,7 @@ interface ProductSelectionProps {
   onProductRemove: (productId: number) => void;
   onRepairItemRemove: (productId: number) => void;
   onOpenStockPage: () => void;
+  onProductSearch: (val: string) => void;
   theme: Theme;
 }
 
@@ -55,6 +56,7 @@ const ProductSelection = ({
   onProductRemove,
   onRepairItemRemove,
   onOpenStockPage,
+  onProductSearch,
   theme,
 }: ProductSelectionProps) => {
   if (saleType !== "SELLITEMS" && saleType !== "REPAIR") {
@@ -181,21 +183,8 @@ const ProductSelection = ({
           }
           value={undefined}
           showSearch
-          filterOption={(input, option) => {
-            const product = products?.find(
-              (p: Product) => p.p_id === Number(option?.value)
-            );
-            const searchText = input.toLowerCase();
-            return (
-              product?.p_name?.toLowerCase().includes(searchText) ||
-              product?.p_id?.toString().includes(searchText) ||
-              product?.p_costprice?.toString().includes(searchText) ||
-              product?.p_sellprice?.toString().includes(searchText) ||
-              product?.model_code?.toLowerCase().includes(searchText) ||
-              product?.serial_number?.toLowerCase().includes(searchText) ||
-              false
-            );
-          }}
+          onSearch={onProductSearch}
+          filterOption={false}
           notFoundContent="No products found"
         >
           {products

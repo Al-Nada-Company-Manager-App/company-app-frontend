@@ -34,7 +34,17 @@ const ProductModal: React.FC<ProductModalProps> = ({
   product,
 }) => {
   const { isDark } = useThemeContext();
-  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 1000 });
+  const [supplierSearchTerm, setSupplierSearchTerm] = useState("");
+  const [debouncedSupplierSearch, setDebouncedSupplierSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSupplierSearch(supplierSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [supplierSearchTerm]);
+
+  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 50, search: debouncedSupplierSearch });
   const suppliers = paginatedSuppliers?.data;
   const [form] = Form.useForm();
   const category = Form.useWatch("p_category", form);
@@ -212,11 +222,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     placeholder="Select a supplier" 
                     allowClear
                     showSearch
-                    filterOption={(input, option) =>
-                      (option?.children as unknown as string)
-                        ?.toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
+                    onSearch={setSupplierSearchTerm}
+                    filterOption={false}
                   >
                     {suppliers?.map((sup: any) => (
                       <Select.Option key={sup.s_id} value={sup.s_id}>

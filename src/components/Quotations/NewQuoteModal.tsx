@@ -33,11 +33,30 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
 
   const { data: quoteToEdit, isFetching: loadingQuote } = useGetQuotationById(editingQuoteId || null);
 
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [debouncedCustomerSearch, setDebouncedCustomerSearch] = useState("");
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [debouncedProductSearch, setDebouncedProductSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedCustomerSearch(customerSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [customerSearchTerm]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedProductSearch(productSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [productSearchTerm]);
+
   // Fetch Data
   const { data: customersResponse, isLoading: loadingCustomers } =
-    useGetAllCustomers({ limit: 10 });
+    useGetAllCustomers({ limit: 50, search: debouncedCustomerSearch });
   const customers = customersResponse?.data;
-  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 1000 });
+  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 50, search: debouncedProductSearch });
   const products = paginatedProducts?.data;
 
   const [items, setItems] = useState<any[]>([
@@ -291,11 +310,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                   placeholder="Select Customer"
                   showSearch
                   loading={loadingCustomers}
-                  filterOption={(input, option) =>
-                    (option?.children as unknown as string)
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+                  onSearch={setCustomerSearchTerm}
+                  filterOption={false}
                 >
                   {customers?.map((c) => (
                     <Option key={c.c_id} value={c.c_id}>
@@ -364,11 +380,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                       placeholder="Search Product..."
                       loading={loadingProducts}
                       onChange={(val) => handleProductSelect(idx, val)}
-                      filterOption={(input, option) =>
-                        ((option?.label as string) || "")
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
+                      onSearch={setProductSearchTerm}
+                      filterOption={false}
                       options={products?.map((p) => ({
                         value: p.p_id,
                         label: `${p.p_name} (${p.model_code || "No Model"})`,

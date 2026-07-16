@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Form, Input, Select, DatePicker, Button, Row, Col } from "antd";
 import { useCreateTask, useUpdateTask } from "@src/queries/Tasks";
 import { useGetAllEmployees } from "@src/queries/Employees";
@@ -24,7 +24,17 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
   // Queries
   const createTaskMutation = useCreateTask();
   const updateTaskMutation = useUpdateTask();
-  const { data: paginatedEmployees } = useGetAllEmployees(1, 1000);
+  const [employeeSearchTerm, setEmployeeSearchTerm] = useState("");
+  const [debouncedEmployeeSearch, setDebouncedEmployeeSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedEmployeeSearch(employeeSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [employeeSearchTerm]);
+
+  const { data: paginatedEmployees } = useGetAllEmployees(1, 50, debouncedEmployeeSearch);
   const employees = paginatedEmployees?.data;
 
   // Reset form when modal opens or task changes
@@ -205,16 +215,13 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
                 </span>
               }
             >
-              <Select
-                placeholder="Select Employee"
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                dropdownStyle={{ background: theme.modal?.background }}
-              >
+                <Select
+                  placeholder="Select Employee"
+                  showSearch
+                  onSearch={setEmployeeSearchTerm}
+                  filterOption={false}
+                  dropdownStyle={{ background: theme.modal?.background }}
+                >
                 {employees?.map((emp) => (
                   <Option key={emp.e_id} value={emp.e_id}>
                     {emp.f_name} {emp.l_name}

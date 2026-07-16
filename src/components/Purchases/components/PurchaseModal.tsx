@@ -54,9 +54,28 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   const createPurchase = useCreatePurchase(isDark);
   const updatePurchase = useUpdatePurchase(isDark);
-  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 1000 });
+  const [supplierSearchTerm, setSupplierSearchTerm] = useState("");
+  const [debouncedSupplierSearch, setDebouncedSupplierSearch] = useState("");
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [debouncedProductSearch, setDebouncedProductSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSupplierSearch(supplierSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [supplierSearchTerm]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedProductSearch(productSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [productSearchTerm]);
+
+  const { data: paginatedSuppliers } = useGetAllSuppliers({ limit: 50, search: debouncedSupplierSearch });
   const suppliers = paginatedSuppliers?.data;
-  const { data: paginatedProducts } = useGetAllProducts({ limit: 1000 });
+  const { data: paginatedProducts } = useGetAllProducts({ limit: 50, search: debouncedProductSearch });
   const products = paginatedProducts?.data;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -262,12 +281,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="Select a supplier"
                 showSearch
                 disabled={!!purchase}
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    ?.toLowerCase()
-                    ?.includes(input.toLowerCase())
-                }
+                onSearch={setSupplierSearchTerm}
+                filterOption={false}
               >
                 {suppliers?.map((supplier) => (
                   <Select.Option key={supplier.s_id} value={supplier.s_id}>
@@ -397,21 +412,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                 placeholder="Search by name, ID, price, model, or serial..."
                 showSearch
                 onChange={handleProductSelect}
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                  const product = products?.find(
-                    (p) => p.p_id === Number(option?.value)
-                  );
-                  const searchText = input.toLowerCase();
-                  return (
-                    product?.p_name?.toLowerCase().includes(searchText) ||
-                    product?.p_id?.toString().includes(searchText) ||
-                    product?.p_sellprice?.toString().includes(searchText) ||
-                    product?.model_code?.toLowerCase().includes(searchText) ||
-                    product?.serial_number?.toLowerCase().includes(searchText) ||
-                    false
-                  );
-                }}
+                onSearch={setProductSearchTerm}
+                filterOption={false}
                 notFoundContent="No products found"
               >
                 {products

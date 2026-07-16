@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Badge, Select, Row, Col, Spin, Card, Modal } from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
@@ -13,8 +13,18 @@ const TaskHistory = () => {
   const { theme, isDark } = useThemeContext();
   const { user } = useAuthContext();
   const { data: tasks, isLoading: isLoadingTasks } = useGetAllTasks();
+  const [employeeSearchTerm, setEmployeeSearchTerm] = useState("");
+  const [debouncedEmployeeSearch, setDebouncedEmployeeSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedEmployeeSearch(employeeSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [employeeSearchTerm]);
+
   const { data: paginatedEmployees, isLoading: isLoadingEmployees } =
-    useGetAllEmployees(1, 1000);
+    useGetAllEmployees(1, 50, debouncedEmployeeSearch);
   const employees = paginatedEmployees?.data;
   // Using a custom hook or just checking user role/permissions roughly here
   // Ideally, we'd use useGetPermissions but we need it for the *current* user.
@@ -105,17 +115,20 @@ const TaskHistory = () => {
         </Col>
         <Col>
           {showFilter && (
-            <Select
-              allowClear
-              placeholder="Filter by Employee"
-              style={{ width: 200 }}
-              onChange={setSelectedEmployee}
-              dropdownStyle={{ background: theme.modal?.background }}
-              options={employees?.map((emp) => ({
-                label: `${emp.f_name} ${emp.l_name}`,
-                value: emp.e_id,
-              }))}
-            />
+              <Select
+                allowClear
+                showSearch
+                onSearch={setEmployeeSearchTerm}
+                filterOption={false}
+                placeholder="Filter by Employee"
+                style={{ width: 200 }}
+                onChange={setSelectedEmployee}
+                dropdownStyle={{ background: theme.modal?.background }}
+                options={employees?.map((emp) => ({
+                  label: `${emp.f_name} ${emp.l_name}`,
+                  value: emp.e_id,
+                }))}
+              />
           )}
         </Col>
       </Row>

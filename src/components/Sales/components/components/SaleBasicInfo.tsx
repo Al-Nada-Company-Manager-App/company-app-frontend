@@ -17,6 +17,7 @@ interface SaleBasicInfoProps {
   saleType: string;
   onSaleTypeChange: (value: string) => void;
   onOpenCustomersPage: () => void;
+  onCustomerSearch: (val: string) => void;
 }
 
 const SaleBasicInfo = ({
@@ -24,6 +25,7 @@ const SaleBasicInfo = ({
   loadingCustomers,
   onSaleTypeChange,
   onOpenCustomersPage,
+  onCustomerSearch,
 }: SaleBasicInfoProps) => {
   return (
     <div className="w-full md:w-1/2 flex flex-col gap-4">
@@ -55,14 +57,8 @@ const SaleBasicInfo = ({
           placeholder="Select customer"
           showSearch
           loading={loadingCustomers}
-          filterOption={(input, option) => {
-            const customer = customers?.find((c) => c.c_id === option?.value);
-            if (!customer) return false;
-
-            const searchText =
-              `${customer.c_name} ${customer.c_email}`.toLowerCase();
-            return searchText.includes(input.toLowerCase());
-          }}
+          onSearch={onCustomerSearch}
+          filterOption={false}
         >
           {customers?.map((customer) => (
             <Option key={customer.c_id} value={customer.c_id}>
