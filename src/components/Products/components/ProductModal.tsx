@@ -19,6 +19,7 @@ import CustomBtn from "@src/components/UI/customBtn";
 import RichTextEditor from "@src/components/UI/RichTextEditor";
 import { ImageUpload } from "@src/components/UI";
 import { getImageUrl } from "@src/config/api";
+import { useGetAllSuppliers } from "@src/queries/Suppliers/supplierQueries";
 import dayjs from "dayjs";
 
 interface ProductModalProps {
@@ -35,6 +36,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   product,
 }) => {
   const { isDark } = useThemeContext();
+  const { data: suppliers } = useGetAllSuppliers();
   const [form] = Form.useForm();
   const category = Form.useWatch("p_category", form);
   const [imageFile, setImageFile] = useState<RcFile | null>(null);
@@ -60,6 +62,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           expire_date: product.expire_date ? dayjs(product.expire_date) : null,
           p_status: product.p_status,
           serial_number: product.serial_number,
+          s_id: product.s_id || undefined,
         });
         setDescription(product.p_description || "");
         setPreviewImage(product.p_photo ? getImageUrl("products", product.p_photo) : undefined);
@@ -196,6 +199,19 @@ const ProductModal: React.FC<ProductModalProps> = ({
                       Spare Part
                     </Select.Option>
                     <Select.Option value="Others">Others</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <Form.Item label="Manufacturer / Supplier" name="s_id">
+                  <Select placeholder="Select a supplier" allowClear>
+                    {suppliers?.map((sup: any) => (
+                      <Select.Option key={sup.s_id} value={sup.s_id}>
+                        {sup.s_name}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>

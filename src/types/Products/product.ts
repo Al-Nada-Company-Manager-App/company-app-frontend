@@ -12,6 +12,11 @@ export interface Product {
   expire_date: string | null;
   p_status: string | null;
   serial_number: string;
+  s_id?: number | null;
+  supplier?: {
+    s_id: number;
+    s_name: string;
+  } | null;
 }
 // For creating a new product
 export interface CreateProductInput {
@@ -27,6 +32,7 @@ export interface CreateProductInput {
   p_status?: string | null;
   serial_number: string;
   p_photo?: string;
+  s_id?: number | null;
 }
 
 // For updating an existing product
@@ -43,4 +49,5 @@ export interface UpdateProductInput {
   expire_date?: string | null;
   p_status?: string | null;
   p_photo?: string | null;
+  s_id?: number | null;
 }

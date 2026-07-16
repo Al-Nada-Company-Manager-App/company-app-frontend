@@ -44,6 +44,13 @@ export const getProductColumns = (
     ]
     : []),
   {
+    title: "Supplier",
+    dataIndex: "supplier",
+    key: "supplier",
+    render: (supplier: any) => supplier?.s_name || "-",
+    width: "12%",
+  },
+  {
     title: "Cost Price",
     dataIndex: "p_costprice",
     key: "p_costprice",
