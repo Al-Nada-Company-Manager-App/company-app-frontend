@@ -99,6 +99,11 @@ const ProductDetailModal = ({
                   {product.p_category}
                 </Descriptions.Item>
               )}
+              {product?.supplier && (
+                <Descriptions.Item label="Manufacturer / Supplier">
+                  {product.supplier.s_name}
+                </Descriptions.Item>
+              )}
               {product?.p_size && (
                 <Descriptions.Item label="Size">
                   {product.p_size}
