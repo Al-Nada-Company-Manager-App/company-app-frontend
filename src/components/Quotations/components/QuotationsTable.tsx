@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import ResponsiveList from "@src/components/UI/ResponsiveList";
-import { useState } from "react";
+
 import QuotationCard from "./QuotationCard";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";

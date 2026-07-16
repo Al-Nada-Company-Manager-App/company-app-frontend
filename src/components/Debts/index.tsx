@@ -1,4 +1,5 @@
 import { useDebts } from "@src/hooks/Debts/useDebts";
+import { useState } from "react";
 import DebtTable from "./components/DebtTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import { useSearchContext } from "@src/contexts/search";

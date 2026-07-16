@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Employee } from "@src/types/Employees/employee";
+
 import { useGetAllEmployees } from "@src/queries/Employees/employeeQueries";
 import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
 

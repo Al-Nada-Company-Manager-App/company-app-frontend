@@ -24,7 +24,7 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
   // Queries
   const createTaskMutation = useCreateTask();
   const updateTaskMutation = useUpdateTask();
-  const { data: paginatedEmployees } = useGetAllEmployees({ limit: 1000 });
+  const { data: paginatedEmployees } = useGetAllEmployees(1, 1000);
   const employees = paginatedEmployees?.data;
 
   // Reset form when modal opens or task changes

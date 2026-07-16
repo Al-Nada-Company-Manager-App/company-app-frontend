@@ -121,6 +121,10 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
           products={outOfStockProducts}
           theme={theme}
           showCategory={true}
+          total={outOfStockProducts.length}
+          currentPage={1}
+          pageSize={outOfStockProducts.length || 10}
+          onPageChange={() => {}}
         />
       )}
       {inStockSpares.length > 0 && (
@@ -128,6 +132,10 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
           title="Spares"
           products={inStockSpares}
           theme={theme}
+          total={total}
+          currentPage={1}
+          pageSize={10}
+          onPageChange={() => {}}
         />
       )}
       {showAddModal && (

@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import ResponsiveList from "@src/components/UI/ResponsiveList";
-import { useState } from "react";
+
 import EmployeeCard from "./EmployeeCard";
 import * as Icons from "lucide-react";
 import type { Employee } from "@src/types/Employees/employee";
