@@ -14,6 +14,7 @@ export const customerKeys = {
     [...customerKeys.lists(), params] as const,
   details: () => [...customerKeys.all, "detail"] as const,
   detail: (id: number) => [...customerKeys.details(), id] as const,
+  sales: (id: number) => [...customerKeys.detail(id), "sales"] as const,
 };
 
 // Get all customers (paginated, with search and type filter)
@@ -51,7 +52,7 @@ export const useGetAllCompanies = () => {
 //Get customer Sales by ID
 export const useGetCustomerSales = (id: number) => {
   return useQuery({
-    queryKey: customerKeys.detail(id),
+    queryKey: customerKeys.sales(id),
     queryFn: () => customerApi.getCustomerSales(id),
     enabled: !!id, // Only run if id is provided
   });

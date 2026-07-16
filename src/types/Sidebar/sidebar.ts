@@ -4,6 +4,7 @@ export interface SidebarItem {
   id: string;
   label: string;
   icon: string;
+  path?: string;
   isActive?: boolean;
   children?: SidebarItem[];
 }

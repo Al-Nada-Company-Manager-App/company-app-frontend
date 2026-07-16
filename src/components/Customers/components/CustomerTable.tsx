@@ -1,10 +1,11 @@
-import { Table, Grid } from "antd";
+import { Table } from "antd";
 import CustomerCard from "./CustomerCard";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import { useState } from "react";
 import CustomerDetailModal from "./CustomerDetailModal";
 import { getCustomerColumns } from "./customerColumns";
+import ResponsiveList from "@src/components/UI/ResponsiveList";
 
 interface CustomerTableProps {
   customers: Customer[];
@@ -12,7 +13,7 @@ interface CustomerTableProps {
   total: number;
   currentPage: number;
   pageSize: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (page: number, pageSize: number) => void;
   loading?: boolean;
 }
 
@@ -25,8 +26,6 @@ const CustomerTable = ({
   onPageChange,
   loading,
 }: CustomerTableProps) => {
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
     null,
   );
@@ -44,43 +43,50 @@ const CustomerTable = ({
     setSelectedCustomerId(null);
   };
 
+  const tableComponent = (
+    <Table<Customer>
+      className="custom-table"
+      dataSource={customers}
+      showHeader={true}
+      loading={loading}
+      pagination={false}
+      rowKey="c_id"
+      columns={columns}
+      scroll={{ x: "max-content" }}
+      showSorterTooltip={{ target: "sorter-icon" }}
+      onRow={(record) => ({
+        onClick: () => handleRowClick(record.c_id),
+      })}
+    />
+  );
+
+  const cardsComponent = (
+    <div className="flex flex-col gap-4">
+      {customers.map((customer) => (
+        <CustomerCard
+          key={customer.c_id}
+          customer={customer}
+          theme={theme}
+          onClick={() => handleRowClick(customer.c_id)}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <>
-      <div className="custom-table">
-        {!screens.md ? (
-          <div className="flex flex-col gap-4">
-            {customers.map((customer) => (
-              <CustomerCard
-                key={customer.c_id}
-                customer={customer}
-                theme={theme}
-                onClick={() => handleRowClick(customer.c_id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <Table<Customer>
-            className="custom-table"
-            dataSource={customers}
-            showHeader={true}
-            loading={loading}
-            pagination={{
-              current: currentPage,
-              pageSize: pageSize,
-              total: total,
-              onChange: onPageChange,
-              showSizeChanger: false,
-            }}
-            rowKey="c_id"
-            columns={columns}
-            scroll={{ x: 1000 }}
-            showSorterTooltip={{ target: "sorter-icon" }}
-            onRow={(record) => ({
-              onClick: () => handleRowClick(record.c_id),
-            })}
-          />
-        )}
-      </div>
+      <ResponsiveList
+        className="custom-table"
+        table={tableComponent}
+        cards={cardsComponent}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: total,
+          onChange: onPageChange,
+          showSizeChanger: true,
+        }}
+      />
       <CustomerDetailModal
         modalOpen={isModalVisible}
         onClose={handleModalClose}

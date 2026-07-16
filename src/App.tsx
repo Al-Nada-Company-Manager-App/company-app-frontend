@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import { useEffect } from "react";
 import { ThemeProvider } from "@src/contexts/theme/ThemeContext";
@@ -26,10 +27,8 @@ import AuthPage from "@src/components/pages/AuthPage";
 import QuotationsPage from "@src/components/pages/QuotationsPage";
 import TasksPage from "@src/components/pages/TasksPage";
 import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
-// import TechnicianDashboard from "./components/dashboards/technicianDashboard";
-// import SecartaryDashboard from "./components/dashboards/SecartaryDashboard";
-// import AccountantDashboard from "./components/dashboards/AccountantDashboard";
-// import SalesManDashboard from "./components/dashboards/SalesManDashboard";
+import { PermissionGuard } from "@src/components/Auth/PermissionGuard";
+import { ROUTES } from "@src/config/routes";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -39,6 +38,12 @@ function RouteHandler() {
   useEffect(() => {
     // Clear search query whenever route changes
     setSearchQuery("");
+
+    // Scroll to top
+    const scrollableElement = document.querySelector(".scrollable-content");
+    if (scrollableElement) {
+      scrollableElement.scrollTo(0, 0);
+    }
   }, [location.pathname, setSearchQuery]);
 
   return (
@@ -63,20 +68,98 @@ function RouteHandler() {
         }
       >
         <Route index element={<ManagerDashboard />} />
-        <Route path="employees" element={<EmployeesPage />} />
-        <Route path="customers" element={<CustomersPage />} />
+        <Route
+          path="employees"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.employees.permission} fallback={<NotFoundPage />}>
+              <EmployeesPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="customers"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.customers.permission} fallback={<NotFoundPage />}>
+              <CustomersPage />
+            </PermissionGuard>
+          }
+        />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="stock" element={<StockPage />}>
-          <Route path="products" element={<ProductPage />} />
-          <Route path="spare-parts" element={<SparePartsPage />} />
+          <Route index element={<Navigate to="products" replace />} />
+          <Route
+            path="products"
+            element={
+              <PermissionGuard requiredPermission={ROUTES.products.permission} fallback={<NotFoundPage />}>
+                <ProductPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="spare-parts"
+            element={
+              <PermissionGuard requiredPermission={ROUTES["spare-parts"].permission} fallback={<NotFoundPage />}>
+                <SparePartsPage />
+              </PermissionGuard>
+            }
+          />
         </Route>
-        <Route path="repairs" element={<RepairPage />} />
-        <Route path="sales" element={<SalesPage />} />
-        <Route path="debts" element={<DebtsPage />} />
-        <Route path="purchases" element={<PurchasesPage />} />
-        <Route path="suppliers" element={<SuppliersPage />} />
-        <Route path="quotations" element={<QuotationsPage />} />
-        <Route path="tasks" element={<TasksPage />} />
+        <Route
+          path="repairs"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.repairs.permission} fallback={<NotFoundPage />}>
+              <RepairPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="sales"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.sales.permission} fallback={<NotFoundPage />}>
+              <SalesPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="debts"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.debts.permission} fallback={<NotFoundPage />}>
+              <DebtsPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="purchases"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.purchases.permission} fallback={<NotFoundPage />}>
+              <PurchasesPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="suppliers"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.suppliers.permission} fallback={<NotFoundPage />}>
+              <SuppliersPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="quotations"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.quotations.permission} fallback={<NotFoundPage />}>
+              <QuotationsPage />
+            </PermissionGuard>
+          }
+        />
+        <Route
+          path="tasks"
+          element={
+            <PermissionGuard requiredPermission={ROUTES.tasks.permission} fallback={<NotFoundPage />}>
+              <TasksPage />
+            </PermissionGuard>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

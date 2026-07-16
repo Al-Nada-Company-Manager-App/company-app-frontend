@@ -3,6 +3,10 @@ import type { Theme } from "@src/types/theme";
 const ModalStyle = ({ theme }: { theme: Theme }) => {
   return (
     <style>{`
+      .custom-modal {
+        max-width: calc(100vw - 32px) !important;
+        margin: 0 auto !important;
+      }
       .custom-modal .ant-modal-content {
         background: ${theme?.modal?.background} !important;
         color: ${theme?.modal?.color} !important;
@@ -41,6 +45,8 @@ const ModalStyle = ({ theme }: { theme: Theme }) => {
       /* Modal Body */
       .custom-modal .ant-modal-body {
         padding: 32px !important;
+        max-height: calc(100dvh - 200px) !important;
+        overflow-y: auto !important;
       }
       
       /* Confirm Dialog Specific Styles */

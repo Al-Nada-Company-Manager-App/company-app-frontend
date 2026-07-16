@@ -4,7 +4,7 @@ import { useAuthContext } from "@src/contexts/auth";
 import Sidebar from "@src/components/Sidebar";
 import Breadcrumb from "@src/components/Breadcrumb";
 import { darkTheme, lightTheme } from "@src/hooks/dark&lightthemes";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ModalStyle from "../UI/ModalStyle";
 import TableStyle from "../UI/TableStyle";
 import { useLogout } from "@src/queries/Auth";
@@ -20,26 +20,10 @@ const Layout = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleSidebarItemClick = (itemId: string) => {
-    const routeMap: Record<string, string> = {
-      dashboard: "/",
-      employees: "/employees",
-      customers: "/customers",
-      stock: "/stock",
-      products: "/stock/products",
-      "spare-parts": "/stock/spare-parts",
-      repairs: "/repairs",
-      sales: "/sales",
-      quotations: "/quotations",
-      debts: "/debts",
-      purchases: "/purchases",
-      suppliers: "/suppliers",
-      tasks: "/tasks",
-    };
-
-    const newRoute = routeMap[itemId] || "/";
-    navigate(newRoute);
-  };
+  useEffect(() => {
+    // Close mobile menu on route change
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleBreadcrumbItemClick = async (itemId: string) => {
     console.log("Breadcrumb item clicked:", itemId);
@@ -70,22 +54,6 @@ const Layout = () => {
     }
   };
 
-  const getCurrentPageName = () => {
-    const pageNames: Record<string, string> = {
-      "/": "Dashboard",
-      "/employees": "Employees",
-      "/customers": "Customers",
-      "/stock": "Stock",
-      "/profile": "Profile",
-      "/sales": "Sales",
-      "/debts": "Debts",
-      "/purchases": "Purchases",
-      "/suppliers": "Suppliers",
-      "/tasks": "Tasks",
-    };
-    return pageNames[location.pathname] || "Dashboard";
-  };
-
   return (
     <>
       <ModalStyle theme={itheme} />
@@ -112,7 +80,6 @@ const Layout = () => {
         <div className="hidden md:block">
           <Sidebar
             isDark={isDark}
-            onItemClick={handleSidebarItemClick}
             currentPath={location.pathname}
           />
         </div>
@@ -130,10 +97,6 @@ const Layout = () => {
           <div style={{ height: "100%", padding: "10px" }}>
             <Sidebar
               isDark={isDark}
-              onItemClick={(id) => {
-                handleSidebarItemClick(id);
-                setMobileMenuOpen(false);
-              }}
               currentPath={location.pathname}
               mobile={true}
             />
@@ -144,7 +107,6 @@ const Layout = () => {
         <div className="md:pl-[298px] transition-all duration-300">
           <Breadcrumb
             isDark={isDark}
-            currentPage={getCurrentPageName()}
             onThemeToggle={toggleTheme}
             onMenuItemClick={handleBreadcrumbItemClick}
           />

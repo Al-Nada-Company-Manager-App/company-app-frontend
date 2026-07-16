@@ -2,24 +2,23 @@ import { useBreadcrumb } from "@src/hooks/Breadcrumb/useBreadcrumb";
 import SearchInput from "./components/SearchInput";
 import UserMenu from "./components/UserMenu";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { ROUTES } from "@src/config/routes";
 
 interface BreadcrumbProps {
   isDark: boolean;
-  currentPage?: string;
-  breadcrumbPath?: string;
   onThemeToggle?: () => void;
   onMenuItemClick?: (itemId: string) => void;
 }
 
 const Breadcrumb = ({
   isDark,
-  currentPage = "Tables",
-  breadcrumbPath = "Breadcrumb",
   onThemeToggle,
   onMenuItemClick,
 }: BreadcrumbProps) => {
   const { theme, userMenuItems, scrolledTheme } = useBreadcrumb(isDark);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +47,26 @@ const Breadcrumb = ({
     }
   };
 
+  // Derive breadcrumbs dynamically
+  let currentRouteMeta = undefined;
+  for (const key in ROUTES) {
+    if (ROUTES[key].path === location.pathname) {
+      currentRouteMeta = ROUTES[key];
+      break;
+    }
+  }
+
+  const currentPage = currentRouteMeta?.title || "Dashboard";
+  
+  let breadcrumbPath = "";
+  if (currentRouteMeta?.parent && ROUTES[currentRouteMeta.parent]) {
+    breadcrumbPath = `${ROUTES[currentRouteMeta.parent].title} / ${currentRouteMeta.title}`;
+  } else {
+    breadcrumbPath = currentRouteMeta?.title || "Dashboard";
+  }
+
+  const showSearch = !!currentRouteMeta?.searchable;
+
   return (
     <div
       className="fixed left-14 md:left-[322px] top-4 sm:top-6 right-2 sm:right-6 flex items-center justify-end sm:justify-between z-30 transition-all duration-300"
@@ -73,6 +92,7 @@ const Breadcrumb = ({
           <span
             className="text-sm font-normal"
             style={{ color: currentTheme.title.color }}
+            aria-current="page"
           >
             {currentPage}
           </span>
@@ -81,7 +101,7 @@ const Breadcrumb = ({
 
       {/* Right side - Search and Menu */}
       <div className="flex items-center gap-2 sm:gap-6">
-        <SearchInput theme={currentTheme} />
+        {showSearch && <SearchInput theme={currentTheme} />}
         <UserMenu
           theme={currentTheme}
           items={userMenuItems}

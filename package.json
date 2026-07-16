@@ -54,13 +54,17 @@
   },
   "build": {
     "appId": "com.company.app",
+    "linux": {
+      "target": ["AppImage", "deb"]
+    },
     "win": {
-      "target": "nsis"
+      "target": ["nsis"]
     },
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "!node_modules/**/*"
     ],
     "directories": {
       "output": "release"

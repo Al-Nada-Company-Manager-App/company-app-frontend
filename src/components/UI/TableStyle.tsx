@@ -91,10 +91,6 @@ const TableStyle = ({ theme }: { theme: Theme }) => {
           color: ${theme.title.color || "#000"} !important;
         }
 
-        .custom-table .ant-select-selector{
-           display: none !important;
-        }
-
         .custom-table .ant-table-column-sorter-inner{
           color: ${theme.employee.nameColor || "#222"} !important;
         }
