@@ -206,7 +206,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
             <Row gutter={[16, 16]}>
               <Col span={24}>
                 <Form.Item label="Manufacturer / Supplier" name="s_id">
-                  <Select placeholder="Select a supplier" allowClear>
+                  <Select 
+                    placeholder="Select a supplier" 
+                    allowClear
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)
+                        ?.toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
                     {suppliers?.map((sup: any) => (
                       <Select.Option key={sup.s_id} value={sup.s_id}>
                         {sup.s_name}
