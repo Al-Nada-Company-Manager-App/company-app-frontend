@@ -1,4 +1,4 @@
-// API and image URL configuration
+import { getSyncBackendUrl } from "../platform/storage";
 
 // Get API URL from environment variable (set in .env file)
 // For Vite, environment variables must be prefixed with VITE_
@@ -27,7 +27,7 @@ export const getImageUrl = (
   // Return the backend API URL for the image
   // If the filename contains a path, strip it to getting just the basename
   const cleanFilename = filename.split(/[/\\]/).pop();
-  return `${API_BASE_URL}/images/${type}/${cleanFilename}`;
+  return `${getSyncBackendUrl()}/images/${type}/${cleanFilename}`;
 };
 
 /**

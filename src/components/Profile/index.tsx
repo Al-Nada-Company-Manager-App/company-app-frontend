@@ -5,7 +5,6 @@ import {
   ProfileHeader,
   ProfileCards,
   UpdateProfileModal,
-  ChangePasswordModal,
 } from "./components";
 
 interface ProfileProps {
@@ -15,7 +14,6 @@ interface ProfileProps {
 const Profile = ({ isDark }: ProfileProps) => {
   const { user, theme } = useProfile(isDark);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   if (!user) {
     return (
@@ -77,7 +75,6 @@ const Profile = ({ isDark }: ProfileProps) => {
             theme={theme}
             isDark={isDark}
             onEditProfile={() => setShowEditModal(true)}
-            onChangePassword={() => setShowChangePasswordModal(true)}
           />
         </div>
       </div>
@@ -85,11 +82,6 @@ const Profile = ({ isDark }: ProfileProps) => {
         modalOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         user={user}
-        theme={theme}
-      />
-      <ChangePasswordModal
-        modalOpen={showChangePasswordModal}
-        onClose={() => setShowChangePasswordModal(false)}
         theme={theme}
       />
     </div>

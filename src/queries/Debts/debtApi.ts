@@ -1,8 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type { Debt, DebtQueryParams, PaginatedDebtResponse } from "@src/types/Debts/debt";
 
-const DEBTS_URL = `${API_BASE_URL}/debts`;
+const DEBTS_URL = `/debts`;
 
 export const debtApi = {
   //Get all debts

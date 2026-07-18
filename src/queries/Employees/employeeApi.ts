@@ -3,9 +3,8 @@ import type {
   EmployeePermissions,
 } from "@src/types/Employees/employee";
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 
-const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
+const EMPLOYEES_URL = `/employees`;
 
 // Employee API functions
 export const employeeApi = {

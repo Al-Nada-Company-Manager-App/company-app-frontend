@@ -28,9 +28,10 @@ const Layout = () => {
   const handleBreadcrumbItemClick = async (itemId: string) => {
     console.log("Breadcrumb item clicked:", itemId);
 
-    // Handle profile navigation
-    if (itemId === "profile" || itemId === "settings") {
+    if (itemId === "profile") {
       navigate("/profile");
+    } else if (itemId === "settings") {
+      navigate("/settings");
     }
     // Handle logout
     if (itemId === "logout") {

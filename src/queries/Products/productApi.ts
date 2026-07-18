@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   Product,
   CreateProductInput,
@@ -8,7 +7,7 @@ import type {
   PaginatedProductResponse,
 } from "@src/types/Products/product";
 
-const PRODUCTS_URL = `${API_BASE_URL}/products`;
+const PRODUCTS_URL = `/products`;
 
 export const productsApi = {
   // Get all products

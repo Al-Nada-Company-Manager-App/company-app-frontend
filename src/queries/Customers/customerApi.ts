@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   Customer,
   CustomerSales,
@@ -8,7 +7,7 @@ import type {
   CustomerQueryParams,
 } from "@src/types/Customers/customer";
 
-const CUSTOMERS_URL = `${API_BASE_URL}/customers`;
+const CUSTOMERS_URL = `/customers`;
 
 export const customerApi = {
   // Get customer locations for map

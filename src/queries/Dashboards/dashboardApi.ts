@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   CustomerProduct,
   DebtOverview,
@@ -18,7 +17,7 @@ import type {
   CustomerMarket,
 } from "@src/types/Dashboard/dashboard";
 
-const DASHBOARD_URL = `${API_BASE_URL}/api`;
+const DASHBOARD_URL = `/api`;
 
 // helper to handle responses that may be a number or an object containing a number
 async function parseNumberResponse(

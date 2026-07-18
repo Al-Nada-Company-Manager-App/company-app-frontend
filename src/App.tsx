@@ -31,6 +31,8 @@ import TasksPage from "@src/components/pages/TasksPage";
 import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
 import { PermissionGuard } from "@src/components/Auth/PermissionGuard";
 import { ROUTES } from "@src/config/routes";
+import { UpdateManager } from "@src/components/UpdateManager";
+import SettingsPage from "@src/components/pages/SettingsPage";
 
 // Component to handle route changes and clear search
 function RouteHandler() {
@@ -87,6 +89,7 @@ function RouteHandler() {
           }
         />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="stock" element={<StockPage />}>
           <Route index element={<Navigate to="products" replace />} />
           <Route
@@ -218,12 +221,15 @@ function AppConfigProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+
+
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <SearchProvider>
           <AppConfigProvider>
+            <UpdateManager />
             <Router
               future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
             >

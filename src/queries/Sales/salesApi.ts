@@ -1,8 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type { Sales, Products, SalesQueryParams, PaginatedSalesResponse } from "@src/types/Sales/sales";
 
-const SALES_URL = `${API_BASE_URL}/sales`;
+const SALES_URL = `/sales`;
 
 export const salesApi = {
   // Get all sales

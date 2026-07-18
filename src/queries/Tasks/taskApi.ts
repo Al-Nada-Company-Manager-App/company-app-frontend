@@ -1,8 +1,7 @@
 import type { Task } from "@src/types/Tasks/task";
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 
-const TASKS_URL = `${API_BASE_URL}/tasks`;
+const TASKS_URL = `/tasks`;
 
 export const taskApi = {
   getAllTasks: async (): Promise<Task[]> => {

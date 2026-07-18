@@ -1,8 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type { Notification } from "@src/types/Notifications/notifications";
 
-const NOTIFICATIONS_URL = `${API_BASE_URL}/notifications`;
+const NOTIFICATIONS_URL = `/notifications`;
 
 // Notification API functions
 export const notificationApi = {

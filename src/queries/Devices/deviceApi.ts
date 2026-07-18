@@ -1,8 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type { Device, CreateDeviceInput } from "@src/types/Devices/device";
 
-const DEVICES_URL = `${API_BASE_URL}/devices`;
+const DEVICES_URL = `/devices`;
 
 export const getDevices = async (): Promise<Device[]> => {
   const res = await fetchWithAuth(DEVICES_URL);

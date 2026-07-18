@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   Supplier,
   SupplierPurchases,
@@ -7,7 +6,7 @@ import type {
   PaginatedSupplierResponse,
 } from "@src/types/Suppliers/supplier";
 
-const SUPPLIERS_URL = `${API_BASE_URL}/suppliers`;
+const SUPPLIERS_URL = `/suppliers`;
 
 export const supplierApi = {
   // Get all suppliers

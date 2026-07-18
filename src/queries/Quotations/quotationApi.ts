@@ -5,9 +5,8 @@ import type {
   QuotationQueryParams,
   PaginatedQuotationResponse,
 } from "@src/types/Quotations/quotation";
-import { API_BASE_URL } from "@src/config/api";
 
-const BASE_URL = `${API_BASE_URL}/quotes`;
+const BASE_URL = `/quotes`;
 
 export const quotationApi = {
   // Get all quotations

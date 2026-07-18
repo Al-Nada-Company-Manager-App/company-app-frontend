@@ -15,14 +15,12 @@ interface ProfileCardsProps {
   theme: Theme;
   isDark: boolean;
   onEditProfile: () => void;
-  onChangePassword: () => void;
 }
 
 const ProfileCards = ({
   user,
   theme,
   onEditProfile,
-  onChangePassword,
 }: ProfileCardsProps) => {
   const InfoItem = ({
     icon: Icon,
@@ -176,32 +174,6 @@ const ProfileCards = ({
                 theme.profile?.actions.editButton.color || "";
             }}
           >
-            Edit Profile
-          </button>
-          <button
-            className="w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:transform hover:-translate-y-0.5"
-            style={{
-              background:
-                theme.profile?.actions.changePasswordButton.background,
-              color: theme.profile?.actions.changePasswordButton.color,
-              border: theme.profile?.actions.changePasswordButton.border,
-            }}
-            onClick={onChangePassword}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background =
-                theme.profile?.actions.changePasswordButton.hoverBackground ||
-                "";
-              e.currentTarget.style.color =
-                theme.profile?.actions.changePasswordButton.hoverColor || "";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background =
-                theme.profile?.actions.changePasswordButton.background || "";
-              e.currentTarget.style.color =
-                theme.profile?.actions.changePasswordButton.color || "";
-            }}
-          >
-            Change Password
           </button>
         </div>
       </div>

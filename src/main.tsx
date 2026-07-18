@@ -5,12 +5,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "@src/styles/index.css";
 import App from "@src/App.tsx";
 import { queryClient } from "@src/queries/queryClient";
+import { initBackendUrl } from "@src/platform/storage";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <App />
-    </QueryClientProvider>
-  </StrictMode>
-);
+initBackendUrl().then(() => {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <App />
+      </QueryClientProvider>
+    </StrictMode>
+  );
+});

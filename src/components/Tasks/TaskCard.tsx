@@ -20,7 +20,7 @@ import { TaskPriority } from "@src/types/Tasks/task";
 import type { Theme } from "@src/types/theme";
 import moment from "moment";
 import { useDeleteTask } from "@src/queries/Tasks";
-import { API_BASE_URL } from "@src/config/api";
+import { getImageUrl } from "@src/config/api";
 import { usePermission } from "@src/hooks/usePermission";
 
 interface TaskCardProps {
@@ -101,7 +101,7 @@ const TaskCard = ({ task, onEdit, theme, isDark }: TaskCardProps) => {
   // const { Modal } = require("antd"); // Removed incorrect re-declaration
 
   const imageUrl = task.assignee?.e_photo
-    ? `${API_BASE_URL.replace("/api", "")}/images/${task.assignee.e_photo}`
+    ? getImageUrl("employees", task.assignee.e_photo)
     : null;
 
   return (

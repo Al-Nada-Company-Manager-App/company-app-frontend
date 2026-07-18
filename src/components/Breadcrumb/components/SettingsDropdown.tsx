@@ -25,6 +25,7 @@ const SettingsDropdown = ({
 
   const dropdownItems: DropdownItem[] = [
     { id: "profile", label: "Profile", icon: User },
+    { id: "settings", label: "Settings", icon: Settings },
     { id: "help", label: "Help", icon: HelpCircle },
     { id: "logout", label: "Log Out", icon: LogOut },
   ];

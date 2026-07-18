@@ -78,15 +78,16 @@ export interface LogoutResponse {
   message: string;
 }
 
-import { API_BASE_URL } from "@src/config/api";
+import { getBackendUrl } from "@src/platform/storage";
 
-const AUTH_URL = `${API_BASE_URL}/auth`;
+const AUTH_URL = `/auth`;
 
 // Auth API functions
 export const authApi = {
   // Login user
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await fetch(`${AUTH_URL}/login`, {
+    const baseUrl = await getBackendUrl();
+    const response = await fetch(`${baseUrl}${AUTH_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +108,8 @@ export const authApi = {
   // Logout user
   logout: async (): Promise<LogoutResponse> => {
     localStorage.removeItem("authToken"); // Clear token locally
-    const response = await fetch(`${AUTH_URL}/logout`, {
+    const baseUrl = await getBackendUrl();
+    const response = await fetch(`${baseUrl}${AUTH_URL}/logout`, {
       method: "GET",
     });
     return response.json();
@@ -120,7 +122,8 @@ export const authApi = {
       return { success: false, message: "No token found" };
     }
 
-    const response = await fetch(`${AUTH_URL}/session`, {
+    const baseUrl = await getBackendUrl();
+    const response = await fetch(`${baseUrl}${AUTH_URL}/session`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -147,7 +150,8 @@ export const authApi = {
     data: ChangePasswordRequest,
   ): Promise<ChangePasswordResponse> => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`${AUTH_URL}/changepassword`, {
+    const baseUrl = await getBackendUrl();
+    const response = await fetch(`${baseUrl}${AUTH_URL}/changepassword`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -161,7 +165,8 @@ export const authApi = {
   // Register new employee
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
     // Public endpoint, no token required
-    const response = await fetch(`${AUTH_URL}/register`, {
+    const baseUrl = await getBackendUrl();
+    const response = await fetch(`${baseUrl}${AUTH_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -10,7 +10,13 @@ export default defineConfig({
       "@src": "/src",
     },
   },
+  optimizeDeps: {
+    entries: ["index.html"],
+  },
   server: {
+    watch: {
+      ignored: ["**/android/**", "**/electron/**", "**/release/**", "**/dist/**"],
+    },
     proxy: {
       // Forward all API calls through Vite → no CORS issues in dev
       "/api": {

@@ -1,4 +1,6 @@
-export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+import { getBackendUrl } from "@src/platform/storage";
+
+export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
   const token = localStorage.getItem("authToken");
 
   const headers = new Headers(options.headers);
@@ -16,6 +18,9 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     ...options,
     headers,
   };
+
+  const baseUrl = await getBackendUrl();
+  const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
 
   const response = await fetch(url, config);
 

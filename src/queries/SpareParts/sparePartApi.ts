@@ -1,12 +1,11 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   SparePart,
   CreateSparePartInput,
   UpdateSparePartInput,
 } from "@src/types/SpareParts/sparePart";
 
-const SPARE_PARTS_URL = `${API_BASE_URL}/spare-parts`;
+const SPARE_PARTS_URL = `/spare-parts`;
 
 export const getSpareParts = async (): Promise<SparePart[]> => {
   const res = await fetchWithAuth(SPARE_PARTS_URL);

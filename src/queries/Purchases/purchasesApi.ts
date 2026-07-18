@@ -1,8 +1,7 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type { Purchases, Products, PurchaseQueryParams, PaginatedPurchaseResponse } from "@src/types/Purchases/purchases";
 
-const PURCHASES_URL = `${API_BASE_URL}/purchases`;
+const PURCHASES_URL = `/purchases`;
 
 export const purchasesApi = {
   // Get all purchases

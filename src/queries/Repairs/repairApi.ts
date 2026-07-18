@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@src/utils/apiClient";
-import { API_BASE_URL } from "@src/config/api";
 import type {
   Repair,
   CreateRepairInput,
@@ -8,7 +7,7 @@ import type {
   PaginatedRepairResponse,
 } from "@src/types/Repairs/repair";
 
-const REPAIRS_URL = `${API_BASE_URL}/repairs`;
+const REPAIRS_URL = `/repairs`;
 
 export const repairApi = {
   getAllRepairs: async (params: RepairQueryParams = {}): Promise<PaginatedRepairResponse> => {
