@@ -1,0 +1,111 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*" # Triggers on tags like v1.0.0
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+permissions:
+  contents: write # Required for electron-builder and gh-release to create releases
+
+jobs:
+  build-desktop:
+    name: Build Desktop (Windows & Linux)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Frontend
+        run: npm run build
+
+      - name: Build and Publish Electron (Linux)
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          mac_certs: false
+          build_script_name: false
+          args: --linux AppImage
+          
+      # Since we're on Ubuntu, we can cross-compile Windows using Wine, but action-electron-builder
+      # usually handles this or we can use a separate Windows job if needed.
+      # To be absolutely safe and avoid Wine issues in Actions, we will run the Windows build
+      # on a native windows-latest runner below.
+
+  build-windows:
+    name: Build Windows (.exe)
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Frontend
+        run: npm run build
+
+      - name: Build and Publish Electron (Windows)
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          mac_certs: false
+          build_script_name: false
+          args: --win nsis
+
+  build-android:
+    name: Build Android (APK)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Frontend
+        run: npm run build
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Build Android APK
+        working-directory: ./android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: android/app/build/outputs/apk/debug/app-debug.apk

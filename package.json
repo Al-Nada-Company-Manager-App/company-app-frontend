@@ -65,8 +65,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "company",
-        "repo": "company-manager"
+        "owner": "Al-Nada-Company-Manager-App",
+        "repo": "company-app-frontend"
       }
     ],
     "linux": {
