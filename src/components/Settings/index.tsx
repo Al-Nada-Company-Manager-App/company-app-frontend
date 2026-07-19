@@ -106,7 +106,7 @@ const Settings = ({ isDark }: SettingsProps) => {
                 Backend API URL
               </label>
               <p className="mb-2 text-xs" style={{ color: theme.title?.color, opacity: 0.6 }}>
-                Enter the full URL of your backend server (e.g., http://192.168.1.100:4000). Leave empty to use the default http://localhost:4000.
+                Enter the full URL of your backend server (e.g., http://192.168.1.100:4000). Leave empty to use the default http://192.168.1.34:4000.
               </p>
               <input
                 type="text"
