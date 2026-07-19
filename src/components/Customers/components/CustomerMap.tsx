@@ -96,8 +96,8 @@ const CustomerMap = ({ theme }: CustomerMapProps) => {
           }}
         >
           <Popup>
-            <div style={{ textAlign: "center", minWidth: 120 }}>
-              <strong>{location.c_name}</strong>
+            <div style={{ textAlign: "center", minWidth: 120, color: "#334155" }}>
+              <strong style={{ color: "#0f172a" }}>{location.c_name}</strong>
               <br />
               <span
                 style={{

@@ -212,6 +212,21 @@ function AppConfigProvider({ children }: { children: React.ReactNode }) {
             colorBgContainer: theme.modal?.background || '#fff',
             colorText: theme.modal?.color || '#222',
             colorBorder: theme.row?.borderColor || '#d9d9d9',
+          },
+          Tabs: {
+            itemColor: theme.title?.color ? `${theme.title.color}99` : undefined, /* 99 is ~60% opacity */
+            itemHoverColor: theme.title?.color,
+            itemSelectedColor: theme.title?.color,
+            titleFontSize: 16,
+          },
+          Descriptions: {
+            colorText: theme.title?.color,
+            colorTextSecondary: theme.title?.color ? `${theme.title.color}99` : undefined,
+            colorSplit: theme.row?.borderColor,
+            colorBgContainer: 'transparent',
+          },
+          Radio: {
+            colorText: theme.title?.color,
           }
         }
       }}
