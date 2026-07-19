@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Typography } from "antd";
 import { DownloadOutlined, WarningOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { getBackendUrl } from "@src/platform/storage";
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 
 const { Title, Text } = Typography;
 
@@ -11,6 +13,8 @@ export const UpdateManager = () => {
     latest: string;
     show: boolean;
   } | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const checkUpdates = async () => {
@@ -56,17 +60,88 @@ export const UpdateManager = () => {
     };
 
     checkUpdates();
-  }, []);
 
-  const handleUpdate = () => {
     // @ts-ignore
     if (window.companyManager) {
-      // Trigger Electron updater
       // @ts-ignore
-      window.companyManager.installUpdate();
+      window.companyManager.onUpdateProgress((progressObj: any) => {
+        setDownloadProgress(Math.round(progressObj.percent));
+      });
+      // @ts-ignore
+      window.companyManager.onUpdateDownloaded(() => {
+        setIsDownloading(false);
+        // @ts-ignore
+        window.companyManager.installUpdate();
+      });
+    }
+  }, []);
+
+  const handleUpdate = async () => {
+    setIsDownloading(true);
+    setDownloadProgress(0);
+    // @ts-ignore
+    if (window.companyManager) {
+      // @ts-ignore
+      window.companyManager.downloadUpdate();
     } else {
-      // Redirect to download page or play store
-      window.open("https://your-download-link.com", "_blank");
+      // Android Updater Logic
+      try {
+        const res = await fetch("https://api.github.com/repos/Al-Nada-Company-Manager-App/company-app-frontend/releases/latest");
+        if (!res.ok) throw new Error("Failed to fetch release info");
+        const releaseData = await res.json();
+        
+        const apkAsset = releaseData.assets.find((a: any) => a.name.endsWith(".apk"));
+        if (!apkAsset) throw new Error("APK not found in the latest release");
+
+        // Download APK as Blob (mocking progress by tracking fetch bytes)
+        const response = await fetch(apkAsset.browser_download_url);
+        if (!response.body) throw new Error("Failed to download APK");
+        
+        const reader = response.body.getReader();
+        const contentLength = +(response.headers.get('Content-Length') || '0');
+        let receivedLength = 0;
+        let chunks: Uint8Array[] = [];
+        
+        while(true) {
+          const {done, value} = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          receivedLength += value.length;
+          if (contentLength > 0) {
+            setDownloadProgress(Math.round((receivedLength / contentLength) * 100));
+          }
+        }
+        
+        const blob = new Blob(chunks, { type: "application/vnd.android.package-archive" });
+        
+        // Convert Blob to Base64 for Capacitor Filesystem
+        const readerBase64 = new FileReader();
+        readerBase64.readAsDataURL(blob);
+        
+        readerBase64.onloadend = async () => {
+          const base64data = readerBase64.result as string;
+          const base64Split = base64data.split(',')[1];
+          
+          const savedFile = await Filesystem.writeFile({
+            path: 'update.apk',
+            data: base64Split,
+            directory: Directory.Cache
+          });
+          
+          setIsDownloading(false);
+          setUpdateInfo({ ...updateInfo!, show: false });
+          
+          await FileOpener.openFile({
+            path: savedFile.uri,
+            mimeType: 'application/vnd.android.package-archive'
+          });
+        };
+      } catch (err) {
+        console.error("Update Failed:", err);
+        setIsDownloading(false);
+        // Fallback
+        window.open("https://github.com/Al-Nada-Company-Manager-App/company-app-frontend/releases/latest", "_blank");
+      }
     }
   };
 
@@ -101,7 +176,7 @@ export const UpdateManager = () => {
         </Text>
 
         <div className="flex gap-4 w-full">
-          {!updateInfo.mandatory && (
+          {!updateInfo.mandatory && !isDownloading && (
             <Button 
               size="large" 
               className="flex-1"
@@ -113,11 +188,14 @@ export const UpdateManager = () => {
           <Button 
             type="primary" 
             size="large" 
-            icon={<DownloadOutlined />}
+            icon={isDownloading ? <DownloadOutlined className="animate-bounce" /> : <DownloadOutlined />}
             className="flex-1"
             onClick={handleUpdate}
+            disabled={isDownloading}
           >
-            Update Now
+            {isDownloading 
+              ? `Downloading... ${downloadProgress !== null ? downloadProgress + "%" : ""}` 
+              : "Update Now"}
           </Button>
         </div>
       </div>

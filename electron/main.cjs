@@ -52,6 +52,22 @@ app.whenReady().then(async () => {
     autoUpdater.quitAndInstall();
   });
 
+  autoUpdater.autoDownload = false;
+
+  ipcMain.handle("app:downloadUpdate", () => {
+    autoUpdater.downloadUpdate();
+  });
+
+  autoUpdater.on("download-progress", (progressObj) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win) win.webContents.send("updater:progress", progressObj);
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win) win.webContents.send("updater:downloaded");
+  });
+
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify().catch(console.error);
