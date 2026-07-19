@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Company Manager',
   webDir: 'dist',
   server: {
-    cleartext: true
+    cleartext: true,
+    androidScheme: 'http'
   }
 };
 
