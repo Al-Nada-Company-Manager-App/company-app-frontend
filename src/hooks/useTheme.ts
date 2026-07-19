@@ -16,7 +16,7 @@ export const useTheme = () => {
   const getInitialTheme = (): boolean => {
     const stored = localStorage.getItem("theme");
     if (stored) return stored === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return false; // Force light mode as default
   };
 
   useEffect(() => {
@@ -26,15 +26,7 @@ export const useTheme = () => {
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem("theme")) {
-        setIsDark(e.matches);
-        applyThemeToDocument(e.matches);
-      }
-    };
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    // OS theme change listener removed to prevent overriding explicit user preference
   }, []);
 
   const toggleTheme = () => {
