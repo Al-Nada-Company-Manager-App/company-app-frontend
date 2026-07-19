@@ -33,6 +33,7 @@ jobs:
       - name: Build Electron (Linux)
         uses: samuelmeuli/action-electron-builder@v1
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           mac_certs: false
           build_script_name: false
           args: --linux AppImage
@@ -71,6 +72,7 @@ jobs:
       - name: Build Electron (Windows)
         uses: samuelmeuli/action-electron-builder@v1
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           mac_certs: false
           build_script_name: false
           args: --win nsis
