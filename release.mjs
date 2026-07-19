@@ -50,7 +50,7 @@ async function updateFrontend() {
 
   // Git operations
   console.log("  🚀 Committing and pushing frontend changes...");
-  await execAsync(`git add package.json android/app/build.gradle`, { cwd: FRONTEND_DIR });
+  await execAsync(`git add package.json android/app/build.gradle android/app/release-key.keystore`, { cwd: FRONTEND_DIR });
   
   try {
     await execAsync(`git commit -m "chore: release v${version}"`, { cwd: FRONTEND_DIR });
