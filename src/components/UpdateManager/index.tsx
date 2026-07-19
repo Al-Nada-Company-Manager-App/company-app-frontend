@@ -92,49 +92,35 @@ export const UpdateManager = () => {
         const apkAsset = releaseData.assets.find((a: any) => a.name.endsWith(".apk"));
         if (!apkAsset) throw new Error("APK not found in the latest release");
 
-        // Download APK as Blob (mocking progress by tracking fetch bytes)
-        const response = await fetch(apkAsset.browser_download_url);
-        if (!response.body) throw new Error("Failed to download APK");
-        
-        const reader = response.body.getReader();
-        const contentLength = +(response.headers.get('Content-Length') || '0');
-        let receivedLength = 0;
-        let chunks: Uint8Array[] = [];
-        
-        while(true) {
-          const {done, value} = await reader.read();
-          if (done) break;
-          chunks.push(value);
-          receivedLength += value.length;
-          if (contentLength > 0) {
-            setDownloadProgress(Math.round((receivedLength / contentLength) * 100));
+        // Use Native DownloadFile to avoid memory limit crashes
+        const progressListener = await Filesystem.addListener('progress', (status) => {
+          if (status.contentLength > 0) {
+            setDownloadProgress(Math.round((status.bytes / status.contentLength) * 100));
           }
+        });
+
+        const savedFile = await Filesystem.downloadFile({
+          url: apkAsset.browser_download_url,
+          path: 'update.apk',
+          directory: Directory.Cache,
+          progress: true
+        });
+
+        await progressListener.remove();
+        
+        let fileUri = savedFile.path;
+        if (!fileUri?.startsWith('file://')) {
+          const stat = await Filesystem.stat({ path: 'update.apk', directory: Directory.Cache });
+          fileUri = stat.uri;
         }
         
-        const blob = new Blob(chunks, { type: "application/vnd.android.package-archive" });
+        setIsDownloading(false);
+        setUpdateInfo({ ...updateInfo!, show: false });
         
-        // Convert Blob to Base64 for Capacitor Filesystem
-        const readerBase64 = new FileReader();
-        readerBase64.readAsDataURL(blob);
-        
-        readerBase64.onloadend = async () => {
-          const base64data = readerBase64.result as string;
-          const base64Split = base64data.split(',')[1];
-          
-          const savedFile = await Filesystem.writeFile({
-            path: 'update.apk',
-            data: base64Split,
-            directory: Directory.Cache
-          });
-          
-          setIsDownloading(false);
-          setUpdateInfo({ ...updateInfo!, show: false });
-          
-          await FileOpener.openFile({
-            path: savedFile.uri,
-            mimeType: 'application/vnd.android.package-archive'
-          });
-        };
+        await FileOpener.openFile({
+          path: fileUri!,
+          mimeType: 'application/vnd.android.package-archive'
+        });
       } catch (err) {
         console.error("Update Failed:", err);
         setIsDownloading(false);
