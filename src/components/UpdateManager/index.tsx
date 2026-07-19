@@ -4,6 +4,7 @@ import { DownloadOutlined, WarningOutlined, InfoCircleOutlined } from "@ant-desi
 import { getBackendUrl } from "@src/platform/storage";
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { FileOpener } from '@capawesome-team/capacitor-file-opener';
+import packageJson from '../../../package.json';
 
 const { Title, Text } = Typography;
 
@@ -34,7 +35,7 @@ export const UpdateManager = () => {
         const policy = data.platforms[platform];
         if (!policy) return;
 
-        let currentVersion = "1.0.0";
+        let currentVersion = packageJson.version;
         // @ts-ignore
         if (window.companyManager) currentVersion = await window.companyManager.getAppVersion();
         
