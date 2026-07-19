@@ -93,12 +93,26 @@ html, body, #root {
   margin-bottom: 16px;
 }
 
-.ant-message .ant-message-notice-content {
+body .ant-message .ant-message-notice-content {
   border-radius: 20px !important;
   overflow: hidden;
   position: relative;
-  background: transparent !important;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
 
+body .dark .ant-message .ant-message-notice-content {
+  background: rgba(30, 41, 59, 0.95);
+  color: #f8fafc;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure any nested text inside default toasts takes the light color in dark mode */
+body .dark .ant-message .ant-message-notice-content .ant-message-custom-content,
+body .dark .ant-message .ant-message-notice-content .ant-message-custom-content span {
+  color: #f8fafc;
 }
 
 /* Glass morphism entrance animation */
@@ -111,7 +125,7 @@ html, body, #root {
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
-    backdrop-filter: blur(60px);
+    backdrop-filter: blur(20px);
   }
 }
 
@@ -122,9 +136,9 @@ html, body, #root {
 }
 
 /* Remove default Ant Design styling that might interfere */
-.ant-message .ant-message-notice .ant-message-success,
-.ant-message .ant-message-notice .ant-message-error,
-.ant-message .ant-message-notice .ant-message-warning {
+body .ant-message .ant-message-notice .ant-message-success,
+body .ant-message .ant-message-notice .ant-message-error,
+body .ant-message .ant-message-notice .ant-message-warning {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;

@@ -20,7 +20,7 @@ export default defineConfig({
     proxy: {
       // Forward all API calls through Vite → no CORS issues in dev
       "/api": {
-        target: "http://localhost:4001",
+        target: "http://localhost:4000",
         changeOrigin: true,
         // Remove /api prefix before forwarding to backend
         rewrite: (path) => path.replace(/^\/api/, ""),

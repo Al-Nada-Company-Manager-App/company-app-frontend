@@ -17,12 +17,14 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
   const handleDownload = async () => {
     if (quoteId) {
       try {
-        await quotationApi.downloadQuotationPdf(quoteId);
+        await quotationApi.downloadQuotationPdf(quoteId, quote?.q_pdf_data);
       } catch (error) {
         console.error("Failed to download PDF", error);
       }
     }
   };
+
+  const isNative = (window as any).Capacitor?.isNativePlatform();
 
   return (
     <>
@@ -74,13 +76,35 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
               <span style={{ color: theme.employee?.roleSubtextColor }}>Loading PDF...</span>
             </div>
           ) : quote?.q_pdf_data ? (
-            <iframe
-              src={quote.q_pdf_data}
-              width="100%"
-              height="100%"
-              style={{ border: "none" }}
-              title="PDF Preview"
-            />
+            isNative ? (
+              <div className="flex flex-col items-center gap-4 p-6 text-center">
+                <FileText size={64} className="text-blue-500 opacity-80" />
+                <h3 className="text-xl font-semibold" style={{ color: theme.title?.color }}>PDF is Ready</h3>
+                <p style={{ color: theme.employee?.roleSubtextColor }}>
+                  Mobile apps do not support inline PDF previews. Tap the button below to open the PDF in your device's native viewer.
+                </p>
+                <Button 
+                  type="primary" 
+                  size="large" 
+                  onClick={handleDownload}
+                  icon={<Download size={18} />}
+                  style={{
+                    background: theme.button.background,
+                    borderColor: theme.button.background,
+                  }}
+                >
+                  Open PDF
+                </Button>
+              </div>
+            ) : (
+              <iframe
+                src={quote.q_pdf_data}
+                width="100%"
+                height="100%"
+                style={{ border: "none" }}
+                title="PDF Preview"
+              />
+            )
           ) : (
             <div className="flex flex-col items-center gap-2 text-gray-500">
               <FileText size={48} className="opacity-50" />

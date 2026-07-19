@@ -3,7 +3,7 @@
 let currentBackendUrl = "";
 
 export const getSyncBackendUrl = (): string => {
-  return currentBackendUrl || import.meta.env.VITE_API_BASE_URL || "http://192.168.1.34:4000";
+  return currentBackendUrl || import.meta.env.VITE_API_BASE_URL || "http://192.168.1.100:4000";
 };
 
 export const initBackendUrl = async (): Promise<void> => {
@@ -17,7 +17,7 @@ export const initBackendUrl = async (): Promise<void> => {
  * 2. Default API URL from environment variables
  */
 export const getBackendUrl = async (): Promise<string> => {
-  const defaultUrl = import.meta.env.VITE_API_BASE_URL || "http://192.168.1.34:4000";
+  const defaultUrl = import.meta.env.VITE_API_BASE_URL || "http://192.168.1.100:4000";
   
   try {
     // 1. Electron

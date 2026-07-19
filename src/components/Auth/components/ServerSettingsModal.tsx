@@ -114,13 +114,13 @@ const ServerSettingsModal = ({
               Backend API URL
             </label>
             <p className="mb-3 text-xs" style={{ color: theme.title?.color, opacity: 0.6 }}>
-              Enter the full URL of your backend server (e.g., http://192.168.1.100:4000). Leave empty to use the default http://192.168.1.34:4000.
+              Enter the full URL of your backend server (e.g., http://192.168.1.100:4000). Leave empty to use the default http://192.168.1.100:4000.
             </p>
             <input
               type="text"
               value={backendUrl}
               onChange={(e) => setLocalBackendUrl(e.target.value)}
-              placeholder="e.g. http://192.168.1.100:4001"
+              placeholder="e.g. http://192.168.1.100:4000"
               className="w-full px-4 py-3 rounded-xl outline-none transition-all focus:ring-2 focus:ring-indigo-500"
               style={{
                 background: isDark ? "rgba(255, 255, 255, 0.05)" : "#f8fafc",

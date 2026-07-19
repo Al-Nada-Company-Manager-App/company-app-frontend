@@ -75,7 +75,37 @@ export const quotationApi = {
   },
 
   // Download PDF
-  downloadQuotationPdf: async (id: number): Promise<void> => {
+  downloadQuotationPdf: async (id: number, base64Data?: string): Promise<void> => {
+    // Check if running in Capacitor Native environment
+    const isNative = (window as any).Capacitor?.isNativePlatform();
+    
+    if (isNative && base64Data) {
+      try {
+        const { Filesystem, Directory } = await import("@capacitor/filesystem");
+        const { FileOpener } = await import("@capawesome-team/capacitor-file-opener");
+        
+        // Remove the data URI prefix (e.g., data:application/pdf;base64,)
+        const base64 = base64Data.includes(",") ? base64Data.split(',')[1] : base64Data;
+        
+        const path = `Quotation_${id}.pdf`;
+        const result = await Filesystem.writeFile({
+          path,
+          data: base64,
+          directory: Directory.Cache,
+        });
+        
+        await FileOpener.openFile({
+          path: result.uri,
+          mimeType: 'application/pdf',
+        });
+        return;
+      } catch (err) {
+        console.error("Native PDF download/open failed:", err);
+        // Fallback to web implementation if native fails
+      }
+    }
+
+    // Web Implementation
     const res = await fetchWithAuth(`${BASE_URL}/${id}/download`);
     if (!res.ok) throw new Error("Failed to download PDF");
     const blob = await res.blob();
