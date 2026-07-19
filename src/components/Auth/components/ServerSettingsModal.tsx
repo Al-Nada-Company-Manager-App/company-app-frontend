@@ -36,7 +36,10 @@ const ServerSettingsModal = ({
   const handleTestConnection = async () => {
     setIsTesting(true);
     try {
-      const url = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl;
+      let url = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl;
+      if (url && url !== "/api" && !url.startsWith("http://") && !url.startsWith("https://")) {
+        url = `http://${url}`;
+      }
       const res = await fetch(`${url}/health`);
       if (res.ok) {
         const data = await res.json();
@@ -59,7 +62,10 @@ const ServerSettingsModal = ({
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const url = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl;
+      let url = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl;
+      if (url && url !== "/api" && !url.startsWith("http://") && !url.startsWith("https://")) {
+        url = `http://${url}`;
+      }
       await setBackendUrl(url);
       message.success("Server settings saved successfully!");
       // Reload window to apply changes across all API instances immediately
