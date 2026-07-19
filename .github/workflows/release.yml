@@ -42,7 +42,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: release/*.AppImage
+          files: |
+            release/*.AppImage
+            release/*.yml
           
       # Since we're on Ubuntu, we can cross-compile Windows using Wine, but action-electron-builder
       # usually handles this or we can use a separate Windows job if needed.
@@ -81,7 +83,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: release/*.exe
+          files: |
+            release/*.exe
+            release/*.yml
 
   build-android:
     name: Build Android (APK)
