@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 import type { Theme } from "@src/types/theme";
 
@@ -24,9 +24,28 @@ export const LoginForm = ({
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  useEffect(() => {
+    const savedUser = localStorage.getItem("saved_username");
+    const savedPass = localStorage.getItem("saved_password");
+    if (savedUser && savedPass) {
+      setUsername(savedUser);
+      setPassword(savedPass);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
+
+    if (rememberMe) {
+      localStorage.setItem("saved_username", username);
+      localStorage.setItem("saved_password", password);
+    } else {
+      localStorage.removeItem("saved_username");
+      localStorage.removeItem("saved_password");
+    }
+
     await onLogin(username, password);
   };
 

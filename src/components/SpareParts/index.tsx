@@ -12,7 +12,7 @@ interface SparePartsProps {
 }
 
 const SparePartsPage = ({ isDark }: SparePartsProps) => {
-  const { theme, isLoading, error, products: spares, total } = useProducts(isDark);
+  const { theme, isLoading, error, products: spares, total } = useProducts(isDark, { category: "Spare Part" });
   const [showAddModal, setShowAddModal] = useState(false);
   const { searchQuery } = useSearchContext();
 
