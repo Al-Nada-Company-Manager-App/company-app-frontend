@@ -43,16 +43,18 @@ const Sidebar = ({
   return (
     <div className={containerClass} style={containerStyle}>
       {/* Logo Section */}
-      <div className="flex items-center justify-center mt-4 mb-8">
+      <div className="flex items-center justify-center mt-4 mb-8 shrink-0">
         <Logo isDark={isDark} />
       </div>
 
       {/* Navigation Menu */}
-      <NavigationMenu
-        isDark={isDark}
-        currentPath={currentPath}
-        onItemClick={handleItemClick}
-      />
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pb-4 custom-scrollbar">
+        <NavigationMenu
+          isDark={isDark}
+          currentPath={currentPath}
+          onItemClick={handleItemClick}
+        />
+      </div>
 
     </div>
   );

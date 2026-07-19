@@ -32,7 +32,7 @@ const NavigationMenu = ({
   };
 
   return (
-    <div className="px-8 mt-16">
+    <div className="px-8 pt-2">
       {items.map((item) => (
         <div key={item.id}>
           <SidebarMenuItem

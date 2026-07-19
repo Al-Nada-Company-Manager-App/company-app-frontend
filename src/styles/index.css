@@ -2,6 +2,14 @@
 @import "tailwindcss";
 
 /* Design tokens (light) */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 :root {
   --color-background: 255 255 255;
   --color-foreground: 17 24 39;

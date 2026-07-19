@@ -50,7 +50,7 @@ const Layout = () => {
       <ModalStyle />
       <TableStyle theme={itheme} />
       <div
-        className="relative w-screen h-screen"
+        className="relative w-full h-full"
         style={{ backgroundColor: theme.containerBg }}
       >
         {/* Mobile Hamburger Button - Visible only on small screens */}

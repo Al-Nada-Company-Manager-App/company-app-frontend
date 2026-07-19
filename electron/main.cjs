@@ -19,6 +19,7 @@ function createWindow() {
 
   const indexPath = path.join(app.getAppPath(), "dist", "index.html");
   win.loadFile(indexPath);
+  win.maximize();
 }
 
 app.whenReady().then(async () => {
