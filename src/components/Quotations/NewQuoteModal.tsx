@@ -335,16 +335,16 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="flex gap-3 items-start mb-6 p-4 rounded-lg border"
+                className="flex flex-col md:flex-row gap-3 items-start mb-6 p-4 rounded-lg border"
                 style={{
                   background: theme.row.hoverBackground || "rgba(0,0,0,0.02)",
                   borderColor: theme.row.borderColor || "#eee",
                 }}
               >
                 {/* Product Image Thumbnail & Toggle */}
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2 w-full md:w-auto">
                   <div
-                    className="w-20 h-20 flex-shrink-0 rounded overflow-hidden flex items-center justify-center border"
+                    className="w-20 h-20 flex-shrink-0 rounded overflow-hidden flex items-center justify-center border mx-auto md:mx-0"
                     style={{ background: theme.row.borderColor || "#f5f5f5" }}
                   >
                     {item.image ? (
@@ -371,7 +371,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                   )}
                 </div>
 
-                <div className="flex-1 grid grid-cols-1 gap-3">
+                <div className="flex-1 grid grid-cols-1 gap-3 w-full">
                   {/* Product Name & Search */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <Select
@@ -411,7 +411,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                 </div>
 
                 {/* Qty & Price Side Column */}
-                <div className="flex flex-col gap-2 w-28">
+                <div className="flex flex-col gap-2 w-full md:w-28">
                   <Input
                     type="number"
                     prefix="Qty"

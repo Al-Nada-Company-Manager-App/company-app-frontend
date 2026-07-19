@@ -138,3 +138,54 @@ html, body, #root {
   gap: 8px;
   font-family: inherit;
 }
+
+/* --- MOBILE UI FIXES --- */
+@media (max-width: 640px) {
+  /* 1. Smaller toasts */
+  .ant-message .ant-message-notice-content {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* 2. Smaller cards padding to prevent clipping */
+  .p-6 {
+    padding: 1rem !important;
+  }
+
+  /* 3. Modal buttons stack on mobile to prevent clipping */
+  .ant-modal-body [class*="justify-end"] > .flex,
+  .ant-modal-body [class*="justify-end"] {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .ant-modal-body [class*="justify-end"] button {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 8px;
+  }
+
+  /* 4. Pagination wraps nicely */
+  .ant-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .ant-pagination-item, .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-next, .ant-pagination-jump-prev {
+    margin: 0 !important;
+  }
+
+  /* 6. Page headers (Title + Add Button) stack on mobile */
+  .justify-between.flex.items-center:has(h2),
+  .justify-between.flex.items-center:has(h3) {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+  .justify-between.flex.items-center:has(h2) button,
+  .justify-between.flex.items-center:has(h3) button {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
