@@ -80,7 +80,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "public/Images/logo/favicon.ico"
+      "icon": "public/Images/logo/android-chrome-512x512.png"
     },
     "mac": {
       "icon": "public/Images/logo/android-chrome-512x512.png"
