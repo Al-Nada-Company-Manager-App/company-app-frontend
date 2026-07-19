@@ -49,10 +49,8 @@ export const UpdateManager = () => {
           return false;
         };
 
-        if (isOlder(currentVersion, policy.minimum)) {
+        if (isOlder(currentVersion, policy.latest)) {
           setUpdateInfo({ mandatory: true, latest: policy.latest, show: true });
-        } else if (isOlder(currentVersion, policy.latest)) {
-          setUpdateInfo({ mandatory: false, latest: policy.latest, show: true });
         }
       } catch (err) {
         console.error("Failed to check app version", err);
