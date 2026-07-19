@@ -36,6 +36,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           mac_certs: false
           build_script_name: false
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}
           args: --linux AppImage
           
       # Since we're on Ubuntu, we can cross-compile Windows using Wine, but action-electron-builder
@@ -69,6 +70,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           mac_certs: false
           build_script_name: false
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}
           args: --win nsis
 
   build-android:
