@@ -72,6 +72,16 @@ export const UpdateManager = () => {
         // @ts-ignore
         window.companyManager.installUpdate();
       });
+      // @ts-ignore
+      if (window.companyManager.onUpdateError) {
+        // @ts-ignore
+        window.companyManager.onUpdateError((errorMsg: string) => {
+          console.error("Updater error:", errorMsg);
+          setIsDownloading(false);
+          setDownloadProgress(null);
+          alert(`Update failed: ${errorMsg}\nPlease download the new version manually from GitHub.`);
+        });
+      }
     }
   }, []);
 
@@ -80,8 +90,17 @@ export const UpdateManager = () => {
     setDownloadProgress(0);
     // @ts-ignore
     if (window.companyManager) {
-      // @ts-ignore
-      window.companyManager.downloadUpdate();
+      try {
+        // Explicitly check for updates first so electron-updater caches the UpdateInfo
+        // @ts-ignore
+        await window.companyManager.checkForUpdates();
+        // @ts-ignore
+        window.companyManager.downloadUpdate();
+      } catch (err) {
+        console.error("Failed to trigger download:", err);
+        setIsDownloading(false);
+        alert("Failed to start update. Please download the new version manually from GitHub.");
+      }
     } else {
       // Android Updater Logic
       try {

@@ -59,6 +59,11 @@ app.whenReady().then(async () => {
     autoUpdater.downloadUpdate();
   });
 
+  autoUpdater.on("error", (error) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win) win.webContents.send("updater:error", error.message || error.toString());
+  });
+
   autoUpdater.on("download-progress", (progressObj) => {
     const win = BrowserWindow.getAllWindows()[0];
     if (win) win.webContents.send("updater:progress", progressObj);
