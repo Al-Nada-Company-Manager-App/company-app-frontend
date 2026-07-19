@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "electron:build": "npm run build && electron-builder",
+    "release": "node release.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
