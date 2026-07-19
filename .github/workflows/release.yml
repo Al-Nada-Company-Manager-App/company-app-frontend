@@ -112,6 +112,19 @@ jobs:
       - name: Sync Capacitor Android
         run: npx cap sync android
 
+      - name: Cache Android Keystore
+        uses: actions/cache@v4
+        with:
+          path: ~/.android
+          key: android-debug-keystore
+          
+      - name: Generate Keystore if not cached
+        run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
+          fi
+
       - name: Build Android APK
         working-directory: ./android
         run: ./gradlew assembleDebug

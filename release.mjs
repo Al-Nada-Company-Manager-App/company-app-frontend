@@ -36,9 +36,21 @@ async function updateFrontend() {
   await fs.writeFile(packagePath, JSON.stringify(pkgData, null, 2));
   console.log("  ✅ package.json updated");
 
+  // Update Android versionCode and versionName
+  const buildGradlePath = path.join(FRONTEND_DIR, 'android', 'app', 'build.gradle');
+  try {
+    let gradleData = await fs.readFile(buildGradlePath, 'utf8');
+    gradleData = gradleData.replace(/versionCode (\d+)/, (match, p1) => `versionCode ${parseInt(p1) + 1}`);
+    gradleData = gradleData.replace(/versionName "[^"]+"/, `versionName "${version}"`);
+    await fs.writeFile(buildGradlePath, gradleData);
+    console.log("  ✅ android/app/build.gradle updated");
+  } catch(e) {
+    console.log("  ⚠️ Skipping android build.gradle (not found)");
+  }
+
   // Git operations
   console.log("  🚀 Committing and pushing frontend changes...");
-  await execAsync(`git add package.json`, { cwd: FRONTEND_DIR });
+  await execAsync(`git add package.json android/app/build.gradle`, { cwd: FRONTEND_DIR });
   
   try {
     await execAsync(`git commit -m "chore: release v${version}"`, { cwd: FRONTEND_DIR });
