@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@src/hooks/Auth/useAuth";
 import { useAuthContext } from "@src/contexts/auth";
-import { LoginForm, RegisterForm, ForgotPasswordForm } from "./components";
-import { LogIn, UserPlus, KeyRound } from "lucide-react";
+import { LoginForm, RegisterForm, ForgotPasswordForm, ServerSettingsModal } from "./components";
+import { LogIn, UserPlus, KeyRound, Settings } from "lucide-react";
 
 interface AuthProps {
   isDark: boolean;
@@ -13,6 +13,7 @@ type AuthTab = "login" | "register" | "forgot";
 
 const Auth = ({ isDark }: AuthProps) => {
   const [activeTab, setActiveTab] = useState<AuthTab>("login");
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const navigate = useNavigate();
   const {
     theme,
@@ -140,6 +141,32 @@ const Auth = ({ isDark }: AuthProps) => {
           background: "radial-gradient(circle, #10B981 0%, transparent 70%)",
           transform: "translate(50%, 50%)",
         }}
+      />
+
+      {/* Settings Button */}
+      <button
+        onClick={() => setIsSettingsModalOpen(true)}
+        className="fixed top-6 right-6 p-3 rounded-xl transition-all duration-300 hover:scale-110 shadow-lg z-40 group"
+        style={{
+          background: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.5)",
+          backdropFilter: "blur(10px)",
+          border: `1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)"}`,
+        }}
+        aria-label="Server Settings"
+      >
+        <Settings 
+          size={24} 
+          className="transition-transform duration-500 group-hover:rotate-90"
+          style={{ color: isDark ? "#fff" : "#1e293b" }} 
+        />
+      </button>
+
+      {/* Server Settings Modal */}
+      <ServerSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        theme={theme}
+        isDark={isDark}
       />
 
       {/* Auth Card */}
