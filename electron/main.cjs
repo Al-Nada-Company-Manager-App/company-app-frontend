@@ -50,7 +50,7 @@ app.whenReady().then(async () => {
   });
 
   ipcMain.handle("app:installUpdate", () => {
-    autoUpdater.quitAndInstall();
+    autoUpdater.quitAndInstall(false, true);
   });
 
   autoUpdater.autoDownload = false;
