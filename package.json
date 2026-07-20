@@ -66,6 +66,8 @@
   },
   "build": {
     "appId": "com.company.manager",
+    "productName": "CompanyManager",
+    "artifactName": "${productName}-${version}.${ext}",
     "publish": [
       {
         "provider": "github",
