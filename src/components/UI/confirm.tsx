@@ -31,6 +31,7 @@ const Confirm = ({
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
+      zIndex: 99999,
       onOk: () => {
         if (onOk) {
           onOk();
