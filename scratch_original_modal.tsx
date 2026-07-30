@@ -28,13 +28,6 @@ import AppModal from "@src/components/UI/AppModal";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
-const QUICK_DATES = [
-  { label: "+1 Week", amount: 1, unit: "week" as const },
-  { label: "+2 Weeks", amount: 2, unit: "week" as const },
-  { label: "+1 Month", amount: 1, unit: "month" as const },
-  { label: "+3 Months", amount: 3, unit: "month" as const },
-  { label: "+6 Months", amount: 6, unit: "month" as const },
-];
 
 const DEFAULT_TERMS = [
   { label: "Validity", value: "Offer valid until the date shown above or until stock lasts." },
@@ -44,6 +37,15 @@ const DEFAULT_TERMS = [
   { label: "Taxes", value: "VAT is applied as shown in this quotation." },
   { label: "Training", value: "Prices include installation, operation and training when applicable." },
 ];
+
+const QUICK_DATES = [
+  { label: "+1 Week", amount: 1, unit: "week" as const },
+  { label: "+2 Weeks", amount: 2, unit: "week" as const },
+  { label: "+1 Month", amount: 1, unit: "month" as const },
+  { label: "+3 Months", amount: 3, unit: "month" as const },
+  { label: "+6 Months", amount: 6, unit: "month" as const },
+];
+
 const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }: any) => {
   const { theme, isDark } = useThemeContext();
   const [form] = Form.useForm();
@@ -52,11 +54,30 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
 
   const { data: quoteToEdit, isFetching: loadingQuote } = useGetQuotationById(editingQuoteId || null);
 
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [debouncedCustomerSearch, setDebouncedCustomerSearch] = useState("");
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [debouncedProductSearch, setDebouncedProductSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedCustomerSearch(customerSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [customerSearchTerm]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedProductSearch(productSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [productSearchTerm]);
+
   // Fetch Data
   const { data: customersResponse, isLoading: loadingCustomers } =
-    useGetAllCustomers({ limit: 10 });
+    useGetAllCustomers({ limit: 50, search: debouncedCustomerSearch });
   const customers = customersResponse?.data;
-  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 1000 });
+  const { data: paginatedProducts, isLoading: loadingProducts } = useGetAllProducts({ limit: 50, search: debouncedProductSearch });
   const products = paginatedProducts?.data;
 
   const [items, setItems] = useState<any[]>([
@@ -75,17 +96,15 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
   const [currency, setCurrency] = useState("EGP");
   const [totalAmount, setTotalAmount] = useState(0);
   const [terms, setTerms] = useState<{ label: string; value: string }[]>(DEFAULT_TERMS);
+  const [selectedCustomerName, setSelectedCustomerName] = useState("");
 
   // Recalculate totals
   const calculateTotal = useCallback(() => {
     const itemsTotal = items.reduce((sum, item) => sum + (item.total || 0), 0);
-
     const discountAmount = itemsTotal * (discount / 100);
     const afterDiscount = Math.max(0, itemsTotal - discountAmount);
-
     const vatAmount = afterDiscount * (vat / 100);
     const total = afterDiscount + vatAmount;
-
     setTotalAmount(total);
   }, [items, vat, discount]);
 
@@ -100,12 +119,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         validUntil: dayjs(quoteToEdit.q_valid_until),
       });
       setCurrency(quoteToEdit.q_currency || "EGP");
-
-      // Calculate derived vat/discount percentage from amounts if needed, 
-      // but if we store them in DB later it's better. For now we assume 0 or 
-      // if you added pq_discount we can use it. Since we didn't add it to DB,
-      // let's leave it as 0 unless you want to reverse engineer it.
-      // We will set items:
+      setSelectedCustomerName(quoteToEdit.q_customer_name || "");
       if (quoteToEdit.quotation_items) {
         setItems(quoteToEdit.quotation_items.map((qi: any) => ({
           productId: qi.p_id,
@@ -118,21 +132,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
           includeImage: !!qi.stock?.p_photo,
         })));
       }
-      
-      // Load terms if they exist in quoteToEdit, otherwise fallback to DEFAULT_TERMS
-      // We don't have terms in the DB yet, but we prepare it.
-      // @ts-ignore
-      if (quoteToEdit.q_terms) {
-          try {
-              // @ts-ignore
-              const parsed = JSON.parse(quoteToEdit.q_terms);
-              setTerms(parsed);
-          } catch(e) {
-              setTerms(DEFAULT_TERMS);
-          }
-      }
     } else if (!isOpen) {
-      resetFormState();
+       resetFormState();
     }
   }, [editingQuoteId, quoteToEdit, form, isOpen]);
 
@@ -140,34 +141,18 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     setItems((prevItems) => {
       const newItems = [...prevItems];
       const item = { ...newItems[index], [field]: value };
-
       if (field === "quantity" || field === "price") {
-        item.total =
-          (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
+        item.total = (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
       }
-
       newItems[index] = item;
       return newItems;
     });
   };
 
   const handleProductSelect = (index: number, val: any) => {
-    console.log("handleProductSelect called", { index, val });
-
-    // Ensure we are looking for the ID
     const productId = Number(val);
-
-    // Find product
     const product = products?.find((p) => Number(p.p_id) === productId);
-
-    if (!product) {
-      console.warn("Product not found for ID:", productId);
-      return;
-    }
-
-    console.log("Product found:", product);
-
-    // Calculate Price logic
+    if (!product) return;
     const sellPrice = Number(product.p_sellprice);
     const costPrice = Number(product.p_costprice);
     const finalPrice = sellPrice > 0 ? sellPrice : costPrice;
@@ -178,16 +163,13 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         ...newItems[index],
         productId: product.p_id,
         productName: product.p_name || "",
-        description:
-          product.p_description ||
-          (product.model_code ? `${product.model_code}` : ""),
+        description: product.p_description || (product.model_code ? `${product.model_code}` : ""),
         price: finalPrice || 0,
-        quantity: 1, // Reset qty to 1 or keep? Let's keep 1 default
+        quantity: 1,
         image: product.p_photo,
         includeImage: !!product.p_photo,
         total: 1 * (finalPrice || 0),
       };
-      console.log("Updated Item:", newItems[index]);
       return newItems;
     });
   };
@@ -237,15 +219,10 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
       return;
     }
 
-    // Find customer name from ID
-    const customer = customers?.find((c) => c.c_id === values.customerId);
-
     const payload = {
       customerId: values.customerId,
-      customerName: customer ? customer.c_name : "Unknown Customer",
-      validUntil: values.validUntil
-        ? values.validUntil.format("YYYY-MM-DD")
-        : null,
+      customerName: selectedCustomerName || "Valued Customer",
+      validUntil: values.validUntil ? values.validUntil.format("YYYY-MM-DD") : null,
       items: items.map((item) => ({
         productId: item.productId,
         productName: item.productName,
@@ -283,6 +260,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     setVat(0);
     setDiscount(0);
     setCurrency("EGP");
+    setSelectedCustomerName("");
     setTerms(DEFAULT_TERMS);
     setItems([
       {
@@ -302,6 +280,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     onClose();
   };
 
+  const subtotal = items.reduce((sum, i) => sum + (i.total || 0), 0);
+
   return (
     <>
       <ModalStyle />
@@ -310,7 +290,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         onCancel={handleClose}
         footer={null}
         centered
-        width={1000}
+        width={1100}
         form={form}
         isLoading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
         title={
@@ -328,37 +308,41 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             validUntil: dayjs().add(30, "day"),
           }}
         >
-          {/* Customer Info Row - Removed Global Checkbox */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="w-full">
-              <Form.Item
-                name="customerId"
-                label="Customer"
-                rules={[
-                  { required: true, message: "Please select a customer" },
-                ]}
+          {/* ── Header Row: Customer / Currency / Valid Until ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+            <Form.Item
+              name="customerId"
+              label="Customer"
+              rules={[{ required: true, message: "Please select a customer" }]}
+              className="mb-0"
+            >
+              <Select
+                placeholder="Select Customer"
+                showSearch
+                loading={loadingCustomers}
+                onSearch={setCustomerSearchTerm}
+                filterOption={false}
+                onSelect={(_val, option: any) => setSelectedCustomerName(option.children)}
               >
-                <Select
-                  placeholder="Select Customer"
-                  showSearch
-                  loading={loadingCustomers}
-                  filterOption={(input, option) =>
-                    (option?.children as unknown as string)
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                >
-                  {customers?.map((c) => (
-                    <Option key={c.c_id} value={c.c_id}>
-                      {c.c_name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </div>
-            <div className="w-full">
+                {customers?.map((c) => (
+                  <Option key={c.c_id} value={c.c_id}>
+                    {c.c_name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Currency" className="mb-0">
+              <Select value={currency} onChange={(val) => setCurrency(val)}>
+                <Select.Option value="EGP">EGP — Egyptian Pound</Select.Option>
+                <Select.Option value="USD">USD — US Dollar</Select.Option>
+                <Select.Option value="EUR">EUR — Euro</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <div>
               <Form.Item name="validUntil" label="Valid Until" className="mb-1">
-                <DatePicker className="w-full" size="large" />
+                <DatePicker className="w-full" />
               </Form.Item>
               {/* Quick date chips */}
               <Space wrap size={4}>
@@ -379,63 +363,35 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             </div>
           </div>
 
-          <Divider orientation="left">Items</Divider>
+          <Divider orientation="left" style={{ color: "#0056B3", borderColor: "#D1E4F6" }}>
+            <span style={{ color: "#0056B3", fontWeight: 600 }}>Quotation Items</span>
+          </Divider>
 
-          {/* Items List */}
-          <div className="max-h-[500px] overflow-y-auto pr-2 mb-4">
+          {/* ── Items List ── */}
+          <div className="flex flex-col gap-4 mb-4 max-h-[520px] overflow-y-auto pr-1">
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border p-4 flex flex-col gap-4"
+                className="rounded-xl border p-4"
                 style={{
                   background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,86,179,0.03)",
                   borderColor: theme.row.borderColor || "#dbeafe",
                 }}
               >
-                {/* Header: Badge & Product Selection */}
-                <div className="flex items-start sm:items-center gap-3">
+                {/* Row 1 — Item number badge + image + include toggle */}
+                <div className="flex gap-4 items-start mb-3">
+                  {/* Item Number */}
                   <div
-                    className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white mt-1 sm:mt-0"
+                    className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
                     style={{ background: "#0056B3" }}
                   >
                     {idx + 1}
                   </div>
-                  <div className="flex-1">
-                    <Select
-                      className="w-full"
-                      showSearch
-                      value={item.productId || null}
-                      placeholder="Search Product..."
-                      loading={loadingProducts}
-                      onChange={(val) => handleProductSelect(idx, val)}
-                      filterOption={(input, option) =>
-                        ((option?.label as string) || "")
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                      options={products?.map((p) => ({
-                        value: p.p_id,
-                        label: `${p.p_name} (${p.model_code || "No Model"})`,
-                      }))}
-                    />
-                  </div>
-                  {items.length > 1 && (
-                    <Button
-                      danger
-                      type="text"
-                      className="mt-1 sm:mt-0 px-2"
-                      icon={<Trash size={16} />}
-                      onClick={() => removeItem(idx)}
-                    />
-                  )}
-                </div>
 
-                {/* Middle Section: Image + Core Inputs */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  {/* Image */}
-                  <div className="flex flex-col items-center gap-2">
+                  {/* Image block */}
+                  <div className="flex flex-col items-center gap-1">
                     <div
-                      className="w-full sm:w-28 h-40 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden flex items-center justify-center border"
+                      className="w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden flex items-center justify-center border"
                       style={{
                         background: isDark ? "#1a1a2e" : "#f0f5ff",
                         borderColor: theme.row.borderColor || "#dbeafe",
@@ -463,48 +419,75 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                     )}
                   </div>
 
-                  {/* Inputs */}
-                  <div className="flex-1 flex flex-col gap-3">
-                    <Input
-                      placeholder="Product Name (Editable)"
-                      value={item.productName}
-                      onChange={(e) => handleItemChange(idx, "productName", e.target.value)}
-                    />
-                    
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                      <Input
-                        type="number"
-                        prefix={<span className="text-gray-400 text-xs">Qty</span>}
-                        min={1}
-                        value={item.quantity}
-                        onChange={(e) => handleItemChange(idx, "quantity", e.target.value)}
+                  {/* Fields: search + name + description */}
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <Select
+                        showSearch
+                        value={item.productId || null}
+                        placeholder="Search & select product..."
+                        loading={loadingProducts}
+                        onChange={(val) => handleProductSelect(idx, val)}
+                        onSearch={setProductSearchTerm}
+                        filterOption={false}
+                        options={products?.map((p) => ({
+                          value: p.p_id,
+                          label: `${p.p_name} (${p.model_code || "No Model"})`,
+                        }))}
                       />
                       <Input
-                        type="number"
-                        prefix={<span className="text-gray-400 text-xs">{currency}</span>}
-                        min={0}
-                        step={0.01}
-                        value={item.price}
-                        onChange={(e) => handleItemChange(idx, "price", e.target.value)}
+                        placeholder="Product name (editable)"
+                        value={item.productName}
+                        onChange={(e) => handleItemChange(idx, "productName", e.target.value)}
                       />
-                      <div className="col-span-2 lg:col-span-2 flex items-center justify-center sm:justify-start gap-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-md border border-blue-100 dark:border-blue-900/30">
-                        <span className="text-gray-500 text-xs">Total:</span>
-                        <span className="font-bold text-sm" style={{ color: theme.button.background }}>
-                          {currency} {item.total?.toFixed(2)}
-                        </span>
-                      </div>
                     </div>
+                    <RichTextEditor
+                      value={item.description}
+                      onChange={(val: string) => handleItemChange(idx, "description", val)}
+                      height={100}
+                      isDark={isDark}
+                      placeholder="Item description..."
+                    />
                   </div>
                 </div>
 
-                {/* Description */}
-                <RichTextEditor
-                  value={item.description}
-                  onChange={(val: string) => handleItemChange(idx, "description", val)}
-                  height={110}
-                  isDark={isDark}
-                  placeholder="Item description..."
-                />
+                {/* Row 2 — Qty / Price / Total / Remove */}
+                <div className="flex items-center gap-3 pt-2 border-t" style={{ borderColor: theme.row.borderColor || "#dbeafe" }}>
+                  <Input
+                    type="number"
+                    prefix={<span className="text-gray-400 text-xs">Qty</span>}
+                    min={1}
+                    value={item.quantity}
+                    onChange={(e) => handleItemChange(idx, "quantity", e.target.value)}
+                    className="w-24"
+                  />
+                  <Input
+                    type="number"
+                    prefix={<span className="text-gray-400 text-xs">{currency}</span>}
+                    min={0}
+                    step={0.01}
+                    value={item.price}
+                    onChange={(e) => handleItemChange(idx, "price", e.target.value)}
+                    className="w-36"
+                  />
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-400 text-xs">Total:</span>
+                    <span className="font-bold text-sm" style={{ color: theme.button.background }}>
+                      {currency} {item.total?.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex-1" />
+                  {items.length > 1 && (
+                    <Tooltip title="Remove item">
+                      <Button
+                        danger
+                        size="small"
+                        icon={<Trash size={13} />}
+                        onClick={() => removeItem(idx)}
+                      />
+                    </Tooltip>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -513,37 +496,29 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             type="dashed"
             onClick={addItem}
             block
-            icon={<Plus size={16} />}
-            className="mb-6 text-blue-600 border-blue-200 hover:border-blue-400 hover:text-blue-700"
+            icon={<Plus size={15} />}
+            className="mb-4"
+            style={{ color: "#0056B3", borderColor: "#93C5FD", borderRadius: 8 }}
           >
             Add Item
           </Button>
 
-          {/* Totals Section */}
-          <div className="flex justify-end border-t pt-4">
-            <div className="w-full md:w-1/3 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Subtotal:</span>
-                <span className="font-medium">
-                  {items.reduce((sum, i) => sum + (i.total || 0), 0).toFixed(2)}
-                </span>
+          {/* ── Totals Section ── */}
+          <div className="flex justify-end mb-4">
+            <div
+              className="w-full md:w-80 rounded-xl p-4 flex flex-col gap-3"
+              style={{
+                background: isDark ? "rgba(0,86,179,0.1)" : "#EBF4FF",
+                border: "1px solid #BFDBFE",
+              }}
+            >
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Subtotal</span>
+                <span className="font-medium">{currency} {subtotal.toFixed(2)}</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">Currency:</span>
-                <Select
-                  value={currency}
-                  onChange={(val) => setCurrency(val)}
-                  className="flex-1 text-right"
-                >
-                  <Select.Option value="EGP">EGP</Select.Option>
-                  <Select.Option value="USD">USD</Select.Option>
-                  <Select.Option value="EUR">EUR</Select.Option>
-                </Select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">Discount (%):</span>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 w-28 flex-shrink-0">Discount (%)</span>
                 <Input
                   type="number"
                   min={0}
@@ -551,33 +526,28 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                   step={1}
                   value={discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-                  className="flex-1 text-right"
+                  size="small"
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">VAT (%):</span>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 w-28 flex-shrink-0">VAT (%)</span>
                 <Input
                   type="number"
                   min={0}
                   step={1}
                   value={vat}
                   onChange={(e) => setVat(parseFloat(e.target.value) || 0)}
-                  className="flex-1 text-right"
+                  size="small"
                 />
               </div>
 
-              <Divider className="my-2" />
+              <Divider className="my-1" />
 
               <div className="flex items-center justify-between">
-                <Text
-                  type="secondary"
-                  className="text-xs uppercase tracking-wider"
-                >
-                  Total Amount
-                </Text>
-                <Title level={3} className="m-0 text-blue-600">
-                  {totalAmount.toFixed(2)}
+                <Text type="secondary" className="text-xs uppercase tracking-wider">Total Amount</Text>
+                <Title level={4} className="m-0" style={{ color: "#0056B3" }}>
+                  {currency} {totalAmount.toFixed(2)}
                 </Title>
               </div>
             </div>
@@ -645,23 +615,22 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             ]}
           />
 
-          <div className="flex justify-end gap-3 mt-6">
-            <div className="flex gap-3">
-              <Button size="large" onClick={handleClose}>
-                Close
-              </Button>
-              <CustomBtn
-                theme={theme}
-                btnTitle={
-                  editingQuoteId
-                    ? updateQuotation.isPending ? "Updating..." : "Update Quote"
-                    : createQuotation.isPending ? "Generating..." : "Generate Quote"
-                }
-                onClick={() => form.submit()}
-                loading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
-                className="h-10 px-6"
-              />
-            </div>
+          {/* ── Action Buttons ── */}
+          <div className="flex justify-end gap-3 mt-2">
+            <Button size="large" onClick={handleClose}>
+              Close
+            </Button>
+            <CustomBtn
+              theme={theme}
+              btnTitle={
+                editingQuoteId
+                  ? updateQuotation.isPending ? "Updating..." : "Update Quote"
+                  : createQuotation.isPending ? "Generating..." : "Generate Quote"
+              }
+              onClick={() => form.submit()}
+              loading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
+              className="h-10 px-6"
+            />
           </div>
         </Form>
       </AppModal>
