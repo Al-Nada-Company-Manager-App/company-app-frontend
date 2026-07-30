@@ -8,8 +8,12 @@ import {
   Divider,
   Select,
   Checkbox,
+  Collapse,
+  Tag,
+  Space,
+  Tooltip,
 } from "antd";
-import { Plus, Trash, FileText, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash, FileText, Image as ImageIcon, X } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { useThemeContext } from "@src/contexts/theme";
@@ -24,6 +28,23 @@ import AppModal from "@src/components/UI/AppModal";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
+
+const DEFAULT_TERMS = [
+  { label: "Validity", value: "Offer valid until the date shown above or until stock lasts." },
+  { label: "Delivery", value: "Ex-warehouse Cairo / 2-4 weeks from confirmation." },
+  { label: "Payment", value: "Upon inspection and receipt of goods." },
+  { label: "Warranty", value: "One year against manufacturing defects." },
+  { label: "Taxes", value: "VAT is applied as shown in this quotation." },
+  { label: "Training", value: "Prices include installation, operation and training when applicable." },
+];
+
+const QUICK_DATES = [
+  { label: "+1 Week", amount: 1, unit: "week" as const },
+  { label: "+2 Weeks", amount: 2, unit: "week" as const },
+  { label: "+1 Month", amount: 1, unit: "month" as const },
+  { label: "+3 Months", amount: 3, unit: "month" as const },
+  { label: "+6 Months", amount: 6, unit: "month" as const },
+];
 
 const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }: any) => {
   const { theme, isDark } = useThemeContext();
@@ -74,17 +95,16 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
   const [discount, setDiscount] = useState(0);
   const [currency, setCurrency] = useState("EGP");
   const [totalAmount, setTotalAmount] = useState(0);
+  const [terms, setTerms] = useState<{ label: string; value: string }[]>(DEFAULT_TERMS);
+  const [selectedCustomerName, setSelectedCustomerName] = useState("");
 
   // Recalculate totals
   const calculateTotal = useCallback(() => {
     const itemsTotal = items.reduce((sum, item) => sum + (item.total || 0), 0);
-
     const discountAmount = itemsTotal * (discount / 100);
     const afterDiscount = Math.max(0, itemsTotal - discountAmount);
-
     const vatAmount = afterDiscount * (vat / 100);
     const total = afterDiscount + vatAmount;
-
     setTotalAmount(total);
   }, [items, vat, discount]);
 
@@ -99,12 +119,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         validUntil: dayjs(quoteToEdit.q_valid_until),
       });
       setCurrency(quoteToEdit.q_currency || "EGP");
-      
-      // Calculate derived vat/discount percentage from amounts if needed, 
-      // but if we store them in DB later it's better. For now we assume 0 or 
-      // if you added pq_discount we can use it. Since we didn't add it to DB,
-      // let's leave it as 0 unless you want to reverse engineer it.
-      // We will set items:
+      setSelectedCustomerName(quoteToEdit.q_customer_name || "");
       if (quoteToEdit.quotation_items) {
         setItems(quoteToEdit.quotation_items.map((qi: any) => ({
           productId: qi.p_id,
@@ -126,34 +141,18 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     setItems((prevItems) => {
       const newItems = [...prevItems];
       const item = { ...newItems[index], [field]: value };
-
       if (field === "quantity" || field === "price") {
-        item.total =
-          (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
+        item.total = (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
       }
-
       newItems[index] = item;
       return newItems;
     });
   };
 
   const handleProductSelect = (index: number, val: any) => {
-    console.log("handleProductSelect called", { index, val });
-
-    // Ensure we are looking for the ID
     const productId = Number(val);
-
-    // Find product
     const product = products?.find((p) => Number(p.p_id) === productId);
-
-    if (!product) {
-      console.warn("Product not found for ID:", productId);
-      return;
-    }
-
-    console.log("Product found:", product);
-
-    // Calculate Price logic
+    if (!product) return;
     const sellPrice = Number(product.p_sellprice);
     const costPrice = Number(product.p_costprice);
     const finalPrice = sellPrice > 0 ? sellPrice : costPrice;
@@ -164,16 +163,13 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         ...newItems[index],
         productId: product.p_id,
         productName: product.p_name || "",
-        description:
-          product.p_description ||
-          (product.model_code ? `${product.model_code}` : ""),
+        description: product.p_description || (product.model_code ? `${product.model_code}` : ""),
         price: finalPrice || 0,
-        quantity: 1, // Reset qty to 1 or keep? Let's keep 1 default
+        quantity: 1,
         image: product.p_photo,
         includeImage: !!product.p_photo,
         total: 1 * (finalPrice || 0),
       };
-      console.log("Updated Item:", newItems[index]);
       return newItems;
     });
   };
@@ -200,6 +196,22 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     }
   };
 
+  const handleTermChange = (index: number, field: "label" | "value", val: string) => {
+    setTerms((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: val };
+      return next;
+    });
+  };
+
+  const addTerm = () => {
+    setTerms((prev) => [...prev, { label: "", value: "" }]);
+  };
+
+  const removeTerm = (index: number) => {
+    setTerms((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = (values: any) => {
     const validItems = items.filter((item) => item.productName && item.price >= 0);
     if (validItems.length === 0) {
@@ -207,15 +219,10 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
       return;
     }
 
-    // Find customer name from ID
-    const customer = customers?.find((c) => c.c_id === values.customerId);
-
     const payload = {
       customerId: values.customerId,
-      customerName: customer ? customer.c_name : "Unknown Customer",
-      validUntil: values.validUntil
-        ? values.validUntil.format("YYYY-MM-DD")
-        : null,
+      customerName: selectedCustomerName || "Valued Customer",
+      validUntil: values.validUntil ? values.validUntil.format("YYYY-MM-DD") : null,
       items: items.map((item) => ({
         productId: item.productId,
         productName: item.productName,
@@ -228,6 +235,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
       vat,
       discount,
       currency,
+      terms: terms.filter((t) => t.label && t.value),
     };
 
     if (editingQuoteId) {
@@ -252,6 +260,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     setVat(0);
     setDiscount(0);
     setCurrency("EGP");
+    setSelectedCustomerName("");
+    setTerms(DEFAULT_TERMS);
     setItems([
       {
         productName: "",
@@ -270,6 +280,8 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     onClose();
   };
 
+  const subtotal = items.reduce((sum, i) => sum + (i.total || 0), 0);
+
   return (
     <>
       <ModalStyle />
@@ -278,7 +290,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
         onCancel={handleClose}
         footer={null}
         centered
-        width={1000}
+        width={1100}
         form={form}
         isLoading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
         title={
@@ -296,157 +308,184 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             validUntil: dayjs().add(30, "day"),
           }}
         >
-          {/* Customer Info Row - Removed Global Checkbox */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="w-full">
-              <Form.Item
-                name="customerId"
-                label="Customer"
-                rules={[
-                  { required: true, message: "Please select a customer" },
-                ]}
+          {/* ── Header Row: Customer / Currency / Valid Until ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+            <Form.Item
+              name="customerId"
+              label="Customer"
+              rules={[{ required: true, message: "Please select a customer" }]}
+              className="mb-0"
+            >
+              <Select
+                placeholder="Select Customer"
+                showSearch
+                loading={loadingCustomers}
+                onSearch={setCustomerSearchTerm}
+                filterOption={false}
+                onSelect={(_val, option: any) => setSelectedCustomerName(option.children)}
               >
-                <Select
-                  placeholder="Select Customer"
-                  showSearch
-                  loading={loadingCustomers}
-                  onSearch={setCustomerSearchTerm}
-                  filterOption={false}
-                >
-                  {customers?.map((c) => (
-                    <Option key={c.c_id} value={c.c_id}>
-                      {c.c_name}
-                    </Option>
-                  ))}
-                </Select>
+                {customers?.map((c) => (
+                  <Option key={c.c_id} value={c.c_id}>
+                    {c.c_name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Currency" className="mb-0">
+              <Select value={currency} onChange={(val) => setCurrency(val)}>
+                <Select.Option value="EGP">EGP — Egyptian Pound</Select.Option>
+                <Select.Option value="USD">USD — US Dollar</Select.Option>
+                <Select.Option value="EUR">EUR — Euro</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <div>
+              <Form.Item name="validUntil" label="Valid Until" className="mb-1">
+                <DatePicker className="w-full" />
               </Form.Item>
-            </div>
-            <div className="w-full">
-              <Form.Item name="validUntil" label="Valid Until">
-                <DatePicker className="w-full" size="large" />
-              </Form.Item>
+              {/* Quick date chips */}
+              <Space wrap size={4}>
+                {QUICK_DATES.map((qd) => (
+                  <Tag
+                    key={qd.label}
+                    color="blue"
+                    className="cursor-pointer select-none hover:opacity-80 transition-opacity"
+                    style={{ borderRadius: 20, padding: "2px 10px", fontSize: 11 }}
+                    onClick={() =>
+                      form.setFieldsValue({ validUntil: dayjs().add(qd.amount, qd.unit) })
+                    }
+                  >
+                    {qd.label}
+                  </Tag>
+                ))}
+              </Space>
             </div>
           </div>
 
-          <Divider orientation="left">Items</Divider>
+          <Divider orientation="left" style={{ color: "#0056B3", borderColor: "#D1E4F6" }}>
+            <span style={{ color: "#0056B3", fontWeight: 600 }}>Quotation Items</span>
+          </Divider>
 
-          {/* Items List */}
-          <div className="max-h-[500px] overflow-y-auto pr-2 mb-4">
+          {/* ── Items List ── */}
+          <div className="flex flex-col gap-4 mb-4 max-h-[520px] overflow-y-auto pr-1">
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="flex flex-col md:flex-row gap-3 items-start mb-6 p-4 rounded-lg border"
+                className="rounded-xl border p-4"
                 style={{
-                  background: theme.row.hoverBackground || "rgba(0,0,0,0.02)",
-                  borderColor: theme.row.borderColor || "#eee",
+                  background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,86,179,0.03)",
+                  borderColor: theme.row.borderColor || "#dbeafe",
                 }}
               >
-                {/* Product Image Thumbnail & Toggle */}
-                <div className="flex flex-col items-center gap-2 w-full md:w-auto">
+                {/* Row 1 — Item number badge + image + include toggle */}
+                <div className="flex gap-4 items-start mb-3">
+                  {/* Item Number */}
                   <div
-                    className="w-20 h-20 flex-shrink-0 rounded overflow-hidden flex items-center justify-center border mx-auto md:mx-0"
-                    style={{ background: theme.row.borderColor || "#f5f5f5" }}
+                    className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    style={{ background: "#0056B3" }}
                   >
-                    {item.image ? (
-                      <img
-                        src={getImageUrl("products", item.image)}
-                        alt="Product"
-                        className="w-full h-full object-cover"
-                        style={{ opacity: item.includeImage ? 1 : 0.5 }}
-                      />
-                    ) : (
-                      <ImageIcon size={24} className="text-gray-400" />
+                    {idx + 1}
+                  </div>
+
+                  {/* Image block */}
+                  <div className="flex flex-col items-center gap-1">
+                    <div
+                      className="w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden flex items-center justify-center border"
+                      style={{
+                        background: isDark ? "#1a1a2e" : "#f0f5ff",
+                        borderColor: theme.row.borderColor || "#dbeafe",
+                      }}
+                    >
+                      {item.image ? (
+                        <img
+                          src={getImageUrl("products", item.image)}
+                          alt="Product"
+                          className="w-full h-full object-cover"
+                          style={{ opacity: item.includeImage ? 1 : 0.4 }}
+                        />
+                      ) : (
+                        <ImageIcon size={32} className="text-gray-300" />
+                      )}
+                    </div>
+                    {item.image && (
+                      <Checkbox
+                        checked={item.includeImage}
+                        onChange={(e) => handleItemChange(idx, "includeImage", e.target.checked)}
+                        style={{ fontSize: 11 }}
+                      >
+                        Show in PDF
+                      </Checkbox>
                     )}
                   </div>
-                  {item.image && (
-                    <Checkbox
-                      checked={item.includeImage}
-                      onChange={(e) =>
-                        handleItemChange(idx, "includeImage", e.target.checked)
-                      }
-                      style={{ fontSize: "10px" }}
-                    >
-                      Show
-                    </Checkbox>
-                  )}
-                </div>
 
-                <div className="flex-1 grid grid-cols-1 gap-3 w-full">
-                  {/* Product Name & Search */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <Select
-                      showSearch
-                      value={item.productId || null}
-                      placeholder="Search Product..."
-                      loading={loadingProducts}
-                      onChange={(val) => handleProductSelect(idx, val)}
-                      onSearch={setProductSearchTerm}
-                      filterOption={false}
-                      options={products?.map((p) => ({
-                        value: p.p_id,
-                        label: `${p.p_name} (${p.model_code || "No Model"})`,
-                      }))}
-                    />
-                    <Input
-                      placeholder="Product Name"
-                      value={item.productName}
-                      onChange={(e) =>
-                        handleItemChange(idx, "productName", e.target.value)
-                      }
-                    />
-                  </div>
-
-                  {/* Rich Text Editor */}
-                  <div className="mb-2">
+                  {/* Fields: search + name + description */}
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <Select
+                        showSearch
+                        value={item.productId || null}
+                        placeholder="Search & select product..."
+                        loading={loadingProducts}
+                        onChange={(val) => handleProductSelect(idx, val)}
+                        onSearch={setProductSearchTerm}
+                        filterOption={false}
+                        options={products?.map((p) => ({
+                          value: p.p_id,
+                          label: `${p.p_name} (${p.model_code || "No Model"})`,
+                        }))}
+                      />
+                      <Input
+                        placeholder="Product name (editable)"
+                        value={item.productName}
+                        onChange={(e) => handleItemChange(idx, "productName", e.target.value)}
+                      />
+                    </div>
                     <RichTextEditor
                       value={item.description}
-                      onChange={(val: string) =>
-                        handleItemChange(idx, "description", val)
-                      }
-                      height={110}
+                      onChange={(val: string) => handleItemChange(idx, "description", val)}
+                      height={100}
                       isDark={isDark}
                       placeholder="Item description..."
                     />
                   </div>
                 </div>
 
-                {/* Qty & Price Side Column */}
-                <div className="flex flex-col gap-2 w-full md:w-28">
+                {/* Row 2 — Qty / Price / Total / Remove */}
+                <div className="flex items-center gap-3 pt-2 border-t" style={{ borderColor: theme.row.borderColor || "#dbeafe" }}>
                   <Input
                     type="number"
-                    prefix="Qty"
+                    prefix={<span className="text-gray-400 text-xs">Qty</span>}
                     min={1}
                     value={item.quantity}
-                    onChange={(e) =>
-                      handleItemChange(idx, "quantity", e.target.value)
-                    }
+                    onChange={(e) => handleItemChange(idx, "quantity", e.target.value)}
+                    className="w-24"
                   />
                   <Input
                     type="number"
-                    prefix={currency}
+                    prefix={<span className="text-gray-400 text-xs">{currency}</span>}
                     min={0}
                     step={0.01}
                     value={item.price}
-                    onChange={(e) =>
-                      handleItemChange(idx, "price", e.target.value)
-                    }
+                    onChange={(e) => handleItemChange(idx, "price", e.target.value)}
+                    className="w-36"
                   />
-                  <div
-                    className="text-right font-bold mt-1"
-                    style={{ color: theme.button.background }}
-                  >
-                    {item.total?.toFixed(2)}
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-400 text-xs">Total:</span>
+                    <span className="font-bold text-sm" style={{ color: theme.button.background }}>
+                      {currency} {item.total?.toFixed(2)}
+                    </span>
                   </div>
+                  <div className="flex-1" />
                   {items.length > 1 && (
-                    <Button
-                      danger
-                      size="small"
-                      icon={<Trash size={14} />}
-                      onClick={() => removeItem(idx)}
-                      block
-                    >
-                      Remove
-                    </Button>
+                    <Tooltip title="Remove item">
+                      <Button
+                        danger
+                        size="small"
+                        icon={<Trash size={13} />}
+                        onClick={() => removeItem(idx)}
+                      />
+                    </Tooltip>
                   )}
                 </div>
               </div>
@@ -457,37 +496,29 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
             type="dashed"
             onClick={addItem}
             block
-            icon={<Plus size={16} />}
-            className="mb-6 text-blue-600 border-blue-200 hover:border-blue-400 hover:text-blue-700"
+            icon={<Plus size={15} />}
+            className="mb-4"
+            style={{ color: "#0056B3", borderColor: "#93C5FD", borderRadius: 8 }}
           >
             Add Item
           </Button>
 
-          {/* Totals Section */}
-          <div className="flex justify-end border-t pt-4">
-            <div className="w-full md:w-1/3 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Subtotal:</span>
-                <span className="font-medium">
-                  {items.reduce((sum, i) => sum + (i.total || 0), 0).toFixed(2)}
-                </span>
+          {/* ── Totals Section ── */}
+          <div className="flex justify-end mb-4">
+            <div
+              className="w-full md:w-80 rounded-xl p-4 flex flex-col gap-3"
+              style={{
+                background: isDark ? "rgba(0,86,179,0.1)" : "#EBF4FF",
+                border: "1px solid #BFDBFE",
+              }}
+            >
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Subtotal</span>
+                <span className="font-medium">{currency} {subtotal.toFixed(2)}</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">Currency:</span>
-                <Select
-                  value={currency}
-                  onChange={(val) => setCurrency(val)}
-                  className="flex-1 text-right"
-                >
-                  <Select.Option value="EGP">EGP</Select.Option>
-                  <Select.Option value="USD">USD</Select.Option>
-                  <Select.Option value="EUR">EUR</Select.Option>
-                </Select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">Discount (%):</span>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 w-28 flex-shrink-0">Discount (%)</span>
                 <Input
                   type="number"
                   min={0}
@@ -495,56 +526,111 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                   step={1}
                   value={discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-                  className="flex-1 text-right"
+                  size="small"
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 w-24">VAT (%):</span>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 w-28 flex-shrink-0">VAT (%)</span>
                 <Input
                   type="number"
                   min={0}
                   step={1}
                   value={vat}
                   onChange={(e) => setVat(parseFloat(e.target.value) || 0)}
-                  className="flex-1 text-right"
+                  size="small"
                 />
               </div>
 
-              <Divider className="my-2" />
+              <Divider className="my-1" />
 
               <div className="flex items-center justify-between">
-                <Text
-                  type="secondary"
-                  className="text-xs uppercase tracking-wider"
-                >
-                  Total Amount
-                </Text>
-                <Title level={3} className="m-0 text-blue-600">
-                  {totalAmount.toFixed(2)}
+                <Text type="secondary" className="text-xs uppercase tracking-wider">Total Amount</Text>
+                <Title level={4} className="m-0" style={{ color: "#0056B3" }}>
+                  {currency} {totalAmount.toFixed(2)}
                 </Title>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 mt-6">
-            {" "}
-            <div className="flex gap-3">
-              <Button size="large" onClick={handleClose}>
-                Close
-              </Button>
-              <CustomBtn
-                theme={theme}
-                btnTitle={
-                  editingQuoteId
-                    ? updateQuotation.isPending ? "Updating..." : "Update Quote"
-                    : createQuotation.isPending ? "Generating..." : "Generate Quote"
-                }
-                onClick={() => form.submit()}
-                loading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
-                className="h-10 px-6"
-              />
-            </div>
+          {/* ── Terms & Conditions (collapsible) ── */}
+          <Collapse
+            ghost
+            className="mb-4"
+            items={[
+              {
+                key: "terms",
+                label: (
+                  <span style={{ color: "#0056B3", fontWeight: 600 }}>
+                    📋 Terms &amp; Conditions
+                    <span
+                      className="ml-2 text-xs font-normal"
+                      style={{ color: isDark ? "#aaa" : "#555" }}
+                    >
+                      ({terms.length} condition{terms.length !== 1 ? "s" : ""})
+                    </span>
+                  </span>
+                ),
+                children: (
+                  <div className="flex flex-col gap-2">
+                    {terms.map((term, idx) => (
+                      <div key={idx} className="flex gap-2 items-start">
+                        <Input
+                          placeholder="Label"
+                          value={term.label}
+                          onChange={(e) => handleTermChange(idx, "label", e.target.value)}
+                          style={{ width: 120, flexShrink: 0 }}
+                        />
+                        <Input.TextArea
+                          placeholder="Condition text..."
+                          value={term.value}
+                          onChange={(e) => handleTermChange(idx, "value", e.target.value)}
+                          autoSize={{ minRows: 1, maxRows: 3 }}
+                          className="flex-1"
+                        />
+                        <Tooltip title="Remove condition">
+                          <Button
+                            type="text"
+                            danger
+                            size="small"
+                            icon={<X size={13} />}
+                            onClick={() => removeTerm(idx)}
+                          />
+                        </Tooltip>
+                      </div>
+                    ))}
+                    <Button
+                      type="dashed"
+                      size="small"
+                      icon={<Plus size={13} />}
+                      onClick={addTerm}
+                      className="mt-1"
+                      style={{ color: "#0056B3", borderColor: "#93C5FD", alignSelf: "flex-start" }}
+                    >
+                      Add Condition
+                    </Button>
+                  </div>
+                ),
+              },
+            ]}
+          />
+
+          {/* ── Action Buttons ── */}
+          <div className="flex justify-end gap-3 mt-2">
+            <Button size="large" onClick={handleClose}>
+              Close
+            </Button>
+            <CustomBtn
+              theme={theme}
+              btnTitle={
+                editingQuoteId
+                  ? updateQuotation.isPending ? "Updating..." : "Update Quote"
+                  : createQuotation.isPending ? "Generating..." : "Generate Quote"
+              }
+              onClick={() => form.submit()}
+              loading={createQuotation.isPending || updateQuotation.isPending || loadingQuote}
+              className="h-10 px-6"
+            />
           </div>
         </Form>
       </AppModal>
