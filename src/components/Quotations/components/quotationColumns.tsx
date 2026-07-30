@@ -10,11 +10,17 @@ export const getQuotationColumns = (
   onPreview: (id: number) => void,
 ): ColumnsType<Quotation> => [
   {
-    title: "Ref Code",
-    dataIndex: "q_ref_code",
-    key: "q_ref_code",
-    sorter: (a, b) => a.q_ref_code.localeCompare(b.q_ref_code),
+    title: "Quotation No.",
+    dataIndex: "q_number",
+    key: "q_number",
+    sorter: (a, b) => a.q_number.localeCompare(b.q_number),
     render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+  },
+  {
+    title: "Ref No.",
+    dataIndex: "q_ref_to",
+    key: "q_ref_to",
+    render: (text) => <span style={{ color: theme.title?.color || "#555" }}>{text || "-"}</span>,
   },
   {
     title: "Customer",

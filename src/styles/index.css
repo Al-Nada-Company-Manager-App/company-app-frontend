@@ -207,15 +207,5 @@ body .ant-message .ant-message-notice .ant-message-warning {
 /* Fix Ant Design Image Preview z-index to show above custom modals */
 .ant-image-preview-root .ant-image-preview-wrap,
 .ant-image-preview-root .ant-image-preview-mask {
-  z-index: 99999 !important;
-}
-
-/* Fix Ant Design confirm/alert dialogs to always appear above other modals */
-.ant-modal-confirm .ant-modal-wrap,
-.ant-modal-confirm-wrap {
-  z-index: 99999 !important;
-}
-.ant-modal-mask {
-  /* When a confirm is open on top of a detail modal, ensure its mask is on top too */
   z-index: 99998 !important;
 }

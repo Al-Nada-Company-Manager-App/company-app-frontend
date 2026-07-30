@@ -36,14 +36,15 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
         width={800}
         centered
         destroyOnClose
+        zIndex={99999}
         wrapClassName="custom-modal"
         title={
           <div className="flex justify-between items-center w-full pr-8">
             <div className="flex items-center gap-2">
               <FileText className="text-blue-600" size={20} />
               <span>
-                {quote?.q_ref_code
-                  ? `Preview - ${quote.q_ref_code}`
+                {quote?.q_number
+                  ? `Preview - ${quote.q_number}`
                   : "Loading Preview..."}
               </span>
             </div>

@@ -97,6 +97,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
     if (editingQuoteId && quoteToEdit) {
       form.setFieldsValue({
         customerId: quoteToEdit.c_id,
+        refTo: quoteToEdit.q_ref_to || undefined,
         validUntil: dayjs(quoteToEdit.q_valid_until),
       });
       setCurrency(quoteToEdit.q_currency || "EGP");
@@ -258,6 +259,7 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
       vat,
       discount,
       currency,
+      refTo: values.refTo || "",
       terms: terms.filter((t) => t.label && t.value),
     };
 
@@ -356,6 +358,14 @@ const NewQuoteModal = ({ isOpen, onClose, onSuccess, onPreview, editingQuoteId }
                 </Select>
               </Form.Item>
             </div>
+            <div className="w-full">
+              <Form.Item name="refTo" label="Ref No. (Customer Reference)">
+                <Input placeholder="Enter reference number (optional)" size="large" />
+              </Form.Item>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
             <div className="w-full">
               <Form.Item name="validUntil" label="Valid Until" className="mb-1">
                 <DatePicker className="w-full" size="large" />

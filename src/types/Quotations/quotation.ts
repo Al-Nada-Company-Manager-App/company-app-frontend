@@ -8,7 +8,8 @@ export interface QuotationItem {
 
 export interface Quotation {
   q_id: number;
-  q_ref_code: string;
+  q_number: string;
+  q_ref_to?: string;
   q_customer_name: string;
   q_valid_until: string;
   q_total_amount: number;
