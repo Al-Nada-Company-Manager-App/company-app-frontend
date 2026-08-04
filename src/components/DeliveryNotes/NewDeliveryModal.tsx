@@ -72,12 +72,12 @@ const NewDeliveryModal: React.FC<NewDeliveryModalProps> = ({
 
       if (deliveryToEdit.delivery_items && deliveryToEdit.delivery_items.length > 0) {
         setItems(deliveryToEdit.delivery_items.map((ri: any) => ({
-          productName: ri.rni_product_name,
-          serialNumber: ri.rni_serial_number || "",
-          quantity: ri.rni_quantity,
-          model: ri.rni_model || "",
-          manf: ri.rni_manf || "",
-          notes: ri.rni_notes || "",
+          productName: ri.dni_product_name,
+          serialNumber: ri.dni_serial_number || "",
+          quantity: ri.dni_quantity,
+          model: ri.dni_model || "",
+          manf: ri.dni_manf || "",
+          notes: ri.dni_notes || "",
         })));
       }
     } else {
