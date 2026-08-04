@@ -88,10 +88,10 @@ export const ROUTES: Record<string, RouteMeta> = {
     permission: "supplier_page",
     searchable: true,
   },
-  quotations: {
-    path: "/quotations",
-    title: "Quotations",
-    label: "Quotations",
+  documents: {
+    path: "/documents",
+    title: "Documents",
+    label: "Documents",
     permission: "price_page",
     searchable: true,
   },

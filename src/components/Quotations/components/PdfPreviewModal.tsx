@@ -1,5 +1,5 @@
 import { Modal, Button, Spin } from "antd";
-import { Download, FileText } from "lucide-react";
+import { Download, FileText, Printer } from "lucide-react";
 import { useThemeContext } from "@src/contexts/theme";
 import ModalStyle from "@src/components/UI/ModalStyle";
 import { useGetQuotationById } from "@src/queries/Quotations";
@@ -26,6 +26,29 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
 
   const isNative = (window as any).Capacitor?.isNativePlatform();
 
+  const handlePrint = () => {
+    if (!quote?.q_pdf_data) return;
+    const printWindow = window.open("");
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print - ${quote.q_number}</title>
+            <style>
+              body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+              iframe { width: 100%; height: 100%; border: none; }
+            </style>
+          </head>
+          <body>
+            <iframe src="${quote.q_pdf_data}"></iframe>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+    }
+  };
+
   return (
     <>
       <ModalStyle />
@@ -35,7 +58,7 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
         footer={null}
         width={800}
         centered
-        destroyOnClose
+        destroyOnHidden
         zIndex={99999}
         wrapClassName="custom-modal"
         title={
@@ -48,26 +71,38 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
                   : "Loading Preview..."}
               </span>
             </div>
-            <Button
-              type="primary"
-              icon={<Download size={16} />}
-              onClick={handleDownload}
-              disabled={!quote?.q_pdf_data}
-              style={{
-                background: theme.button.background,
-                borderColor: theme.button.background,
-              }}
-            >
-              Download PDF
-            </Button>
+            <div className="flex items-center gap-2">
+              {!isNative && (
+                <Button
+                  type="default"
+                  icon={<Printer size={16} />}
+                  onClick={handlePrint}
+                  disabled={!quote?.q_pdf_data}
+                >
+                  Print
+                </Button>
+              )}
+              <Button
+                type="primary"
+                icon={<Download size={16} />}
+                onClick={handleDownload}
+                disabled={!quote?.q_pdf_data}
+                style={{
+                  background: theme.button.background,
+                  borderColor: theme.button.background,
+                }}
+              >
+                Download PDF
+              </Button>
+            </div>
           </div>
         }
       >
         <div
-          className="w-full flex items-center justify-center rounded-lg overflow-hidden border"
+          className="w-full flex items-center justify-center rounded-lg overflow-hidden border bg-gray-100 dark:bg-gray-900"
           style={{ 
-            height: "70vh",
-            background: theme.container?.background || "#fff",
+            height: "calc(100vh - 200px)", 
+            minHeight: "600px",
             borderColor: theme.row?.borderColor || "#eee"
           }}
         >
@@ -99,7 +134,7 @@ const PdfPreviewModal = ({ quoteId, onClose }: PdfPreviewModalProps) => {
               </div>
             ) : (
               <iframe
-                src={quote.q_pdf_data}
+                src={`${quote.q_pdf_data}#toolbar=0`}
                 width="100%"
                 height="100%"
                 style={{ border: "none" }}

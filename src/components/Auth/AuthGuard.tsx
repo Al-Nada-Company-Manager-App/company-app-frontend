@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
-import { useGetSession } from "@src/queries/Auth";
-import { Loading } from "@src/components/UI";
+import { useAuthContext } from "@src/contexts/auth";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -13,21 +12,9 @@ interface AuthGuardProps {
  */
 export const AuthGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { data: session, isLoading } = useGetSession();
+  const { isAuthenticated } = useAuthContext();
 
-  // Show loading while checking auth status
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loading />
-      </div>
-    );
-  }
-
-  // Only trust the server-verified session — never fall back to localStorage alone
-  const isAuth = session?.success && session?.user;
-
-  if (!isAuth) {
+  if (!isAuthenticated) {
     // Save the attempted URL for redirecting after login
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
@@ -42,19 +29,10 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
  */
 export const GuestGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { data: session, isLoading } = useGetSession();
-
-  // Show loading while checking auth status
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loading />
-      </div>
-    );
-  }
+  const { isAuthenticated } = useAuthContext();
 
   // Redirect to home if already authenticated
-  if (session?.success && session?.user) {
+  if (isAuthenticated) {
     // Redirect to the page they came from, or home
     const from = (location.state as { from?: Location })?.from?.pathname || "/";
     return <Navigate to={from} replace />;

@@ -91,11 +91,11 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     permission: "purchase_page",
   },
   {
-    id: "quotations",
-    label: "Quotations",
+    id: "documents",
+    label: "Documents",
     icon: "FileText",
-    path: "/quotations",
-    isActive: currentPath === "/quotations",
+    path: "/documents",
+    isActive: currentPath === "/documents",
     permission: "price_page",
   },
   {

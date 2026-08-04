@@ -26,7 +26,7 @@ import RepairPage from "@src/components/pages/RepairPage";
 import DebtsPage from "@src/components/pages/DebtsPage";
 import SparePartsPage from "@src/components/pages/SparePartsPage";
 import AuthPage from "@src/components/pages/AuthPage";
-import QuotationsPage from "@src/components/pages/QuotationsPage";
+import DocumentsPage from "@src/components/pages/DocumentsPage";
 import TasksPage from "@src/components/pages/TasksPage";
 import { AuthGuard, GuestGuard } from "@src/components/Auth/AuthGuard";
 import { PermissionGuard } from "@src/components/Auth/PermissionGuard";
@@ -150,10 +150,10 @@ function RouteHandler() {
           }
         />
         <Route
-          path="quotations"
+          path="documents"
           element={
-            <PermissionGuard requiredPermission={ROUTES.quotations.permission} fallback={<NotFoundPage />}>
-              <QuotationsPage />
+            <PermissionGuard requiredPermission={ROUTES.documents.permission} fallback={<NotFoundPage />}>
+              <DocumentsPage />
             </PermissionGuard>
           }
         />

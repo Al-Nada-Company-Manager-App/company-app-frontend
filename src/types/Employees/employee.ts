@@ -15,6 +15,7 @@ export interface Employee {
   e_username: string;
   e_gender: string;
   e_active: boolean;
+  e_national_id?: string;
   access_actions?: EmployeePermissions;
 }
 
