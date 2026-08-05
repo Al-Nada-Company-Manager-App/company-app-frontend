@@ -5,7 +5,6 @@ import {
   Select,
   DatePicker,
   Button,
-  Popconfirm,
   Divider,
   Tag,
 } from "antd";
@@ -21,7 +20,6 @@ import AppModal from "@src/components/UI/AppModal";
 import ModalStyle from "@src/components/UI/ModalStyle";
 
 const { Option } = Select;
-const { TextArea } = Input;
 
 interface NewReceiptModalProps {
   isOpen: boolean;
