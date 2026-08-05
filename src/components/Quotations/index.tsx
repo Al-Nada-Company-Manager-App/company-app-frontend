@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NewQuoteModal from "./NewQuoteModal";
-import { useGetAllQuotations } from "@src/queries/Quotations";
+import { useGetAllQuotations, useDeleteQuotation } from "@src/queries/Quotations";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import { useThemeContext } from "@src/contexts/theme";
 import { useSearchContext } from "@src/contexts/search";
@@ -22,6 +22,8 @@ const Quotations = ({ isDark }: { isDark: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingQuoteId, setEditingQuoteId] = useState<number | null>(null);
   const [previewQuoteId, setPreviewQuoteId] = useState<number | null>(null);
+
+  const { mutate: deleteQuotation } = useDeleteQuotation(isDark);
 
   const handleOpenEdit = (id: number) => {
     setEditingQuoteId(id);
@@ -130,6 +132,7 @@ const Quotations = ({ isDark }: { isDark: boolean }) => {
             theme={theme} 
             onEdit={handleOpenEdit}
             onPreview={setPreviewQuoteId}
+            onDelete={(id) => deleteQuotation(id)}
             total={total}
             currentPage={currentPage}
             pageSize={pageSize}

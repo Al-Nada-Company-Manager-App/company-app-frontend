@@ -1,5 +1,5 @@
-import { Card } from "antd";
-import { FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Card, Popconfirm } from "antd";
+import { FileTextOutlined, CalendarOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
@@ -10,9 +10,10 @@ interface QuotationCardProps {
   onClick?: () => void;
   onEdit?: (id: number) => void;
   onPreview?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
-const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview }: QuotationCardProps) => {
+const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview, onDelete }: QuotationCardProps) => {
   return (
     <Card
       className={`rounded-2xl transition-all duration-300 shadow-sm overflow-hidden ${
@@ -89,6 +90,22 @@ const QuotationCard = ({ quotation, theme, onClick, onEdit, onPreview }: Quotati
                   >
                     Edit
                   </button>
+                )}
+                {onDelete && (
+                  <Popconfirm
+                    title="Delete the quotation"
+                    description="Are you sure you want to delete this quotation?"
+                    onConfirm={() => onDelete(quotation.q_id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <button
+                      className="px-3 py-1 text-sm font-medium rounded-md"
+                      style={{ backgroundColor: "#ef4444", color: "white", border: "none" }}
+                    >
+                      Delete
+                    </button>
+                  </Popconfirm>
                 )}
               </div>
             )}

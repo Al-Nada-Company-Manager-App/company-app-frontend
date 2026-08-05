@@ -2,12 +2,14 @@ import type { ColumnsType } from "antd/es/table";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import dayjs from "dayjs";
-import { FileText, Edit } from "lucide-react";
+import { FileText, Edit, Trash2 } from "lucide-react";
+import { Popconfirm, Space, Button } from "antd";
 
 export const getQuotationColumns = (
   theme: Theme,
   onEdit: (id: number) => void,
   onPreview: (id: number) => void,
+  onDelete: (id: number) => void,
 ): ColumnsType<Quotation> => [
   {
     title: "Quotation No.",
@@ -71,30 +73,39 @@ export const getQuotationColumns = (
   {
     title: "Actions",
     key: "actions",
-    align: "center",
+    align: "right",
     render: (_, record) => (
-      <div className="flex items-center justify-center gap-4">
-        <button
+      <Space>
+        <Button
+          type="text"
+          icon={<FileText size={18} />}
           onClick={(e) => {
             e.stopPropagation();
             onPreview(record.q_id);
           }}
-          className="flex items-center justify-center gap-1 hover:underline cursor-pointer bg-transparent border-none p-0"
           style={{ color: theme.button.background }}
-        >
-          <FileText size={16} /> <span className="text-xs">PDF</span>
-        </button>
-        <button
+        />
+        <Button
+          type="text"
+          icon={<Edit size={18} />}
           onClick={(e) => {
             e.stopPropagation();
             onEdit(record.q_id);
           }}
-          className="flex items-center justify-center gap-1 hover:underline cursor-pointer bg-transparent border-none p-0"
-          style={{ color: "#eab308" }}
-        >
-          <Edit size={16} /> <span className="text-xs">Edit</span>
-        </button>
-      </div>
+          style={{ color: theme.text?.color || "#555" }}
+        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <Popconfirm
+            title="Delete the quotation"
+            description="Are you sure you want to delete this quotation?"
+            onConfirm={() => onDelete(record.q_id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="text" danger icon={<Trash2 size={18} />} />
+          </Popconfirm>
+        </div>
+      </Space>
     ),
   },
 ];

@@ -74,6 +74,18 @@ export const quotationApi = {
     return result;
   },
 
+  // Delete a quotation
+  deleteQuotation: async (id: number): Promise<{ success: boolean; message?: string }> => {
+    const res = await fetchWithAuth(`${BASE_URL}/${id}`, {
+      method: "DELETE",
+    });
+    const result = await res.json();
+    if (!res.ok || !result.success) {
+      throw new Error(result.message || "Failed to delete quotation");
+    }
+    return result;
+  },
+
   // Download PDF
   downloadQuotationPdf: async (id: number, base64Data?: string): Promise<void> => {
     // Check if running in Capacitor Native environment

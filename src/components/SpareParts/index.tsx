@@ -12,9 +12,11 @@ interface SparePartsProps {
 }
 
 const SparePartsPage = ({ isDark }: SparePartsProps) => {
-  const { theme, isLoading, error, products: spares, total } = useProducts(isDark, { category: "Spare Part" });
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const { searchQuery } = useSearchContext();
+  const { theme, isLoading, error, products: spares, total } = useProducts(isDark, { category: "Spare Part", page: currentPage, limit: pageSize, search: searchQuery });
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const filterInStock = (products: Product[] | undefined) =>
     products?.filter((product) => product.p_status !== "Out of Stock") || [];
@@ -127,17 +129,15 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
           onPageChange={() => {}}
         />
       )}
-      {inStockSpares.length > 0 && (
-        <ProductTable
-          title="Spares"
-          products={inStockSpares}
-          theme={theme}
-          total={total}
-          currentPage={1}
-          pageSize={10}
-          onPageChange={() => {}}
-        />
-      )}
+      <ProductTable
+        title="Spares"
+        products={inStockSpares}
+        theme={theme}
+        total={total}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        onPageChange={(page, size) => { setCurrentPage(page); setPageSize(size); }}
+      />
       {showAddModal && (
         <ProductModal
           isOpen={showAddModal}

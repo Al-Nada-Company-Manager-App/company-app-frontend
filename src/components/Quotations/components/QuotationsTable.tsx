@@ -11,6 +11,7 @@ interface QuotationsTableProps {
   theme: Theme;
   onEdit: (id: number) => void;
   onPreview: (id: number) => void;
+  onDelete: (id: number) => void;
   total: number;
   currentPage: number;
   pageSize: number;
@@ -18,8 +19,8 @@ interface QuotationsTableProps {
   loading?: boolean;
 }
 
-const QuotationsTable = ({ quotations, theme, onEdit, onPreview, total, currentPage, pageSize, onPageChange, loading }: QuotationsTableProps) => {
-  const columns = getQuotationColumns(theme, onEdit, onPreview);
+const QuotationsTable = ({ quotations, theme, onEdit, onPreview, onDelete, total, currentPage, pageSize, onPageChange, loading }: QuotationsTableProps) => {
+  const columns = getQuotationColumns(theme, onEdit, onPreview, onDelete);
 
   const tableComponent = (
     <Table
@@ -50,6 +51,7 @@ const QuotationsTable = ({ quotations, theme, onEdit, onPreview, total, currentP
           theme={theme}
           onEdit={onEdit}
           onPreview={onPreview}
+          onDelete={onDelete}
         />
       ))}
       {quotations.length === 0 && (

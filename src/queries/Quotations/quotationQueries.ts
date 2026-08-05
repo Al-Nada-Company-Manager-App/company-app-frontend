@@ -73,3 +73,21 @@ export const useUpdateQuotation = (isDark: boolean = false) => {
     },
   });
 };
+
+// Delete quotation mutation hook
+export const useDeleteQuotation = (isDark: boolean = false) => {
+  const queryClient = useQueryClient();
+  const { showSuccessMessage, showErrorMessage } = useThemedMessage(isDark);
+
+  return useMutation({
+    mutationFn: quotationApi.deleteQuotation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: quotationKeys.lists() });
+      showSuccessMessage("Quotation deleted successfully!", "✅");
+    },
+    onError: (error: any) => {
+      console.error("Error deleting Quotation:", error);
+      showErrorMessage(error.message || "Failed to delete Quotation", "❌");
+    },
+  });
+};
