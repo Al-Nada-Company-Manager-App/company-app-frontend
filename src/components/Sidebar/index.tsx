@@ -10,12 +10,11 @@ interface SidebarComponentProps extends SidebarProps {
 
 const Sidebar = ({
   isDark,
-  currentPath = "/",
   onItemClick,
   mobile,
 }: SidebarComponentProps) => {
   console.log("Sidebar", { mobile });
-  const { theme } = useSidebar(isDark, currentPath);
+  const { theme } = useSidebar(isDark);
 
   const handleItemClick = (itemId: string) => {
     if (onItemClick) {
@@ -51,7 +50,6 @@ const Sidebar = ({
       <div className="flex-1 overflow-y-auto overflow-x-hidden pb-4 custom-scrollbar">
         <NavigationMenu
           isDark={isDark}
-          currentPath={currentPath}
           onItemClick={handleItemClick}
         />
       </div>

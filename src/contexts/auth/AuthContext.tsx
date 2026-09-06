@@ -110,6 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         user,
+        isLoading: isInitialLoad || isLoading,
         isAuthenticated: !!user,
         login,
         logout,

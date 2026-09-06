@@ -18,38 +18,7 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
   const { theme, isLoading, error, products: spares, total } = useProducts(isDark, { category: "Spare Part", page: currentPage, limit: pageSize, search: searchQuery });
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const filterInStock = (products: Product[] | undefined) =>
-    products?.filter((product) => product.p_status !== "Out of Stock") || [];
-
-  const filterOutOfStock = (products: Product[] | undefined) =>
-    products?.filter((product) => product.p_status === "Out of Stock") || [];
-
-  // Filter products by search query (name, model code, serial number)
-  const filterBySearch = (products: Product[] | undefined) => {
-    if (!products || searchQuery.trim() === "") return products || [];
-
-    return products.filter((product) => {
-      const name = product.p_name?.toLowerCase() || "";
-      const modelCode = product.model_code?.toLowerCase() || "";
-      const serialNumber = product.serial_number?.toLowerCase() || "";
-      const query = searchQuery.toLowerCase();
-
-      return (
-        name.includes(query) ||
-        modelCode.includes(query) ||
-        serialNumber.includes(query)
-      );
-    });
-  };
-
-  // Apply search filter first, then stock filter
-  const searchFilteredSpares = filterBySearch(spares);
-
-  const inStockSpares = filterInStock(searchFilteredSpares);
-
-  const outOfStockProducts = [
-    ...filterOutOfStock(searchFilteredSpares),
-  ];
+  const searchFilteredSpares = spares || [];
 
   if (isLoading) {
     return (
@@ -117,21 +86,9 @@ const SparePartsPage = ({ isDark }: SparePartsProps) => {
           className="px-6 py-3 font-semibold border-none"
         />
       </div>
-      {outOfStockProducts.length > 0 && (
-        <ProductTable
-          title="Out of Stock Products"
-          products={outOfStockProducts}
-          theme={theme}
-          showCategory={true}
-          total={outOfStockProducts.length}
-          currentPage={1}
-          pageSize={outOfStockProducts.length || 10}
-          onPageChange={() => {}}
-        />
-      )}
       <ProductTable
         title="Spares"
-        products={inStockSpares}
+        products={searchFilteredSpares}
         theme={theme}
         total={total}
         currentPage={currentPage}

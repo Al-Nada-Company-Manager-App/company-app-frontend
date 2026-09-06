@@ -72,7 +72,6 @@ const Layout = () => {
         <div className="hidden md:block">
           <Sidebar
             isDark={isDark}
-            currentPath={location.pathname}
           />
         </div>
 
@@ -89,7 +88,6 @@ const Layout = () => {
           <div style={{ height: "100%", padding: "10px" }}>
             <Sidebar
               isDark={isDark}
-              currentPath={location.pathname}
               mobile={true}
             />
           </div>

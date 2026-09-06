@@ -1,21 +1,24 @@
 import { Navigate, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useAuthContext } from "@src/contexts/auth";
+import { Loading } from "@src/components/UI";
 
 interface AuthGuardProps {
   children: ReactNode;
 }
 
 /**
- * AuthGuard component - Protects routes that require authentication
- * Redirects to /login if user is not authenticated
+ * Authentication is decided only after the server session check completes.
  */
 export const AuthGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, isLoading } = useAuthContext();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!isAuthenticated) {
-    // Save the attempted URL for redirecting after login
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -24,17 +27,18 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
 };
 
 /**
- * GuestGuard component - For routes that should only be accessible to non-authenticated users
- * Redirects to home if user is already authenticated
+ * Prevents authenticated users from opening the login route.
  */
 export const GuestGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, isLoading } = useAuthContext();
 
-  // Redirect to home if already authenticated
+  if (isLoading) {
+    return <Loading />;
+  }
+
   if (isAuthenticated) {
-    // Redirect to the page they came from, or home
-    const from = (location.state as { from?: Location })?.from?.pathname || "/";
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || "/";
     return <Navigate to={from} replace />;
   }
 

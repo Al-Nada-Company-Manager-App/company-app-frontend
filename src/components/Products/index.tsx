@@ -15,7 +15,6 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const { searchQuery } = useSearchContext();
 
-  const [outOfStockPage, setOutOfStockPage] = useState(1);
   const [measuringPage, setMeasuringPage] = useState(1);
   const [labPage, setLabPage] = useState(1);
   const [chemicalsPage, setChemicalsPage] = useState(1);
@@ -25,7 +24,6 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
 
   const { theme } = useProducts(isDark); // Just for theme
 
-  const { products: outOfStock, total: outOfStockTotal, isLoading: outOfStockLoading } = useProducts(isDark, { page: outOfStockPage, limit: pageSize, search: searchQuery, status: "Out of Stock" });
   const { products: measuring, total: measuringTotal, isLoading: measuringLoading } = useProducts(isDark, { page: measuringPage, limit: pageSize, search: searchQuery, category: "Measuring & Controllers" });
   const { products: lab, total: labTotal, isLoading: labLoading } = useProducts(isDark, { page: labPage, limit: pageSize, search: searchQuery, category: "Laboratory Equipment" });
   const { products: chemicals, total: chemicalsTotal, isLoading: chemicalsLoading } = useProducts(isDark, { page: chemicalsPage, limit: pageSize, search: searchQuery, category: "Chemical" });
@@ -34,7 +32,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   // We can just fetch ALL products without category, and let the backend return everything.
   // Wait! If we fetch all, we can't paginate them by category on the server easily unless backend supports it.
   const { products: allProducts, total: allProductsTotal, isLoading: allLoading, error } = useProducts(isDark, { page: othersPage, limit: pageSize, search: searchQuery });
-  const isLoading = outOfStockLoading || measuringLoading || labLoading || chemicalsLoading || allLoading;
+  const isLoading = measuringLoading || labLoading || chemicalsLoading || allLoading;
 
   // Filter others manually from allProducts if needed, or if we want to change approach, we just use allProducts for others and filter it manually (but pagination will be wrong).
   // Actually, it's better to update backend to support category="Others" or we just render them all in one big table since pagination is now server side!
@@ -42,11 +40,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
   // Let's just use the arrays we fetched. For "Others", we can filter `allProducts` just for display, though pagination will be off.
   // Let's render the tables with the fetched data.
 
-  const inStockMeasuring = measuring.filter(p => p.p_status !== "Out of Stock");
-  const inStockLab = lab.filter(p => p.p_status !== "Out of Stock");
-  const inStockChemicals = chemicals.filter(p => p.p_status !== "Out of Stock");
-  const othersList = allProducts.filter(p => !["Measuring & Controllers", "Laboratory Equipment", "Chemical"].includes(p.p_category) && p.p_status !== "Out of Stock");
-  const outOfStockProducts = outOfStock;
+  const othersList = allProducts.filter(p => !["Measuring & Controllers", "Laboratory Equipment", "Chemical"].includes(p.p_category));
 
   if (isLoading) {
     return (
@@ -114,23 +108,11 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
           className="px-6 py-3 font-semibold border-none"
         />
       </div>
-      {outOfStockProducts.length > 0 && (
-        <ProductTable
-          title="Out of Stock Products"
-          products={outOfStockProducts}
-          theme={theme}
-          showCategory={true}
-          total={outOfStockTotal}
-          currentPage={outOfStockPage}
-          pageSize={pageSize}
-          onPageChange={(page, size) => { setOutOfStockPage(page); setPageSize(size); }}
-          loading={outOfStockLoading}
-        />
-      )}
+
       {measuring.length > 0 && (
         <ProductTable
           title="Measuring & Controllers"
-          products={inStockMeasuring}
+          products={measuring}
           theme={theme}
           total={measuringTotal}
           currentPage={measuringPage}
@@ -142,7 +124,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
       {lab.length > 0 && (
         <ProductTable
           title="Lab Equipments"
-          products={inStockLab}
+          products={lab}
           theme={theme}
           showSize={true}
           total={labTotal}
@@ -155,7 +137,7 @@ const ProductsPage = ({ isDark }: ProductsProps) => {
       {chemicals.length > 0 && (
         <ProductTable
           title="Chemicals"
-          products={inStockChemicals}
+          products={chemicals}
           theme={theme}
           showExpireDate={true}
           total={chemicalsTotal}

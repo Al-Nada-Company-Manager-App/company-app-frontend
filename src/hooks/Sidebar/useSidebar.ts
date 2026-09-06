@@ -9,13 +9,12 @@ interface SidebarItemWithPermission extends SidebarItem {
   children?: SidebarItemWithPermission[];
 }
 
-const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
+const getSidebarItems = (): SidebarItemWithPermission[] => [
   {
     id: "dashboard",
     label: "Dashboard",
     icon: "Home",
     path: "/",
-    isActive: currentPath === "/",
     // No permission needed for dashboard
   },
   {
@@ -23,7 +22,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Employees",
     icon: "Users",
     path: "/employees",
-    isActive: currentPath === "/employees",
     permission: "users_page",
   },
   {
@@ -31,7 +29,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Customers",
     icon: "UserCheck",
     path: "/customers",
-    isActive: currentPath === "/customers",
     permission: "customer_page",
   },
   {
@@ -45,7 +42,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
         label: "Products",
         icon: "Box",
         path: "/stock/products",
-        isActive: currentPath === "/stock/products",
         permission: "products_page",
       },
       {
@@ -53,7 +49,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
         label: "Spare Parts",
         icon: "Box",
         path: "/stock/spare-parts",
-        isActive: currentPath === "/stock/spare-parts",
         permission: "products_page",
       },
     ],
@@ -63,7 +58,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Repairs",
     icon: "Wrench",
     path: "/repairs",
-    isActive: currentPath === "/repairs",
     permission: "repaire_page",
   },
   {
@@ -71,7 +65,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Sales",
     icon: "TrendingUp",
     path: "/sales",
-    isActive: currentPath === "/sales",
     permission: "sales_page",
   },
   {
@@ -79,7 +72,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Debts",
     icon: "DollarSign",
     path: "/debts",
-    isActive: currentPath === "/debts",
     permission: "debts_page",
   },
   {
@@ -87,7 +79,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Purchases",
     icon: "ShoppingCart",
     path: "/purchases",
-    isActive: currentPath === "/purchases",
     permission: "purchase_page",
   },
   {
@@ -95,7 +86,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Documents",
     icon: "FileText",
     path: "/documents",
-    isActive: currentPath === "/documents",
     permission: "price_page",
   },
   {
@@ -103,7 +93,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Suppliers",
     icon: "Truck",
     path: "/suppliers",
-    isActive: currentPath === "/suppliers",
     permission: "supplier_page",
   },
   {
@@ -111,7 +100,6 @@ const getSidebarItems = (currentPath: string): SidebarItemWithPermission[] => [
     label: "Tasks",
     icon: "ClipboardList",
     path: "/tasks",
-    isActive: currentPath === "/tasks",
     permission: "tasks_page",
   },
 ];
@@ -188,12 +176,12 @@ const darkTheme: SidebarTheme = {
   },
 };
 
-export const useSidebar = (isDark: boolean, currentPath: string = "/") => {
+export const useSidebar = (isDark: boolean) => {
   const theme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
   const { hasPermission } = usePermission();
 
   const items = useMemo(() => {
-    const allItems = getSidebarItems(currentPath);
+    const allItems = getSidebarItems();
     return allItems
       .filter((item) => {
         if (!item.permission) return true;
@@ -212,7 +200,7 @@ export const useSidebar = (isDark: boolean, currentPath: string = "/") => {
         }
         return item;
       });
-  }, [currentPath, hasPermission]);
+  }, [hasPermission]);
 
   return {
     items,

@@ -3,17 +3,24 @@ import type { SidebarProps } from "@src/types/Sidebar/sidebar";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { MouseEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import SidebarMenuItem from "./SidebarMenuItem";
 
 const NavigationMenu = ({
   isDark,
-  currentPath = "/",
   onItemClick,
 }: SidebarProps) => {
-  const { items, theme } = useSidebar(isDark, currentPath);
+  const { items, theme } = useSidebar(isDark);
+  const location = useLocation();
   const [expanded, setExpanded] = useState<string | null>(null);
 
+  useEffect(() => {
+    const activeParent = items.find((item) =>
+      item.children?.some((child) => child.path === location.pathname),
+    );
+    setExpanded(activeParent?.id ?? null);
+  }, [items, location.pathname]);
 
   const handleItemClick = (itemId: string) => {
 
@@ -38,7 +45,7 @@ const NavigationMenu = ({
           <SidebarMenuItem
             item={item}
             theme={theme}
-            onClick={(e: MouseEvent<HTMLDivElement>) => {
+            onClick={(e: MouseEvent<HTMLElement>) => {
               e.stopPropagation();
               if (item.children) {
                 toggleExpand(item.id);
@@ -55,7 +62,7 @@ const NavigationMenu = ({
                   key={child.id}
                   item={child}
                   theme={theme}
-                  onClick={(e: MouseEvent<HTMLDivElement>) => {
+                  onClick={(e: MouseEvent<HTMLElement>) => {
                     e.stopPropagation();
                     handleItemClick(child.id);
                   }}

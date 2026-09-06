@@ -1,6 +1,7 @@
 import type { SidebarMenuItemProps } from "@src/types/Sidebar/sidebar";
+import type { MouseEvent } from "react";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const SidebarMenuItem = ({
   item,
@@ -8,8 +9,15 @@ const SidebarMenuItem = ({
   onClick,
   getIcon,
 }: SidebarMenuItemProps) => {
-  const isActive = item.isActive;
-  const itemTheme = isActive ? theme.item.active : theme.item.normal;
+  const location = useLocation();
+  const isActive = item.path === "/"
+    ? location.pathname === "/"
+    : !!item.path && (location.pathname === item.path || location.pathname.startsWith(`${item.path}/`));
+  const hasActiveChild = item.children?.some((child) =>
+    child.path === location.pathname || location.pathname.startsWith(`${child.path}/`),
+  ) ?? false;
+  const isSelected = isActive || hasActiveChild;
+  const itemTheme = isSelected ? theme.item.active : theme.item.normal;
   const hasChildren = !!(item.children && item.children.length > 0);
 
   const content = (
@@ -40,11 +48,11 @@ const SidebarMenuItem = ({
       <button
         className={className}
         style={{ background: itemTheme.background }}
-        onClick={(e: any) => {
+        onClick={(e: MouseEvent<HTMLElement>) => {
           e.stopPropagation();
           if (onClick) onClick(e);
         }}
-        aria-expanded={isActive} // ideally this matches the expanded state in the parent, but keeping it simple for now
+        aria-expanded={hasActiveChild}
         aria-controls={`submenu-${item.id}`}
       >
         {content}
@@ -59,12 +67,12 @@ const SidebarMenuItem = ({
         `${className} ${navActive ? "active" : ""}`
       }
       style={{ background: itemTheme.background }}
-      onClick={(e: any) => {
+      onClick={(e: MouseEvent<HTMLElement>) => {
         // Stop propagation just in case, but let React Router handle routing
         e.stopPropagation();
         if (onClick) onClick(e);
       }}
-      aria-current={isActive ? "page" : undefined}
+      aria-current={isSelected ? "page" : undefined}
     >
       {content}
     </NavLink>

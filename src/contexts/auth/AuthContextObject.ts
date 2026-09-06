@@ -3,6 +3,7 @@ import type { Employee } from "@src/types/Employees/employee";
 
 export interface AuthContextType {
   user: Employee | null;
+  isLoading: boolean;
   isAuthenticated: boolean;
   login: (user: Employee) => void;
   logout: () => void;

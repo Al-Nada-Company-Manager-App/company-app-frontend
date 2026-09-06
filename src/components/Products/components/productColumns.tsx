@@ -139,6 +139,11 @@ export const getProductColumns = (
     title: "Status",
     dataIndex: "p_status",
     key: "p_status",
+    render: (status: string) => (
+      <span style={{ color: status === "Out of Stock" ? "#ff4d4f" : "inherit", fontWeight: status === "Out of Stock" ? "bold" : "normal" }}>
+        {status}
+      </span>
+    ),
     filters: [
       { text: "Available", value: "Available" },
       { text: "Out of Stock", value: "Out of Stock" },

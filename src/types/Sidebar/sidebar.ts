@@ -51,6 +51,6 @@ export interface SidebarProps {
 export interface SidebarMenuItemProps {
   item: SidebarItem;
   theme: SidebarTheme;
-  onClick: (e: MouseEvent<HTMLDivElement>) => void;
+  onClick: (e: MouseEvent<HTMLElement>) => void;
   getIcon: (iconName: string) => React.ReactNode;
 }
