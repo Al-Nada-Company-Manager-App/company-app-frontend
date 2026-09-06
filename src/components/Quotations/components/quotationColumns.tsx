@@ -92,7 +92,7 @@ export const getQuotationColumns = (
             e.stopPropagation();
             onEdit(record.q_id);
           }}
-          style={{ color: theme.text?.color || "#555" }}
+          style={{ color: theme.title?.color || "#555" }}
         />
         <div onClick={(e) => e.stopPropagation()}>
           <Popconfirm

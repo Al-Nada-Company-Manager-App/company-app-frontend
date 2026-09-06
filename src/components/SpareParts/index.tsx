@@ -4,7 +4,6 @@ import ProductTable from "../Products/components/ProductTable";
 import { Loading, ErrorDisplay } from "@src/components/UI";
 import CustomBtn from "../UI/customBtn";
 import ProductModal from "../Products/components/ProductModal";
-import type { Product } from "@src/types/Products/product";
 import { useSearchContext } from "@src/contexts/search";
 
 interface SparePartsProps {

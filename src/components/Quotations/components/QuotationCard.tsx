@@ -1,5 +1,5 @@
 import { Card, Popconfirm } from "antd";
-import { FileTextOutlined, CalendarOutlined, DeleteOutlined } from "@ant-design/icons";
+import { FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { Quotation } from "@src/types/Quotations/quotation";
 import type { Theme } from "@src/types/theme";
 import { convertTimestampToDate } from "@src/utils/ConvertDate";
