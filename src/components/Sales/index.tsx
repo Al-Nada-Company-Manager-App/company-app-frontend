@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { useState } from "react";
 import { useSales } from "@src/hooks/Sales/useSales";
 import SalesTable from "./components/SalesTable";
@@ -11,6 +12,7 @@ interface SalesPageProps {
 }
 
 const SalesPage = ({ isDark }: SalesPageProps) => {
+  const { hasPermission } = usePermission();
   const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,7 +104,7 @@ const SalesPage = ({ isDark }: SalesPageProps) => {
             >
               Sales
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('sales_add')}
               theme={theme}
               btnTitle="Add New Sale"
               onClick={() => setShowAddModal(true)}

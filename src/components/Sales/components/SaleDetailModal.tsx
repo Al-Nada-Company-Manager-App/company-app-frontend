@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import ConfirmBtn from "@src/components/UI/confirm";
 import CustomBtn from "@src/components/UI/customBtn";
 import type { Sales } from "@src/types/Sales/sales";
@@ -24,6 +25,7 @@ const SaleDetailModal = ({
   sale,
   theme,
 }: SaleDetailModalProps) => {
+  const { hasPermission } = usePermission();
   const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
 
@@ -41,7 +43,7 @@ const SaleDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('sales_edit')}
               btnTitle="Edit"
               onClick={() => setUpdateOpen(true)}
               theme={{
@@ -56,7 +58,7 @@ const SaleDetailModal = ({
               }}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
-            <ConfirmBtn
+            <ConfirmBtn disabled={!hasPermission('sales_delete')}
               type="primary"
               isdanger={true}
               btnTitle="Delete"

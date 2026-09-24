@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
 import { Descriptions } from "antd";
@@ -23,6 +24,7 @@ const RepairDetailModal = ({
   repair,
   theme,
 }: RepairDetailModalProps) => {
+  const { hasPermission } = usePermission();
   const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
   const deleteRepair = useDeleteRepair(isDark);
@@ -45,7 +47,7 @@ const RepairDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <ConfirmBtn
+            <ConfirmBtn disabled={!hasPermission('repaire_delete')}
               type="primary"
               isdanger={true}
               btnTitle="Delete"

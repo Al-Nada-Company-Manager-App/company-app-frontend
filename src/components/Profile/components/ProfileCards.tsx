@@ -129,7 +129,7 @@ const ProfileCards = ({
         <InfoItem
           icon={Hash}
           label="Salary"
-          value={`$${user.salary.toLocaleString()}`}
+          value={`$${(user.salary || 0).toLocaleString()}`}
         />
         <InfoItem
           icon={User}
@@ -173,8 +173,7 @@ const ProfileCards = ({
               e.currentTarget.style.color =
                 theme.profile?.actions.editButton.color || "";
             }}
-          >
-          </button>
+          >Edit Profile</button>
         </div>
       </div>
     </div>

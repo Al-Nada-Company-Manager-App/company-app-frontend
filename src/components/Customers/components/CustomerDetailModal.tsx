@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
 import { Descriptions, Image, Spin } from "antd";
@@ -23,6 +24,7 @@ const CustomerDetailModal = ({
   customerId,
   theme,
 }: DetailModal) => {
+  const { hasPermission } = usePermission();
   const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
   const deleteCustomer = useDeleteCustomer(isDark);
@@ -49,7 +51,7 @@ const CustomerDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('customer_edit')}
               btnTitle="Edit"
               onClick={() => setUpdateOpen(true)}
               theme={{
@@ -64,7 +66,7 @@ const CustomerDetailModal = ({
               }}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
-            <ConfirmBtn
+            <ConfirmBtn disabled={!hasPermission('customer_delete')}
               type="primary"
               isdanger={true}
               btnTitle="Delete"

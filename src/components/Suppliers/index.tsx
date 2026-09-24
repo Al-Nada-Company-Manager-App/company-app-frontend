@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { useState, useEffect } from "react";
 import { useSuppliers } from "@src/hooks/Suppliers/useSuppliers";
 import SupplierTable from "./components/SupplierTable";
@@ -11,6 +12,7 @@ interface SuppliersProps {
 }
 
 const SuppliersPage = ({ isDark }: SuppliersProps) => {
+  const { hasPermission } = usePermission();
   const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
   
@@ -121,7 +123,7 @@ const SuppliersPage = ({ isDark }: SuppliersProps) => {
             >
               Suppliers
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('supplier_add')}
               theme={theme}
               btnTitle="Add New Supplier"
               onClick={() => setShowAddModal(true)}

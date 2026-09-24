@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { useState } from "react";
 import { useRepairs } from "@src/hooks/Repairs/useRepairs";
 import RepairProcessTable from "./components/RepairProcessTable";
@@ -13,6 +14,7 @@ interface RepairsProps {
 }
 
 const RepairsPage = ({ isDark }: RepairsProps) => {
+  const { hasPermission } = usePermission();
   const { searchQuery } = useSearchContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -78,7 +80,7 @@ const RepairsPage = ({ isDark }: RepairsProps) => {
             >
               Repair Processes
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('repaire_add')}
               theme={theme}
               btnTitle="Add New Repair"
               onClick={() => setShowAddRepairModal(true)}
@@ -114,7 +116,7 @@ const RepairsPage = ({ isDark }: RepairsProps) => {
             >
               Devices Under Maintenance
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('repaire_add')}
               theme={theme}
               btnTitle="Add New Device Under Maintenance"
               onClick={() => setShowAddDeviceModal(true)}

@@ -11,7 +11,7 @@ import type { Employee } from "@src/types/Employees/employee";
 import type { Theme } from "@src/types/theme";
 import { useAuthContext } from "@src/contexts/auth";
 import { useThemeContext } from "@src/contexts/theme";
-import { useUpdateEmployeePhoto } from "@src/queries/Employees";
+import { useUpdateEmployeePhoto, useUpdateEmployee } from "@src/queries/Employees";
 import type { RcFile, UploadFile } from "antd/es/upload";
 import { useState, useEffect } from "react";
 import CustomBtn from "@src/components/UI/customBtn";
@@ -35,6 +35,7 @@ const UpdateProfileModal = ({
   const { login } = useAuthContext(); // We'll use this to update the dummy data
   const { isDark } = useThemeContext();
   const updateEmployeePhoto = useUpdateEmployeePhoto(isDark);
+  const updateEmployee = useUpdateEmployee(isDark);
   const [form] = Form.useForm();
 
   const [imageFile, setImageFile] = useState<UploadFile | null>(null);
@@ -70,9 +71,7 @@ const UpdateProfileModal = ({
       }
     }
 
-    // Update the dummy user data
-    const updatedUser: Employee = {
-      ...user!,
+    const formattedData = {
       ...values,
       birth_date: values.birth_date
         ? moment(values.birth_date).format("YYYY-MM-DD")
@@ -80,10 +79,24 @@ const UpdateProfileModal = ({
       e_photo: photoFilename || user!.e_photo,
     };
 
-    // Update the auth context with the new user data (simulating API update)
-    login(updatedUser);
+    try {
+      await updateEmployee.mutateAsync({
+        id: user!.e_id,
+        data: formattedData,
+      });
 
-    onClose();
+      // Update the auth context with the new user data
+      const updatedUser: Employee = {
+        ...user!,
+        ...formattedData,
+        // In case the API returns something different, we use our local state. But ideally we'd merge response.
+      };
+      
+      login(updatedUser);
+      onClose();
+    } catch (error) {
+      console.error("Failed to update profile", error);
+    }
   };
 
   return (

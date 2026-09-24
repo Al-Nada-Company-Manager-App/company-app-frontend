@@ -10,6 +10,7 @@ interface ConfirmProps {
   onCancel?: () => void;
   className?: string;
   theme: Theme;
+  disabled?: boolean;
 }
 const Confirm = ({
   type,
@@ -19,6 +20,7 @@ const Confirm = ({
   onCancel,
   className,
   theme,
+  disabled,
 }: ConfirmProps) => {
   const [modal, contextHolder] = Modal.useModal();
 
@@ -50,6 +52,7 @@ const Confirm = ({
       {contextHolder}
       <Button
         type={type || "primary"}
+        disabled={disabled}
         danger={isdanger}
         className={className || "px-6 py-2"}
         style={{

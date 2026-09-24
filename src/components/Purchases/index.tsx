@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { useState } from "react";
 import { usePurchases } from "@src/hooks/Purchases/usePurchases";
 import PurchasesTable from "./components/PurchasesTable";
@@ -11,6 +12,7 @@ interface PurchasesPageProps {
 }
 
 const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
+  const { hasPermission } = usePermission();
   const { searchQuery } = useSearchContext();
   const [showAddModal, setShowAddModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,7 +104,7 @@ const PurchasesPage = ({ isDark }: PurchasesPageProps) => {
             >
               Purchases
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('purchase_add')}
               theme={theme}
               btnTitle="Add New Purchase"
               onClick={() => setShowAddModal(true)}

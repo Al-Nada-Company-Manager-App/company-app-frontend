@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { Descriptions, Tag } from "antd";
 import AppModal from "@src/components/UI/AppModal";
 import type { Debt } from "@src/types/Debts/debt";
@@ -23,6 +24,7 @@ const DebtDetailModal = ({
   onEdit,
   onDelete,
 }: DebtDetailModalProps) => {
+  const { hasPermission } = usePermission();
   if (!debt) return null;
 
   const getStatusColor = (status: string) => {
@@ -91,7 +93,7 @@ const DebtDetailModal = ({
             />
           )}
           {onDelete && (
-            <ConfirmBtn
+            <ConfirmBtn disabled={!hasPermission('debts_delete')}
               type="primary"
               className="px-6 py-2 mb-5 mr-5"
               isdanger={true}

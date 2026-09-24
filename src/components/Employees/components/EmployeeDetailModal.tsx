@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { Descriptions, Tag, Image, Button } from "antd";
 import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
@@ -30,6 +31,7 @@ const EmployeeDetailModal = ({
   employee,
   theme,
 }: DetailModal) => {
+  const { hasPermission } = usePermission();
   const { isDark } = useThemeContext();
   const [updateOpen, setUpdateOpen] = useState(false);
   const deleteEmployee = useDeleteEmployee(isDark);
@@ -85,7 +87,7 @@ const EmployeeDetailModal = ({
               />
             </PermissionGuard>
             <PermissionGuard requiredPermission="users_delete">
-              <ConfirmBtn
+              <ConfirmBtn disabled={!hasPermission('users_delete')}
                 type="primary"
                 isdanger={true}
                 btnTitle="Delete"

@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import { useState, useEffect } from "react";
 import { Tabs } from "antd";
 import { useCustomers } from "@src/hooks/Customers/useCustomers";
@@ -15,6 +16,7 @@ interface CustomersProps {
 }
 
 const CustomersPage = ({ isDark }: CustomersProps) => {
+  const { hasPermission } = usePermission();
   const { searchQuery } = useSearchContext();
   const queryClient = useQueryClient();
 
@@ -196,7 +198,7 @@ const CustomersPage = ({ isDark }: CustomersProps) => {
             >
               Customers
             </h2>
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('customer_add')}
               theme={theme}
               btnTitle="Add New Customer"
               onClick={() => setShowAddModal(true)}

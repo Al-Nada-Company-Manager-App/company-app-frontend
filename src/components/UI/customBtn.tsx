@@ -8,13 +8,15 @@ interface CustomBtnProps {
     className?: string;
     onClick: () => void;
     loading?: boolean;
+    disabled?: boolean;
 }
 
-const CustomBtn = ({ theme, btnTitle, onClick, className ="" , loading = false }: CustomBtnProps) => {
+const CustomBtn = ({ theme, btnTitle, onClick, className ="" , loading = false, disabled = false }: CustomBtnProps) => {
   if(loading){
     return(
       <Button
         type="primary"
+        disabled={disabled}
         className={`${className}`}
         style={{
           background: theme.button?.background || "#6C79F7",
@@ -36,6 +38,7 @@ const CustomBtn = ({ theme, btnTitle, onClick, className ="" , loading = false }
   return(
   <Button
     type="primary"
+    disabled={disabled}
     className={`${className}`}
     style={{
       background: theme.button?.background || "#6C79F7",

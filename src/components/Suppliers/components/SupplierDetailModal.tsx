@@ -1,3 +1,4 @@
+import { usePermission } from "@src/hooks/usePermission";
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Supplier } from "@src/types/Suppliers/supplier";
 import type { Theme } from "@src/types/theme";
@@ -24,6 +25,7 @@ const SupplierDetailModal = ({
   supplier,
   theme,
 }: DetailModal) => {
+  const { hasPermission } = usePermission();
   const [updateOpen, setUpdateOpen] = useState(false);
   const { isDark } = useThemeContext();
   const deleteSupplier = useDeleteSupplier(isDark);
@@ -45,7 +47,7 @@ const SupplierDetailModal = ({
         onCancel={onClose}
         footer={
           <div className="flex justify-end">
-            <CustomBtn
+            <CustomBtn disabled={!hasPermission('supplier_edit')}
               btnTitle="Edit"
               onClick={() => setUpdateOpen(true)}
               theme={{
@@ -60,7 +62,7 @@ const SupplierDetailModal = ({
               }}
               className="mr-2 px-6 py-2 mb-5 font-semibold border-none"
             />
-            <ConfirmBtn
+            <ConfirmBtn disabled={!hasPermission('supplier_delete')}
               type="primary"
               isdanger={true}
               btnTitle="Delete"
