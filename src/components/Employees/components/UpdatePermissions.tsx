@@ -118,6 +118,7 @@ const categories = [
       { name: "tasks_delete", label: "Delete" },
       { name: "tasks_view", label: "View" },
       { name: "tasks_view_all", label: "View All" },
+      { name: "tasks_assign", label: "Assign Tasks" },
     ],
   },
 ];

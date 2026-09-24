@@ -13,7 +13,7 @@ const Sidebar = ({
   onItemClick,
   mobile,
 }: SidebarComponentProps) => {
-  console.log("Sidebar", { mobile });
+  
   const { theme } = useSidebar(isDark);
 
   const handleItemClick = (itemId: string) => {

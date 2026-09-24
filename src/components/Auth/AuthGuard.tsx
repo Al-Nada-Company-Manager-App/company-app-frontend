@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useAuthContext } from "@src/contexts/auth";
-import { Loading } from "@src/components/UI";
+
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -12,11 +12,7 @@ interface AuthGuardProps {
  */
 export const AuthGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { isAuthenticated, isLoading } = useAuthContext();
-
-  if (isLoading) {
-    return <Loading />;
-  }
+  const { isAuthenticated } = useAuthContext();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -31,11 +27,7 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
  */
 export const GuestGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
-  const { isAuthenticated, isLoading } = useAuthContext();
-
-  if (isLoading) {
-    return <Loading />;
-  }
+  const { isAuthenticated } = useAuthContext();
 
   if (isAuthenticated) {
     const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || "/";

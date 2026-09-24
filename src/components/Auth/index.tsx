@@ -120,7 +120,7 @@ const Auth = ({ isDark }: AuthProps) => {
 
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center p-6"
+      className="min-h-screen w-full overflow-y-auto px-6 py-12"
       style={{
         background: isDark
           ? "linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%)"
@@ -171,7 +171,7 @@ const Auth = ({ isDark }: AuthProps) => {
 
       {/* Auth Card */}
       <div
-        className="relative w-full max-w-md rounded-3xl p-8 shadow-2xl"
+        className="relative mx-auto w-full max-w-md rounded-3xl p-8 shadow-2xl"
         style={{
           background: theme.container.background,
           backdropFilter: theme.container.backdropFilter,

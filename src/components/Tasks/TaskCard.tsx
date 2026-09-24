@@ -134,6 +134,22 @@ const TaskCard = ({ task, onEdit, theme, isDark }: TaskCardProps) => {
         }
       >
         <div style={{ color: theme.modal?.color, marginBottom: 10 }}>
+          {task.t_type && task.t_type !== "General" && (
+            <div style={{ fontSize: "12px", color: "#888", marginBottom: "8px" }}>
+              <span style={{ fontWeight: 600 }}>{task.t_type}</span>
+              {task.customers && task.customers.length > 0 && (
+                <div style={{ marginTop: "12px", padding: "8px", background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', borderRadius: "6px" }}>
+                  <div style={{ fontSize: "12px", color: "#888", marginBottom: "4px" }}>Customers:</div>
+                  {task.customers.map(c => (
+                    <div key={c.c_id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: "13px", marginBottom: "4px" }}>
+                      <span style={{ color: theme.modal?.color, fontWeight: 500 }}>{c.c_name}</span>
+                      {c.c_phone && <span style={{ color: "#888" }}>{c.c_phone}</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           {task.t_description && (
             <p
               style={{

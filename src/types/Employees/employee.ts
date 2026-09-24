@@ -72,4 +72,5 @@ export interface EmployeePermissions {
   tasks_delete: boolean;
   tasks_view: boolean;
   tasks_view_all: boolean;
+  tasks_assign: boolean;
 }

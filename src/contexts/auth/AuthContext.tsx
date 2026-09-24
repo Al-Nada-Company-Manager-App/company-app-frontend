@@ -74,6 +74,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         className="min-h-screen flex flex-col items-center justify-center relative p-4"
         style={{ background: theme.containerBg }}
       >
+        {/* Always visible Settings Button */}
+        <button
+          onClick={() => setShowSettings(true)}
+          className="fixed top-6 right-6 p-3 rounded-xl transition-all duration-300 hover:scale-110 shadow-lg z-40 group"
+          style={{
+            background: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)"}`,
+          }}
+          aria-label="Server Settings"
+        >
+          <Settings 
+            size={24} 
+            className="transition-transform duration-500 group-hover:rotate-90"
+            style={{ color: isDark ? "#fff" : "#1e293b" }} 
+          />
+        </button>
+
         <Loading />
         
         {loadingTooLong && (

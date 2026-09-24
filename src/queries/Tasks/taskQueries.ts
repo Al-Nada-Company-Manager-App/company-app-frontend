@@ -22,6 +22,7 @@ export const useCreateTask = (isDark: boolean = false) => {
     mutationFn: taskApi.createTask,
     onSuccess: (_newTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       showSuccessMessage("Task created successfully!", "✅");
     },
     onError: (error) => {
@@ -39,6 +40,7 @@ export const useUpdateTask = (isDark: boolean = false) => {
     mutationFn: taskApi.updateTask,
     onSuccess: (_updatedTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       showSuccessMessage("Task updated successfully!", "✅");
     },
     onError: (error) => {
@@ -56,6 +58,7 @@ export const useUpdateTaskStatus = (isDark: boolean = false) => {
     mutationFn: taskApi.updateTaskStatus,
     onSuccess: (_updatedTask) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       // Optional: show less intrusive message for status updates
       // showSuccessMessage("Task status updated!", "✅");
     },
@@ -74,6 +77,7 @@ export const useDeleteTask = (isDark: boolean = false) => {
     mutationFn: taskApi.deleteTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       showSuccessMessage("Task deleted successfully!", "🗑️");
     },
     onError: (error) => {

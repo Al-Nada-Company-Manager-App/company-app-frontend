@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Modal, Form, Input, Select, DatePicker, Button, Row, Col } from "antd";
 import { useCreateTask, useUpdateTask } from "@src/queries/Tasks";
 import { useGetAllEmployees } from "@src/queries/Employees";
+import { useGetAllCustomers } from "@src/queries/Customers/customerQueries";
+import { usePermission } from "@src/hooks/usePermission";
+import { useAuthContext } from "@src/contexts/auth";
 import type { Task } from "@src/types/Tasks/task";
-import { TaskPriority, TaskStatus } from "@src/types/Tasks/task";
+import { TaskPriority, TaskStatus, TaskType } from "@src/types/Tasks/task";
+import TaskCustomerSelectModal from "./TaskCustomerSelectModal";
+import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import moment from "moment";
 
@@ -19,13 +25,19 @@ const { TextArea } = Input;
 
 const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
   const [form] = Form.useForm();
-  // const { user } = useAuthContext(); // Removed unused user variable
-
+  const { hasPermission } = usePermission();
+  const { user } = useAuthContext();
+  
   // Queries
   const createTaskMutation = useCreateTask();
   const updateTaskMutation = useUpdateTask();
   const [employeeSearchTerm, setEmployeeSearchTerm] = useState("");
   const [debouncedEmployeeSearch, setDebouncedEmployeeSearch] = useState("");
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [debouncedCustomerSearch, setDebouncedCustomerSearch] = useState("");
+  const [selectedTaskType, setSelectedTaskType] = useState<TaskType | string>(TaskType.General);
+  const [showCustomerSelect, setShowCustomerSelect] = useState(false);
+  const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -34,13 +46,25 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
     return () => clearTimeout(handler);
   }, [employeeSearchTerm]);
 
-  const { data: paginatedEmployees } = useGetAllEmployees(1, 50, debouncedEmployeeSearch);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedCustomerSearch(customerSearchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [customerSearchTerm]);
+
+  const queryClient = useQueryClient();
+  const { data: paginatedEmployees } = useGetAllEmployees(1, 10000, debouncedEmployeeSearch);
   const employees = paginatedEmployees?.data;
+  
+  const { data: paginatedCustomers } = useGetAllCustomers({ page: 1, limit: 10000, search: debouncedCustomerSearch });
+  const customers = paginatedCustomers?.data;
 
   // Reset form when modal opens or task changes
   useEffect(() => {
     if (isOpen) {
       if (task) {
+        setSelectedTaskType(task.t_type || TaskType.General);
         form.setFieldsValue({
           t_title: task.t_title,
           t_description: task.t_description,
@@ -48,12 +72,23 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
           t_status: task.t_status,
           due_date: task.due_date ? moment(task.due_date) : null,
           assigned_to: task.assigned_to,
+          t_type: task.t_type || TaskType.General,
+          c_ids: task.c_ids,
         });
+        if (task.customers) {
+          setSelectedCustomers(task.customers as unknown as Customer[]);
+          form.setFieldsValue({ c_ids: task.customers.map(c => c.c_id) });
+        } else {
+          setSelectedCustomers([]);
+        }
       } else {
+        setSelectedTaskType(TaskType.General);
         form.resetFields();
+        setSelectedCustomers([]);
         form.setFieldsValue({
           t_priority: TaskPriority.Medium,
           t_status: TaskStatus.Idle,
+          t_type: TaskType.General,
         });
       }
     }
@@ -65,6 +100,7 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
       const taskData = {
         ...values,
         due_date: values.due_date ? values.due_date.format("YYYY-MM-DD") : null,
+        assigned_to: hasPermission("tasks_assign") ? values.assigned_to : user?.e_id,
       };
 
       if (task) {
@@ -96,7 +132,8 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
   };
 
   return (
-    <Modal
+    <>
+      <Modal forceRender
       open={isOpen}
       onCancel={onClose}
       footer={null}
@@ -122,6 +159,60 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
         >
           <Input placeholder="Task Title" style={modalStyles.input} />
         </Form.Item>
+
+        
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="t_type"
+              label={<span style={{ color: modalStyles.content.color }}>Task Type</span>}
+              initialValue={TaskType.General}
+            >
+              <Select
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setSelectedTaskType(value);
+                  form.setFieldsValue({ t_type: value });
+                }}
+                dropdownStyle={{ background: theme.modal?.background }}
+              >
+                {Object.values(TaskType).map((type) => (
+                  <Option key={type} value={type}>
+                    {type}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          {(selectedTaskType === TaskType.VisitContact) && (
+            
+            <Col span={12}>
+              <Form.Item label={<span style={{ color: modalStyles.content.color }}>Customer</span>}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <Button 
+                    onClick={() => setShowCustomerSelect(true)}
+                    style={{ ...modalStyles.input, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}
+                  >
+                    {selectedCustomers.length > 0 ? selectedCustomers.map(c => c.c_name).join(', ') : "Select Customers"}
+                  </Button>
+                  {selectedCustomers.length > 0 && (
+                    <Button danger type="text" onClick={() => {
+                      setSelectedCustomers([]);
+                      form.setFieldsValue({ c_ids: [] });
+                    }}>
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                {/* Hidden input to store c_id for form submission */}
+                <Form.Item name="c_ids" noStyle>
+                  <Input type="hidden" />
+                </Form.Item>
+              </Form.Item>
+            </Col>
+
+          )}
+        </Row>
 
         <Form.Item
           name="t_description"
@@ -206,6 +297,7 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
               <DatePicker style={{ width: "100%", ...modalStyles.input }} />
             </Form.Item>
           </Col>
+          {hasPermission("tasks_assign") && (
           <Col span={12}>
             <Form.Item
               name="assigned_to"
@@ -230,6 +322,7 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
               </Select>
             </Form.Item>
           </Col>
+        )}
         </Row>
 
         <div
@@ -266,6 +359,40 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
         </div>
       </Form>
     </Modal>
+
+      <TaskCustomerSelectModal
+        isOpen={showCustomerSelect}
+        onClose={() => setShowCustomerSelect(false)}
+        onSelect={(customers) => {
+          setSelectedCustomers(customers);
+          form.setFieldsValue({ c_ids: customers.map(c => c.c_id) });
+        }}
+        selectedCustomerIds={selectedCustomers.map(c => c.c_id)}
+        onUnvisit={async (c_id) => {
+          try {
+            await fetch(`http://localhost:4000/tasks/unvisit/${c_id}`, { 
+              method: 'POST', 
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
+            });
+            queryClient.invalidateQueries({ queryKey: ["customers"] });
+          } catch (err) {}
+        }}
+        onClearAllVisits={async () => {
+          try {
+            await fetch('http://localhost:4000/tasks/clear-visits', { 
+              method: 'POST', 
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
+            });
+            queryClient.invalidateQueries({ queryKey: ["customers"] });
+          } catch (err) {}
+        }}
+        customers={customers || []}
+        loading={!customers}
+        theme={theme}
+        searchTerm={customerSearchTerm}
+        setSearchTerm={setCustomerSearchTerm}
+      />
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ export interface Customer {
   c_company_id?: number | null;
   c_latitude?: number | null;
   c_longitude?: number | null;
+  _count?: { tasks: number };
   company?: { c_id: number; c_name: string } | null;
   employees?: Customer[] | null;
 }
