@@ -72,7 +72,11 @@ const UpdateProfileModal = ({
     }
 
     const formattedData = {
+      e_id: user!.e_id,
       ...values,
+      BirthDate: values.birth_date
+        ? moment(values.birth_date).format("YYYY-MM-DD")
+        : user!.birth_date,
       birth_date: values.birth_date
         ? moment(values.birth_date).format("YYYY-MM-DD")
         : user!.birth_date,
