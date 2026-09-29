@@ -1,10 +1,11 @@
 import { usePermission } from "@src/hooks/usePermission";
 import ConfirmBtn from "@src/components/UI/confirm";
 import type { Theme } from "@src/types/theme";
-import { Descriptions, Image, Spin } from "antd";
+import { Descriptions, Image, Spin, Tabs } from "antd";
 import AppModal from "@src/components/UI/AppModal";
 import { useState } from "react";
 import CustomerSalesTable from "./components/CustomerSalesTable";
+import CustomerVisitHistoryTable from "./components/CustomerVisitHistoryTable";
 import CustomerModal from "./CustomerModal";
 import { useDeleteCustomer, useGetCustomerById } from "@src/queries/Customers";
 import { useThemeContext } from "@src/contexts/theme";
@@ -163,10 +164,31 @@ const CustomerDetailModal = ({
               </div>
             </div>
             <div className="mt-6 w-full overflow-x-auto">
-                <CustomerSalesTable
-                  customerId={customer?.c_id || -1}
-                  theme={theme}
-                />
+              <Tabs
+                defaultActiveKey="sales"
+                items={[
+                  {
+                    key: "sales",
+                    label: "📊 Sales History",
+                    children: (
+                      <CustomerSalesTable
+                        customerId={customer?.c_id || -1}
+                        theme={theme}
+                      />
+                    ),
+                  },
+                  {
+                    key: "visits",
+                    label: "📅 Visit History",
+                    children: (
+                      <CustomerVisitHistoryTable
+                        customerId={customer?.c_id || -1}
+                        theme={theme}
+                      />
+                    ),
+                  },
+                ]}
+              />
             </div>
           </>
         )}

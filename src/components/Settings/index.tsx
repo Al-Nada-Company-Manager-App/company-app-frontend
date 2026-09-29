@@ -3,7 +3,12 @@ import { useAuthContext } from "@src/contexts/auth";
 import { getBackendUrl, setBackendUrl } from "@src/platform/storage";
 import { ChangePasswordModal } from "./components";
 import { useThemeContext } from "@src/contexts/theme";
-import { message } from "antd";
+import { message, InputNumber } from "antd";
+import {
+  useGetVisitSettings,
+  useUpdateVisitSettings,
+  useRunAutoReset,
+} from "@src/queries/Visits/visitQueries";
 
 interface SettingsProps {
   isDark: boolean;
@@ -15,6 +20,18 @@ const Settings = ({ isDark }: SettingsProps) => {
   const [backendUrl, setLocalBackendUrl] = useState("");
   const [isTesting, setIsTesting] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  // Visit settings state
+  const { data: visitSettings } = useGetVisitSettings();
+  const updateVisitSettings = useUpdateVisitSettings(isDark);
+  const runAutoReset = useRunAutoReset(isDark);
+  const [resetMonths, setResetMonths] = useState<number>(3);
+
+  useEffect(() => {
+    if (visitSettings?.visit_reset_months) {
+      setResetMonths(parseInt(visitSettings.visit_reset_months));
+    }
+  }, [visitSettings]);
 
   useEffect(() => {
     const loadUrl = async () => {
@@ -148,6 +165,79 @@ const Settings = ({ isDark }: SettingsProps) => {
                 }}
               >
                 Save & Restart
+              </button>
+            </div>
+          </div>
+
+          {/* Visit Auto-Reset Settings */}
+          <div
+            className="rounded-xl p-6 mb-6 transition-all duration-200 hover:transform hover:-translate-y-1"
+            style={{
+              background: theme.modal?.background || theme.containerBg,
+              border: `1px solid ${theme.row?.borderColor}`,
+            }}
+          >
+            <h2
+              className="text-xl font-semibold mb-4"
+              style={{ color: theme.title?.color }}
+            >
+              📅 Visit Auto-Reset
+            </h2>
+            <p className="mb-4 text-sm" style={{ color: theme.title?.color, opacity: 0.8 }}>
+              Customers will automatically be marked as <strong>unvisited</strong> if their last visit was more than the configured number of months ago. The reset runs automatically every day at midnight.
+            </p>
+            {visitSettings?.visit_reset_last_run && (
+              <p className="mb-4 text-xs" style={{ color: theme.title?.color, opacity: 0.6 }}>
+                Last auto-reset ran: {new Date(visitSettings.visit_reset_last_run).toLocaleString()}
+              </p>
+            )}
+            <div className="mb-4">
+              <label
+                className="block text-sm font-medium mb-2 uppercase tracking-wider"
+                style={{ color: theme.title?.color, opacity: 0.8 }}
+              >
+                Reset Period (Months)
+              </label>
+              <InputNumber
+                min={1}
+                max={24}
+                value={resetMonths}
+                onChange={(val) => setResetMonths(val || 3)}
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.05)" : "#f8fafc",
+                  border: `1px solid ${theme.row?.borderColor}`,
+                  color: theme.title?.color,
+                  width: 120,
+                }}
+              />
+            </div>
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => updateVisitSettings.mutate(resetMonths)}
+                disabled={updateVisitSettings.isPending}
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90"
+                style={{
+                  background: theme.button?.background,
+                  color: theme.button?.color || "#fff",
+                  opacity: updateVisitSettings.isPending ? 0.5 : 1,
+                  cursor: updateVisitSettings.isPending ? "not-allowed" : "pointer",
+                }}
+              >
+                {updateVisitSettings.isPending ? "Saving..." : "Save Reset Period"}
+              </button>
+              <button
+                onClick={() => runAutoReset.mutate()}
+                disabled={runAutoReset.isPending}
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200"
+                style={{
+                  background: isDark ? "rgba(130, 140, 232, 0.1)" : "rgba(108, 121, 239, 0.08)",
+                  color: isDark ? "#828CE8" : "#6C79EF",
+                  border: `1px solid ${isDark ? "#56577A" : "#E2E8F0"}`,
+                  opacity: runAutoReset.isPending ? 0.5 : 1,
+                  cursor: runAutoReset.isPending ? "not-allowed" : "pointer",
+                }}
+              >
+                {runAutoReset.isPending ? "Running..." : "🔄 Run Auto-Reset Now"}
               </button>
             </div>
           </div>

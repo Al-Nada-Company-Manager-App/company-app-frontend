@@ -12,6 +12,7 @@ import TaskCustomerSelectModal from "./TaskCustomerSelectModal";
 import type { Customer } from "@src/types/Customers/customer";
 import type { Theme } from "@src/types/theme";
 import moment from "moment";
+import { visitApi } from "@src/queries/Visits/visitApi";
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -363,28 +364,43 @@ const TaskModal = ({ isOpen, onClose, task, theme }: TaskModalProps) => {
       <TaskCustomerSelectModal
         isOpen={showCustomerSelect}
         onClose={() => setShowCustomerSelect(false)}
-        onSelect={(customers) => {
+        onSelect={async (customers) => {
+          // Find newly added customers (not previously selected)
+          const prevIds = new Set(selectedCustomers.map(c => c.c_id));
+          const newlyAdded = customers.filter(c => !prevIds.has(c.c_id));
+
           setSelectedCustomers(customers);
           form.setFieldsValue({ c_ids: customers.map(c => c.c_id) });
+
+          // Log visit for each newly selected customer (only for Visit/Contact tasks)
+          const taskType = form.getFieldValue("t_type");
+          if (taskType === TaskType.VisitContact && newlyAdded.length > 0) {
+            for (const customer of newlyAdded) {
+              try {
+                await visitApi.logVisit(customer.c_id);
+              } catch (err) {
+                console.warn("Failed to log visit for customer", customer.c_id, err);
+              }
+            }
+            queryClient.invalidateQueries({ queryKey: ["visits"] });
+          }
         }}
         selectedCustomerIds={selectedCustomers.map(c => c.c_id)}
         onUnvisit={async (c_id) => {
           try {
-            await fetch(`http://localhost:4000/tasks/unvisit/${c_id}`, { 
-              method: 'POST', 
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
-            });
+            await visitApi.unvisitCustomer(c_id);
             queryClient.invalidateQueries({ queryKey: ["customers"] });
-          } catch (err) {}
+          } catch (err) {
+            console.error("Failed to unvisit customer", err);
+          }
         }}
         onClearAllVisits={async () => {
           try {
-            await fetch('http://localhost:4000/tasks/clear-visits', { 
-              method: 'POST', 
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
-            });
+            await visitApi.clearAllVisits();
             queryClient.invalidateQueries({ queryKey: ["customers"] });
-          } catch (err) {}
+          } catch (err) {
+            console.error("Failed to clear visits", err);
+          }
         }}
         customers={customers || []}
         loading={!customers}
