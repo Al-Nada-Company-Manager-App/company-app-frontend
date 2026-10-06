@@ -57,6 +57,7 @@ const TaskCard = ({ task, onEdit, theme, isDark }: TaskCardProps) => {
         okText: "Yes",
         okType: "danger",
         cancelText: "No",
+        zIndex: 99999,
         onOk() {
           deleteTaskMutation.mutate(task.t_id);
         },

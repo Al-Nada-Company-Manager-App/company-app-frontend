@@ -164,6 +164,7 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
                     <Select
                       placeholder="Select Company"
                       showSearch
+                      popupClassName="!z-[10500]"
                       filterOption={(input, option) =>
                         (option?.label ?? "")
                           .toLowerCase()
@@ -195,7 +196,21 @@ const CustomerModal = ({ isOpen, onClose, theme, customer }: CustomerModalProps)
               </div>
               <div className="w-full">
                 <Form.Item name="c_business_type" label="Type of Business">
-                  <Input placeholder="Enter type of business" />
+                  <Select
+                    placeholder="Select type of business"
+                    allowClear
+                    showSearch
+                    popupClassName="!z-[10500]"
+                    options={[
+                      { value: 'جامعات', label: 'جامعات' },
+                      { value: 'مصانع', label: 'مصانع' },
+                      { value: 'معاهد', label: 'معاهد' },
+                      { value: 'شركات بترول', label: 'شركات بترول' },
+                      { value: 'وزارات', label: 'وزارات' },
+                      { value: 'جهاز شئون البيئة', label: 'جهاز شئون البيئة' },
+                      { value: 'مستشفيات', label: 'مستشفيات' },
+                    ]}
+                  />
                 </Form.Item>
               </div>
             </div>

@@ -19,6 +19,7 @@ export const useDirtyForm = (form?: FormInstance) => {
         okType: 'danger',
         cancelText: 'Keep Editing',
         className: 'custom-modal', // Use custom modal styling
+        zIndex: 99999,
         onOk: () => {
           form.resetFields();
           onConfirm();
